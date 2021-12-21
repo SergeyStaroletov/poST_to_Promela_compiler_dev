@@ -1,0 +1,8 @@
+<plugin>
+	<extension
+		name="PostToPromela"
+		point="su.nsk.iae.post.post_extension">
+		<client
+			class="su.nsk.iae.post.generator.promela.PromelaGenerator"></client>
+	</extension>
+</plugin>
