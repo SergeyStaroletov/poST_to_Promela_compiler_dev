@@ -1,0 +1,66 @@
+PROGRAM Sanitizer
+
+    VAR CONSTANT
+        ONN : BOOL := TRUE;
+        OFF : BOOL := FALSE;
+        HANDS_OFF_TIMEOUT : TIME := T#550ms;
+        SPRAY_DURATION : TIME := T#5s;
+        DELAY_BETWEEN_SPRAYS : TIME := T#2s;
+    END_VAR
+    VAR_INPUT
+        hands : BOOL;
+    END_VAR
+    VAR_OUTPUT
+        pump : BOOL;
+    END_VAR
+
+    PROCESS Controller
+
+        STATE Init
+            pump := OFF;
+            SET NEXT;
+        END_STATE
+
+        STATE Idle
+            IF hands THEN
+                pump := ONN;
+                START PROCESS DurationControl;
+                SET NEXT;
+            END_IF
+        END_STATE
+
+        STATE Spray
+            IF hands THEN
+                RESET TIMER;
+            END_IF
+            TIMEOUT HANDS_OFF_TIMEOUT THEN
+                pump := OFF;
+                SET STATE Idle;
+            END_TIMEOUT
+        END_STATE
+
+    END_PROCESS
+
+    PROCESS DurationControl
+
+        STATE CheckDuration
+            IF pump = OFF THEN
+                STOP;
+            END_IF
+            TIMEOUT SPRAY_DURATION THEN
+                pump := OFF;
+                STOP PROCESS Controller;
+                SET NEXT;
+            END_TIMEOUT
+        END_STATE
+
+        STATE PauseForCooling
+            TIMEOUT DELAY_BETWEEN_SPRAYS THEN
+                START PROCESS Controller;
+                STOP;
+            END_TIMEOUT
+        END_STATE
+
+    END_PROCESS
+
+END_PROGRAM
