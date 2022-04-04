@@ -80,6 +80,10 @@ public abstract class PromelaExpression implements IPromelaElement {
       this.name = name;
     }
     
+    public String getName() {
+      return this.name;
+    }
+    
     @Override
     public String toText() {
       return this.name;

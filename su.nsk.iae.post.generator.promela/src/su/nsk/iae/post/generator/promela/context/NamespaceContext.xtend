@@ -4,6 +4,8 @@ import java.util.Map
 import java.util.HashMap
 import java.util.Stack
 import su.nsk.iae.post.generator.promela.model.WrongModelStateException
+import java.util.List
+import java.util.ArrayList
 
 class NamespaceContext {
 	static var Namespace rootNamespace = new Namespace(null, null);
@@ -13,7 +15,9 @@ class NamespaceContext {
 		if (current === null) {
 			current = rootNamespace;
 		}
-		current = new Namespace(current, name);
+		var newNamespace = new Namespace(current, name);
+		current.children.add(newNamespace);
+		current = newNamespace;
 	}
 	
 	static def void endNamespace() {
@@ -56,16 +60,18 @@ class NamespaceContext {
 	
 	static def String getFullId(String id) {
 		return getFullId(id, null);
-	}
-	
+	}	
 	
 	private static class Namespace {
 		Namespace parent;
+		List<Namespace> children = new ArrayList();
+		String name;
 		String fullName;
 		Map<String, String> fullIds = new HashMap();//id -> fullId
 		
 		new (Namespace parent, String name) {
 			val prefix = parent !== null && parent.fullName !== null ? parent.fullName + "__" : "";
+			this.name = name;
 			this.fullName = name !== null ? prefix + name : null;
 			this.parent = parent;
 		}

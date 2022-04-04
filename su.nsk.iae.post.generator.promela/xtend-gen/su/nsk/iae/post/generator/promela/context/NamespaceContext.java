@@ -1,5 +1,6 @@
 package su.nsk.iae.post.generator.promela.context;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +11,10 @@ import su.nsk.iae.post.generator.promela.model.WrongModelStateException;
 public class NamespaceContext {
   private static class Namespace {
     private NamespaceContext.Namespace parent;
+    
+    private List<NamespaceContext.Namespace> children = new ArrayList<NamespaceContext.Namespace>();
+    
+    private String name;
     
     private String fullName;
     
@@ -23,6 +28,7 @@ public class NamespaceContext {
         _xifexpression = "";
       }
       final String prefix = _xifexpression;
+      this.name = name;
       String _xifexpression_1 = null;
       if ((name != null)) {
         _xifexpression_1 = (prefix + name);
@@ -42,8 +48,9 @@ public class NamespaceContext {
     if ((NamespaceContext.current == null)) {
       NamespaceContext.current = NamespaceContext.rootNamespace;
     }
-    NamespaceContext.Namespace _namespace = new NamespaceContext.Namespace(NamespaceContext.current, name);
-    NamespaceContext.current = _namespace;
+    NamespaceContext.Namespace newNamespace = new NamespaceContext.Namespace(NamespaceContext.current, name);
+    NamespaceContext.current.children.add(newNamespace);
+    NamespaceContext.current = newNamespace;
   }
   
   public static void endNamespace() {

@@ -63,6 +63,10 @@ abstract class PromelaExpression implements IPromelaElement {
 			this.name = name;
 		}
 		
+		def getName() {
+			return name;
+		}
+		
 		override toText() {
 			return name;
 		}

@@ -44,6 +44,10 @@ abstract class PromelaVar implements IPromelaElement {
 		this.ignored = true;
 	}
 	
+	def getValue() {
+		return value;
+	}
+	
 	override toText() {
 		ignored ?
 		'''

@@ -5,6 +5,7 @@ import su.nsk.iae.post.generator.promela.PromelaContext
 import su.nsk.iae.post.generator.promela.context.PostConstructContext
 import su.nsk.iae.post.generator.promela.expressions.PromelaExpression
 import su.nsk.iae.post.generator.promela.model.vars.PromelaVar
+import su.nsk.iae.post.generator.promela.expressions.PromelaExpression.TimeConstant
 
 class PromelaModel implements IPromelaElement {
 	final PromelaElementList<PromelaProgram> programs = new PromelaElementList("\r\n");
@@ -65,7 +66,16 @@ class PromelaModel implements IPromelaElement {
 						return expr.value;
 					}
 					else if (expr instanceof PromelaExpression.Var) {
-						return 256l;//todo!!!!!!!!!!!! get expr.value (by var's fullName);
+						val timeVarFullName = expr.name;
+						val timeVar = PromelaContext.getContext().getTimeVars()
+							.findFirst[v | v.name.equals(timeVarFullName)];
+						var timeVarValue = timeVar.value;
+						if (timeVarValue instanceof TimeConstant) {
+							return timeVarValue.value;
+						}
+						else {
+							throw new NotSupportedElementException();
+						}
 					}
 					else {
 						throw new NotSupportedElementException();

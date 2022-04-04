@@ -168,6 +168,10 @@ public abstract class PromelaVar implements IPromelaElement {
     return this.ignored = true;
   }
   
+  public PromelaExpression getValue() {
+    return this.value;
+  }
+  
   @Override
   public String toText() {
     String _xifexpression = null;

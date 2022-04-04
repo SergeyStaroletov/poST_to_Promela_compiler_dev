@@ -99,7 +99,17 @@ public class PromelaModel implements IPromelaElement {
           return Long.valueOf(((PromelaExpression.TimeConstant)expr).getValue());
         } else {
           if ((expr instanceof PromelaExpression.Var)) {
-            return Long.valueOf(256l);
+            final String timeVarFullName = ((PromelaExpression.Var)expr).getName();
+            final Function1<PromelaVar.TimeInterval, Boolean> _function_4 = (PromelaVar.TimeInterval v) -> {
+              return Boolean.valueOf(v.getName().equals(timeVarFullName));
+            };
+            final PromelaVar.TimeInterval timeVar = IterableExtensions.<PromelaVar.TimeInterval>findFirst(PromelaContext.getContext().getTimeVars(), _function_4);
+            PromelaExpression timeVarValue = timeVar.getValue();
+            if ((timeVarValue instanceof PromelaExpression.TimeConstant)) {
+              return Long.valueOf(((PromelaExpression.TimeConstant)timeVarValue).getValue());
+            } else {
+              throw new NotSupportedElementException();
+            }
           } else {
             throw new NotSupportedElementException();
           }
