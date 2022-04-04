@@ -314,7 +314,7 @@ abstract class PromelaStatement implements IPromelaElement, IPostConstuctible {
 		override toText() {
 			val timeoutVarName = timeoutVar.name;
 			'''
-				if :: «timeoutVarName» < «timeoutValue.toText» -> {
+				if :: «timeoutVarName» >= «timeoutValue.toText» -> {
 					«timeoutStatements.toText»
 				} :: else -> skip; fi;
 				«timeoutVarName» = «timeoutVarName» + 1;

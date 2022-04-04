@@ -7,6 +7,7 @@ import su.nsk.iae.post.generator.promela.model.NotSupportedElementException;
 import su.nsk.iae.post.generator.promela.model.UnknownElementException;
 import su.nsk.iae.post.poST.Constant;
 import su.nsk.iae.post.poST.Expression;
+import su.nsk.iae.post.poST.IntegerLiteral;
 import su.nsk.iae.post.poST.NumericLiteral;
 import su.nsk.iae.post.poST.PrimaryExpression;
 import su.nsk.iae.post.poST.SymbolicVariable;
@@ -37,8 +38,13 @@ public class PromelaExpressionsHelper {
           NumericLiteral _num = ((PrimaryExpression)expr).getConst().getNum();
           boolean _tripleNotEquals_2 = (_num != null);
           if (_tripleNotEquals_2) {
-            String _string = ((PrimaryExpression)expr).getConst().getNum().toString();
-            return new PromelaExpression.Constant(_string);
+            final NumericLiteral num = ((PrimaryExpression)expr).getConst().getNum();
+            if ((num instanceof IntegerLiteral)) {
+              String _value = ((IntegerLiteral)num).getValue().getValue();
+              return new PromelaExpression.Constant(_value);
+            } else {
+              throw new NotSupportedElementException();
+            }
           } else {
             TimeLiteral _time = ((PrimaryExpression)expr).getConst().getTime();
             boolean _tripleNotEquals_3 = (_time != null);

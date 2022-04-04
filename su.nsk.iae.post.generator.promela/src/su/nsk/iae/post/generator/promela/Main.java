@@ -17,7 +17,7 @@ public class Main {
 	public static void main(String[] args) throws IOException {
         System.out.println("Hello!\r\n");
 
-        Model m = prepareAndParseModelFromResource("D:\\Post programms\\Sanitizer.post");
+        Model m = prepareAndParseModelFromResource(".\\Sanitizer.post");
 
         System.out.println(buildModel(m).toText().toString());
 

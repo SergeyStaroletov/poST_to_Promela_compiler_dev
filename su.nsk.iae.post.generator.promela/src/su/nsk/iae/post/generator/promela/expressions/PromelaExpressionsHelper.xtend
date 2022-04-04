@@ -15,6 +15,7 @@ import su.nsk.iae.post.poST.impl.MulExpressionImpl
 import su.nsk.iae.post.poST.impl.PowerExpressionImpl
 import su.nsk.iae.post.generator.promela.model.NotSupportedElementException
 import su.nsk.iae.post.generator.promela.PromelaContext
+import su.nsk.iae.post.poST.IntegerLiteral
 
 class PromelaExpressionsHelper {
 	static def PromelaExpression getExpr(Expression expr) {
@@ -24,7 +25,13 @@ class PromelaExpressionsHelper {
 			}
 			else if (expr.const !== null) {
 				if (expr.const.num !== null) {
-					return new PromelaExpression.Constant(expr.const.num.toString);
+					val num = expr.const.num;
+					if (num instanceof IntegerLiteral) {
+						return new PromelaExpression.Constant(num.value.value);
+					}
+					else {
+						throw new NotSupportedElementException();
+					}
 				}
 				else if (expr.const.time !== null) {
 					val res = new PromelaExpression.TimeConstant(expr.const.time.interval);
