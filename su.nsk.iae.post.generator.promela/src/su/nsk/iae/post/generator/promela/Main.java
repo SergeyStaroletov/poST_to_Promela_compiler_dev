@@ -23,9 +23,9 @@ public class Main {
 
         System.out.println(res);
         
-        printToFile(".\\Sanitizer.prom", res);
+        printToFile("D:\\Promela programms\\sanitizer-gen.pml", res);
 
-        System.out.println("Saved to file \".\\\\Sanitizer.prom\".");
+        System.out.println("Saved to file sanitizer-gen.pml.");
     }
 
     private static PromelaModel buildModel(Model m) {
