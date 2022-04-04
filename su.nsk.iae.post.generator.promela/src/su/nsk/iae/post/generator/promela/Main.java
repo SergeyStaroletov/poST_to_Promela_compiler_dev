@@ -1,5 +1,7 @@
 package su.nsk.iae.post.generator.promela;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 import org.eclipse.emf.common.util.URI;
@@ -15,13 +17,15 @@ import su.nsk.iae.post.poST.Model;
 
 public class Main {
 	public static void main(String[] args) throws IOException {
-        System.out.println("Hello!\r\n");
-
         Model m = prepareAndParseModelFromResource(".\\Sanitizer.post");
+        
+        var res = buildModel(m).toText().toString();
 
-        System.out.println(buildModel(m).toText().toString());
+        System.out.println(res);
+        
+        printToFile(".\\Sanitizer.prom", res);
 
-        System.out.println("Bye!");
+        System.out.println("Saved to file \".\\\\Sanitizer.prom\".");
     }
 
     private static PromelaModel buildModel(Model m) {
@@ -35,5 +39,11 @@ public class Main {
         Resource r = rs.getResource(URI.createFileURI(fileName), true);
         r.load(null);
         return  (Model)r.getContents().get(0);
+    }
+    
+    private static void printToFile(String path, String text) throws IOException {
+    	var output = new FileOutputStream(path);
+        output.write(text.getBytes());
+        output.close();
     }
 }

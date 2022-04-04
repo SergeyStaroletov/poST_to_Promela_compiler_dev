@@ -1,0 +1,133 @@
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+//metadata && init
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+			
+mtype:P__ = {
+	p__Sanitizer__Controller,
+	p__Sanitizer__DurationControl
+}
+chan __currentProcess = [1] of { mtype:P__ };
+
+mtype:S__Sanitizer__Controller = {
+	s__Sanitizer__Controller__Init,
+	s__Sanitizer__Controller__Idle,
+	s__Sanitizer__Controller__Spray,
+	s__Sanitizer__Controller__Stop,
+	s__Sanitizer__Controller__Error
+}
+mtype:S__Sanitizer__Controller curS__Sanitizer__Controller = s__Sanitizer__Controller__Stop;
+unsigned timeout__Sanitizer__Controller : 4;
+
+mtype:S__Sanitizer__DurationControl = {
+	s__Sanitizer__DurationControl__CheckDuration,
+	s__Sanitizer__DurationControl__PauseForCooling,
+	s__Sanitizer__DurationControl__Stop,
+	s__Sanitizer__DurationControl__Error
+}
+mtype:S__Sanitizer__DurationControl curS__Sanitizer__DurationControl = s__Sanitizer__DurationControl__Stop;
+unsigned timeout__Sanitizer__DurationControl : 7;
+
+init {
+	__currentProcess ! p__Sanitizer__Controller;
+}
+
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+//program Sanitizer
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+
+//constants
+#define Sanitizer__ONN true
+#define Sanitizer__OFF false
+#define Sanitizer__HANDS_OFF_TIMEOUT 11 //550ms
+#define Sanitizer__SPRAY_DURATION 100 //5s
+#define Sanitizer__DELAY_BETWEEN_SPRAYS 40 //2s
+
+//input
+bool Sanitizer__hands;
+
+//output
+bool Sanitizer__pump;
+
+
+//-----------------------------------------------------------------------------
+//process__Sanitizer__Controller
+//-----------------------------------------------------------------------------
+
+//constants
+#define Sanitizer__Controller__TMP_VAR 17
+
+active proctype process__Sanitizer__Controller() {
+	do :: __currentProcess ? p__Sanitizer__Controller ->
+		atomic {
+			if
+				:: s__Sanitizer__Controller__Init == curS__Sanitizer__Controller -> {
+					Sanitizer__pump = Sanitizer__OFF & (Sanitizer__pump ^ Sanitizer__pump) || (Sanitizer__pump ^ Sanitizer__pump);
+					curS__Sanitizer__Controller = s__Sanitizer__Controller__Idle;
+				}
+				:: s__Sanitizer__Controller__Idle == curS__Sanitizer__Controller -> {
+					if :: Sanitizer__hands -> {
+						Sanitizer__pump = Sanitizer__ONN;
+						timeout__Sanitizer__DurationControl = 1;
+						curS__Sanitizer__DurationControl = s__Sanitizer__DurationControl__CheckDuration;
+						timeout__Sanitizer__Controller = 1;
+						curS__Sanitizer__Controller = s__Sanitizer__Controller__Spray;
+					} :: else -> skip; fi;
+				}
+				:: s__Sanitizer__Controller__Spray == curS__Sanitizer__Controller -> {
+					if :: Sanitizer__hands -> {
+						timeout__Sanitizer__Controller = 1;
+					} :: else -> skip; fi;
+						
+					if :: timeout__Sanitizer__Controller >= Sanitizer__HANDS_OFF_TIMEOUT -> {
+						Sanitizer__pump = Sanitizer__OFF;
+						curS__Sanitizer__Controller = s__Sanitizer__Controller__Idle;
+					} :: else -> skip; fi;
+					timeout__Sanitizer__Controller = timeout__Sanitizer__Controller + 1;
+				}
+				:: else -> skip;
+			fi;
+			__currentProcess ! p__Sanitizer__DurationControl;
+		}
+	od;
+}
+
+
+//-----------------------------------------------------------------------------
+//process__Sanitizer__DurationControl
+//-----------------------------------------------------------------------------
+
+active proctype process__Sanitizer__DurationControl() {
+	do :: __currentProcess ? p__Sanitizer__DurationControl ->
+		atomic {
+			if
+				:: s__Sanitizer__DurationControl__CheckDuration == curS__Sanitizer__DurationControl -> {
+					if :: Sanitizer__pump == Sanitizer__OFF -> {
+						curS__Sanitizer__DurationControl = s__Sanitizer__DurationControl__Stop;
+					} :: else -> skip; fi;
+						
+					if :: timeout__Sanitizer__DurationControl >= Sanitizer__SPRAY_DURATION -> {
+						Sanitizer__pump = Sanitizer__OFF;
+						curS__Sanitizer__Controller = s__Sanitizer__Controller__Stop;
+						timeout__Sanitizer__DurationControl = 1;
+						curS__Sanitizer__DurationControl = s__Sanitizer__DurationControl__PauseForCooling;
+					} :: else -> skip; fi;
+					timeout__Sanitizer__DurationControl = timeout__Sanitizer__DurationControl + 1;
+				}
+				:: s__Sanitizer__DurationControl__PauseForCooling == curS__Sanitizer__DurationControl -> {
+					if :: timeout__Sanitizer__DurationControl >= Sanitizer__DELAY_BETWEEN_SPRAYS -> {
+						curS__Sanitizer__Controller = s__Sanitizer__Controller__Init;
+						curS__Sanitizer__DurationControl = s__Sanitizer__DurationControl__Stop;
+					} :: else -> skip; fi;
+					timeout__Sanitizer__DurationControl = timeout__Sanitizer__DurationControl + 1;
+				}
+				:: else -> skip;
+			fi;
+			__currentProcess ! p__Sanitizer__Controller;
+		}
+	od;
+}
