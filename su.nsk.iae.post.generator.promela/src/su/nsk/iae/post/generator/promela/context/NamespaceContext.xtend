@@ -10,6 +10,7 @@ import java.util.ArrayList
 class NamespaceContext {
 	static var Namespace rootNamespace = new Namespace(null, null);
 	static var Namespace current = rootNamespace;
+	static FullIdsToNamesMapper namesMapper = new FullIdsToNamesMapper();
 	
 	static def void startNamespace(String name) {
 		if (current === null) {
@@ -61,6 +62,15 @@ class NamespaceContext {
 	static def String getFullId(String id) {
 		return getFullId(id, null);
 	}	
+	
+	static def prepareNamesMapping() {
+		namesMapper.processNamespace(rootNamespace);
+	}
+	
+	static def getName(String fullId) {
+		return namesMapper.getName(fullId);
+	}
+	
 	
 	public static class Namespace {
 		Namespace parent;

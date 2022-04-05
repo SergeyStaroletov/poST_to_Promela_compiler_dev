@@ -5,7 +5,7 @@ import su.nsk.iae.post.generator.promela.model.PromelaElementList
 import java.util.List
 import su.nsk.iae.post.generator.promela.model.UnknownElementException
 import su.nsk.iae.post.generator.promela.model.NotSupportedElementException
-import su.nsk.iae.post.generator.promela.PromelaContext
+import su.nsk.iae.post.generator.promela.context.PromelaContext
 import java.util.ArrayList
 import su.nsk.iae.post.generator.promela.context.NamespaceContext
 import su.nsk.iae.post.generator.promela.expressions.PromelaExpressionsHelper

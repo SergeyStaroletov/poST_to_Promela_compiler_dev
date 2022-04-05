@@ -52,6 +52,8 @@ public class NamespaceContext {
   
   private static NamespaceContext.Namespace current = NamespaceContext.rootNamespace;
   
+  private static FullIdsToNamesMapper namesMapper = new FullIdsToNamesMapper();
+  
   public static void startNamespace(final String name) {
     if ((NamespaceContext.current == null)) {
       NamespaceContext.current = NamespaceContext.rootNamespace;
@@ -123,5 +125,13 @@ public class NamespaceContext {
   
   public static String getFullId(final String id) {
     return NamespaceContext.getFullId(id, null);
+  }
+  
+  public static Object prepareNamesMapping() {
+    return NamespaceContext.namesMapper.processNamespace(NamespaceContext.rootNamespace);
+  }
+  
+  public static String getName(final String fullId) {
+    return NamespaceContext.namesMapper.getName(fullId);
   }
 }

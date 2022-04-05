@@ -1,4 +1,4 @@
-package su.nsk.iae.post.generator.promela
+package su.nsk.iae.post.generator.promela.context
 
 import su.nsk.iae.post.generator.promela.model.vars.PromelaVar
 import java.util.List

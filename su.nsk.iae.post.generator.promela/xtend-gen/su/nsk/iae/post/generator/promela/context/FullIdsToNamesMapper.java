@@ -11,19 +11,7 @@ import su.nsk.iae.post.generator.promela.model.WrongModelStateException;
 public class FullIdsToNamesMapper {
   private Map<String, String> fullIdsToNames = new HashMap<String, String>();
   
-  public FullIdsToNamesMapper(final NamespaceContext.Namespace namespace) {
-    this.processNamespace(namespace);
-  }
-  
-  public String getName(final String fullId) {
-    String res = this.fullIdsToNames.get(fullId);
-    if ((res == null)) {
-      throw new WrongModelStateException();
-    }
-    return res;
-  }
-  
-  private void processNamespace(final NamespaceContext.Namespace namespace) {
+  public Object processNamespace(final NamespaceContext.Namespace namespace) {
     final Consumer<NamespaceContext.Namespace> _function = (NamespaceContext.Namespace it) -> {
       this.processNamespace(it);
     };
@@ -32,5 +20,14 @@ public class FullIdsToNamesMapper {
       this.fullIdsToNames.put(fullId, (fullId + "_____"));
     };
     namespace.getFullIds().forEach(_function_1);
+    return null;
+  }
+  
+  public String getName(final String fullId) {
+    String res = this.fullIdsToNames.get(fullId);
+    if ((res == null)) {
+      throw new WrongModelStateException();
+    }
+    return res;
   }
 }

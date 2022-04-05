@@ -1,7 +1,7 @@
 package su.nsk.iae.post.generator.promela.model
 
 import su.nsk.iae.post.poST.Process
-import su.nsk.iae.post.generator.promela.PromelaContext
+import su.nsk.iae.post.generator.promela.context.PromelaContext
 import su.nsk.iae.post.generator.promela.context.NamespaceContext
 import su.nsk.iae.post.generator.promela.model.vars.PromelaVar
 import su.nsk.iae.post.generator.promela.model.vars.PromelaVarsHelper

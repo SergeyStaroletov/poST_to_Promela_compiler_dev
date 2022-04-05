@@ -1,8 +1,8 @@
 package su.nsk.iae.post.generator.promela.expressions;
 
 import com.google.common.base.Objects;
-import su.nsk.iae.post.generator.promela.PromelaContext;
 import su.nsk.iae.post.generator.promela.context.NamespaceContext;
+import su.nsk.iae.post.generator.promela.context.PromelaContext;
 import su.nsk.iae.post.generator.promela.model.NotSupportedElementException;
 import su.nsk.iae.post.generator.promela.model.UnknownElementException;
 import su.nsk.iae.post.poST.Constant;

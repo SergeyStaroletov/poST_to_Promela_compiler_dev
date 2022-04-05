@@ -14,7 +14,7 @@ import su.nsk.iae.post.poST.impl.AddExpressionImpl
 import su.nsk.iae.post.poST.impl.MulExpressionImpl
 import su.nsk.iae.post.poST.impl.PowerExpressionImpl
 import su.nsk.iae.post.generator.promela.model.NotSupportedElementException
-import su.nsk.iae.post.generator.promela.PromelaContext
+import su.nsk.iae.post.generator.promela.context.PromelaContext
 import su.nsk.iae.post.poST.IntegerLiteral
 
 class PromelaExpressionsHelper {

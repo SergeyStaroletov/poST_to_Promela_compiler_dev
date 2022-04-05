@@ -1,11 +1,12 @@
 package su.nsk.iae.post.generator.promela.model
 
 import su.nsk.iae.post.poST.Model
-import su.nsk.iae.post.generator.promela.PromelaContext
+import su.nsk.iae.post.generator.promela.context.PromelaContext
 import su.nsk.iae.post.generator.promela.context.PostConstructContext
 import su.nsk.iae.post.generator.promela.expressions.PromelaExpression
 import su.nsk.iae.post.generator.promela.model.vars.PromelaVar
 import su.nsk.iae.post.generator.promela.expressions.PromelaExpression.TimeConstant
+import su.nsk.iae.post.generator.promela.context.NamespaceContext
 
 class PromelaModel implements IPromelaElement {
 	final PromelaElementList<PromelaProgram> programs = new PromelaElementList("\r\n");
@@ -18,6 +19,8 @@ class PromelaModel implements IPromelaElement {
 		setNextProcesses();
 		
 		PostConstructContext.postConstruct();
+		
+		NamespaceContext.prepareNamesMapping();
 	}
 	
 	override toText() {

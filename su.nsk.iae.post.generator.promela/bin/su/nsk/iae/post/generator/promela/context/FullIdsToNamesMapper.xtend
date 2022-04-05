@@ -8,8 +8,9 @@ import su.nsk.iae.post.generator.promela.context.NamespaceContext.Namespace
 class FullIdsToNamesMapper {
 	Map<String, String> fullIdsToNames = new HashMap();
 	
-	new (Namespace namespace) {
-		processNamespace(namespace);
+	def processNamespace(Namespace namespace) {
+		namespace.childrenNamespaces.forEach[processNamespace];
+		namespace.fullIds.forEach[id, fullId | fullIdsToNames.put(fullId, fullId + "_____")];
 	}
 	
 	def getName(String fullId) {
@@ -18,10 +19,5 @@ class FullIdsToNamesMapper {
 			throw new WrongModelStateException();
 		}
 		return res;
-	}
-	
-	private def processNamespace(Namespace namespace) {
-		namespace.childrenNamespaces.forEach[processNamespace];
-		namespace.fullIds.forEach[id, fullId | fullIdsToNames.put(fullId, fullId + "_____")];
 	}
 }

@@ -14,7 +14,7 @@ import su.nsk.iae.post.poST.IfStatement
 import su.nsk.iae.post.poST.CaseStatement
 import su.nsk.iae.post.poST.SignedInteger
 import su.nsk.iae.post.poST.StartProcessStatement
-import su.nsk.iae.post.generator.promela.PromelaContext
+import su.nsk.iae.post.generator.promela.context.PromelaContext
 import su.nsk.iae.post.generator.promela.model.WrongModelStateException
 import su.nsk.iae.post.poST.StopProcessStatement
 import su.nsk.iae.post.poST.ErrorProcessStatement

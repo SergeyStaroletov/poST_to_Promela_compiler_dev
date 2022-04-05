@@ -7,8 +7,9 @@ import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.Functions.Function2;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.ListExtensions;
-import su.nsk.iae.post.generator.promela.PromelaContext;
+import su.nsk.iae.post.generator.promela.context.NamespaceContext;
 import su.nsk.iae.post.generator.promela.context.PostConstructContext;
+import su.nsk.iae.post.generator.promela.context.PromelaContext;
 import su.nsk.iae.post.generator.promela.expressions.PromelaExpression;
 import su.nsk.iae.post.generator.promela.model.vars.PromelaVar;
 import su.nsk.iae.post.generator.promela.statements.PromelaStatement;
@@ -29,6 +30,7 @@ public class PromelaModel implements IPromelaElement {
     this.setTimeoutVars();
     this.setNextProcesses();
     PostConstructContext.postConstruct();
+    NamespaceContext.prepareNamesMapping();
   }
   
   @Override
