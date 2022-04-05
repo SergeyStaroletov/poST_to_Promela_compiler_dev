@@ -62,7 +62,7 @@ class NamespaceContext {
 		return getFullId(id, null);
 	}	
 	
-	private static class Namespace {
+	public static class Namespace {
 		Namespace parent;
 		List<Namespace> children = new ArrayList();
 		String name;
@@ -74,6 +74,14 @@ class NamespaceContext {
 			this.name = name;
 			this.fullName = name !== null ? prefix + name : null;
 			this.parent = parent;
+		}
+		
+		def getFullIds() {
+			return fullIds;
+		}
+		
+		def getChildrenNamespaces() {
+			return children;
 		}
 	}
 }

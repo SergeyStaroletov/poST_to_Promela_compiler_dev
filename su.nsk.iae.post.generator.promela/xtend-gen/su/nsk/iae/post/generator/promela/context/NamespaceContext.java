@@ -9,7 +9,7 @@ import su.nsk.iae.post.generator.promela.model.WrongModelStateException;
 
 @SuppressWarnings("all")
 public class NamespaceContext {
-  private static class Namespace {
+  public static class Namespace {
     private NamespaceContext.Namespace parent;
     
     private List<NamespaceContext.Namespace> children = new ArrayList<NamespaceContext.Namespace>();
@@ -37,6 +37,14 @@ public class NamespaceContext {
       }
       this.fullName = _xifexpression_1;
       this.parent = parent;
+    }
+    
+    public Map<String, String> getFullIds() {
+      return this.fullIds;
+    }
+    
+    public List<NamespaceContext.Namespace> getChildrenNamespaces() {
+      return this.children;
     }
   }
   
