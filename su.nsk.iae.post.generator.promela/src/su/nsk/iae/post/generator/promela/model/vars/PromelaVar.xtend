@@ -3,6 +3,7 @@ package su.nsk.iae.post.generator.promela.model.vars
 import su.nsk.iae.post.generator.promela.model.IPromelaElement
 import su.nsk.iae.post.generator.promela.model.WrongModelStateException
 import su.nsk.iae.post.generator.promela.expressions.PromelaExpression
+import su.nsk.iae.post.generator.promela.context.NamespaceContext
 
 abstract class PromelaVar implements IPromelaElement {
 	protected String name;
@@ -51,25 +52,25 @@ abstract class PromelaVar implements IPromelaElement {
 	override toText() {
 		ignored ?
 		'''
-			//ignored: «name»
+			//ignored: «NamespaceContext.getName(name)»
 		''' :
 		value !== null ?
 		'''
 			«IF this.constant»
-			#define «name» «value.toText»
+			#define «NamespaceContext.getName(name)» «value.toText»
 			«ELSEIF this.after !== null»
-			«typeName» «name» «after» = «value.toText»;
+			«typeName» «NamespaceContext.getName(name)» «after» = «value.toText»;
 			«ELSE»
-			«typeName» «name» = «value.toText»;
+			«typeName» «NamespaceContext.getName(name)» = «value.toText»;
 			«ENDIF»
 		''' :
 		'''
 			«IF this.constant»
-			#define «name»
+			#define «NamespaceContext.getName(name)»
 			«ELSEIF this.after !== null»
-			«typeName» «name» «after»;
+			«typeName» «NamespaceContext.getName(name)» «after»;
 			«ELSE»
-			«typeName» «name»;
+			«typeName» «NamespaceContext.getName(name)»;
 			«ENDIF»
 		'''
 	}
@@ -154,7 +155,7 @@ abstract class PromelaVar implements IPromelaElement {
 			if (ignored) {
 				return
 				'''
-					//ignored: «v === null ? this.name : v.name»
+					//ignored: «NamespaceContext.getName(v === null ? this.name : v.name)»
 				''';
 			}
 			if (v === null) {

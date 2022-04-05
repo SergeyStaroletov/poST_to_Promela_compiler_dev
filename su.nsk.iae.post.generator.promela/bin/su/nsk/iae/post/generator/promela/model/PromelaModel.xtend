@@ -13,6 +13,7 @@ class PromelaModel implements IPromelaElement {
 	
 	new(Model m) {
 		m.programs.forEach[p | programs.add(new PromelaProgram(p))];
+		NamespaceContext.addId("__currentProcess");
 		
 		setTimeValues();
 		setTimeoutVars();

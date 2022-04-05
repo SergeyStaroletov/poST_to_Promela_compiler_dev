@@ -35,7 +35,8 @@ class PromelaProcess implements IPromelaElement {
 		stateTypeMType = NamespaceContext.addId(p.name, "S");
 		stateVarMType = NamespaceContext.addId(p.name, "curS");
 		if (p.states.findFirst[state | state.timeout !== null] !== null) {
-			timeoutVar = new PromelaVar.TimeInterval("timeout__" + this.programName + "__" + this.shortName);
+			val timeoutVarFullName = NamespaceContext.addId(this.shortName, "timeout");
+			timeoutVar = new PromelaVar.TimeInterval(timeoutVarFullName);
 		}
 		NamespaceContext.startNamespace(p.name);
 		
@@ -98,14 +99,14 @@ class PromelaProcess implements IPromelaElement {
 	
 	def getStatesMTypeText() {
 		'''
-			mtype:«stateTypeMType» = {
+			mtype:«NamespaceContext.getName(stateTypeMType)» = {
 				«FOR s : states»
-					«s.stateMType»,
+					«NamespaceContext.getName(s.stateMType)»,
 				«ENDFOR»
-				«stateStopMType»,
-				«stateErrorMType»
+				«NamespaceContext.getName(stateStopMType)»,
+				«NamespaceContext.getName(stateErrorMType)»
 			}
-			mtype:«stateTypeMType» «stateVarMType» = «stateStopMType»;
+			mtype:«NamespaceContext.getName(stateTypeMType)» «NamespaceContext.getName(stateVarMType)» = «NamespaceContext.getName(stateStopMType)»;
 		'''
 	}
 	
@@ -113,7 +114,7 @@ class PromelaProcess implements IPromelaElement {
 		'''
 			
 			//-----------------------------------------------------------------------------
-			//«fullName»
+			//«NamespaceContext.getName(fullName)»
 			//-----------------------------------------------------------------------------
 			
 			«IF !constants.isEmpty()»
@@ -141,14 +142,14 @@ class PromelaProcess implements IPromelaElement {
 			«vars.toText()»
 			
 			«ENDIF»
-			active proctype «fullName»() {
-				do :: __currentProcess ? «nameMType» ->
+			active proctype «NamespaceContext.getName(fullName)»() {
+				do :: «NamespaceContext.getName("__currentProcess")» ? «NamespaceContext.getName(nameMType)» ->
 					atomic {
 						if
 							«states.toText()»
 							:: else -> skip;
 						fi;
-						__currentProcess ! «nextMType»;
+						«NamespaceContext.getName("__currentProcess")» ! «NamespaceContext.getName(nextMType)»;
 					}
 				od;
 			}

@@ -1,6 +1,7 @@
 package su.nsk.iae.post.generator.promela.model.vars;
 
 import org.eclipse.xtend2.lib.StringConcatenation;
+import su.nsk.iae.post.generator.promela.context.NamespaceContext;
 import su.nsk.iae.post.generator.promela.expressions.PromelaExpression;
 import su.nsk.iae.post.generator.promela.model.IPromelaElement;
 import su.nsk.iae.post.generator.promela.model.WrongModelStateException;
@@ -112,7 +113,8 @@ public abstract class PromelaVar implements IPromelaElement {
         } else {
           _xifexpression = this.v.name;
         }
-        _builder.append(_xifexpression);
+        String _name = NamespaceContext.getName(_xifexpression);
+        _builder.append(_name);
         _builder.newLineIfNotEmpty();
         return _builder.toString();
       }
@@ -178,7 +180,8 @@ public abstract class PromelaVar implements IPromelaElement {
     if (this.ignored) {
       StringConcatenation _builder = new StringConcatenation();
       _builder.append("//ignored: ");
-      _builder.append(this.name);
+      String _name = NamespaceContext.getName(this.name);
+      _builder.append(_name);
       _builder.newLineIfNotEmpty();
       _xifexpression = _builder.toString();
     } else {
@@ -188,7 +191,8 @@ public abstract class PromelaVar implements IPromelaElement {
         {
           if (this.constant) {
             _builder_1.append("#define ");
-            _builder_1.append(this.name);
+            String _name_1 = NamespaceContext.getName(this.name);
+            _builder_1.append(_name_1);
             _builder_1.append(" ");
             String _text = this.value.toText();
             _builder_1.append(_text);
@@ -197,7 +201,8 @@ public abstract class PromelaVar implements IPromelaElement {
             if ((this.after != null)) {
               _builder_1.append(this.typeName);
               _builder_1.append(" ");
-              _builder_1.append(this.name);
+              String _name_2 = NamespaceContext.getName(this.name);
+              _builder_1.append(_name_2);
               _builder_1.append(" ");
               _builder_1.append(this.after);
               _builder_1.append(" = ");
@@ -208,7 +213,8 @@ public abstract class PromelaVar implements IPromelaElement {
             } else {
               _builder_1.append(this.typeName);
               _builder_1.append(" ");
-              _builder_1.append(this.name);
+              String _name_3 = NamespaceContext.getName(this.name);
+              _builder_1.append(_name_3);
               _builder_1.append(" = ");
               String _text_2 = this.value.toText();
               _builder_1.append(_text_2);
@@ -223,13 +229,15 @@ public abstract class PromelaVar implements IPromelaElement {
         {
           if (this.constant) {
             _builder_2.append("#define ");
-            _builder_2.append(this.name);
+            String _name_4 = NamespaceContext.getName(this.name);
+            _builder_2.append(_name_4);
             _builder_2.newLineIfNotEmpty();
           } else {
             if ((this.after != null)) {
               _builder_2.append(this.typeName);
               _builder_2.append(" ");
-              _builder_2.append(this.name);
+              String _name_5 = NamespaceContext.getName(this.name);
+              _builder_2.append(_name_5);
               _builder_2.append(" ");
               _builder_2.append(this.after);
               _builder_2.append(";");
@@ -237,7 +245,8 @@ public abstract class PromelaVar implements IPromelaElement {
             } else {
               _builder_2.append(this.typeName);
               _builder_2.append(" ");
-              _builder_2.append(this.name);
+              String _name_6 = NamespaceContext.getName(this.name);
+              _builder_2.append(_name_6);
               _builder_2.append(";");
               _builder_2.newLineIfNotEmpty();
             }

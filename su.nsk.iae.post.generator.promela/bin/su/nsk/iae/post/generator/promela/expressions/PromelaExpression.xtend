@@ -1,6 +1,7 @@
 package su.nsk.iae.post.generator.promela.expressions
 
 import su.nsk.iae.post.generator.promela.model.IPromelaElement
+import su.nsk.iae.post.generator.promela.context.NamespaceContext
 
 abstract class PromelaExpression implements IPromelaElement {
 	
@@ -68,7 +69,7 @@ abstract class PromelaExpression implements IPromelaElement {
 		}
 		
 		override toText() {
-			return name;
+			return NamespaceContext.getName(name);
 		}
 		
 	}

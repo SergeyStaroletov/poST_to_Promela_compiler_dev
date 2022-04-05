@@ -78,7 +78,8 @@ public class PromelaProgram implements IPromelaElement {
     _builder.append("//-----------------------------------------------------------------------------");
     _builder.newLine();
     _builder.append("//program ");
-    _builder.append(this.fullName);
+    String _name = NamespaceContext.getName(this.fullName);
+    _builder.append(_name);
     _builder.newLineIfNotEmpty();
     _builder.append("//-----------------------------------------------------------------------------");
     _builder.newLine();

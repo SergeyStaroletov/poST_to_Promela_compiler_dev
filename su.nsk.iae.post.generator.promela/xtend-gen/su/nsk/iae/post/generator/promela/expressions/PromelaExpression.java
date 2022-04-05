@@ -5,6 +5,7 @@ import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.ListExtensions;
+import su.nsk.iae.post.generator.promela.context.NamespaceContext;
 import su.nsk.iae.post.generator.promela.model.IPromelaElement;
 
 @SuppressWarnings("all")
@@ -86,7 +87,7 @@ public abstract class PromelaExpression implements IPromelaElement {
     
     @Override
     public String toText() {
-      return this.name;
+      return NamespaceContext.getName(this.name);
     }
   }
   

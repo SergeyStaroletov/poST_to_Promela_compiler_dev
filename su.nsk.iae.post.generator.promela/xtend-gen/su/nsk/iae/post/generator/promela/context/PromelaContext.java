@@ -52,15 +52,18 @@ public class PromelaContext {
           _builder.appendImmediate(",", "\t");
         }
         _builder.append("\t");
-        String _nameMType = process.getNameMType();
-        _builder.append(_nameMType, "\t");
+        String _name = NamespaceContext.getName(process.getNameMType());
+        _builder.append(_name, "\t");
         _builder.newLineIfNotEmpty();
       }
     }
     _builder.append("}");
     _builder.newLine();
-    _builder.append("chan __currentProcess = [1] of { mtype:P__ };");
-    _builder.newLine();
+    _builder.append("chan ");
+    String _name_1 = NamespaceContext.getName("__currentProcess");
+    _builder.append(_name_1);
+    _builder.append(" = [1] of { mtype:P__ };");
+    _builder.newLineIfNotEmpty();
     _builder.newLine();
     {
       for(final PromelaProcess process_1 : this.allProcesses) {
@@ -82,9 +85,11 @@ public class PromelaContext {
     _builder.append("init {");
     _builder.newLine();
     _builder.append("\t");
-    _builder.append("__currentProcess ! ");
-    String _nameMType_1 = this.allProcesses.get(0).getNameMType();
-    _builder.append(_nameMType_1, "\t");
+    String _name_2 = NamespaceContext.getName("__currentProcess");
+    _builder.append(_name_2, "\t");
+    _builder.append(" ! ");
+    String _name_3 = NamespaceContext.getName(this.allProcesses.get(0).getNameMType());
+    _builder.append(_name_3, "\t");
     _builder.append(";");
     _builder.newLineIfNotEmpty();
     _builder.append("}");

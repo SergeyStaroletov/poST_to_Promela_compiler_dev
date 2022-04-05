@@ -52,7 +52,8 @@ public abstract class PromelaStatement implements IPromelaElement, PostConstruct
     @Override
     public String toText() {
       StringConcatenation _builder = new StringConcatenation();
-      _builder.append(this.fullVarName);
+      String _name = NamespaceContext.getName(this.fullVarName);
+      _builder.append(_name);
       _builder.append(" = ");
       String _text = this.value.toText();
       _builder.append(_text);
@@ -211,7 +212,8 @@ public abstract class PromelaStatement implements IPromelaElement, PostConstruct
     public String toText() {
       StringConcatenation _builder = new StringConcatenation();
       _builder.append("int ");
-      _builder.append(this.caseConditionValueVarName);
+      String _name = NamespaceContext.getName(this.caseConditionValueVarName);
+      _builder.append(_name);
       _builder.append(" = ");
       String _text = this.cond.toText();
       _builder.append(_text);
@@ -321,14 +323,17 @@ public abstract class PromelaStatement implements IPromelaElement, PostConstruct
       StringConcatenation _builder = new StringConcatenation();
       {
         if ((this.timeoutVarName != null)) {
-          _builder.append(this.timeoutVarName);
+          String _name = NamespaceContext.getName(this.timeoutVarName);
+          _builder.append(_name);
           _builder.append(" = 1;");
           _builder.newLineIfNotEmpty();
         }
       }
-      _builder.append(this.processStateMTypeVar);
+      String _name_1 = NamespaceContext.getName(this.processStateMTypeVar);
+      _builder.append(_name_1);
       _builder.append(" = ");
-      _builder.append(this.processFirstStateMTypeName);
+      String _name_2 = NamespaceContext.getName(this.processFirstStateMTypeName);
+      _builder.append(_name_2);
       _builder.append(";");
       _builder.newLineIfNotEmpty();
       return _builder.toString();
@@ -391,14 +396,17 @@ public abstract class PromelaStatement implements IPromelaElement, PostConstruct
       StringConcatenation _builder = new StringConcatenation();
       {
         if ((this.timeoutVarName != null)) {
-          _builder.append(this.timeoutVarName);
+          String _name = NamespaceContext.getName(this.timeoutVarName);
+          _builder.append(_name);
           _builder.append(" = 1;");
           _builder.newLineIfNotEmpty();
         }
       }
-      _builder.append(this.processStateMTypeVar);
+      String _name_1 = NamespaceContext.getName(this.processStateMTypeVar);
+      _builder.append(_name_1);
       _builder.append(" = ");
-      _builder.append(this.stateMTypeName);
+      String _name_2 = NamespaceContext.getName(this.stateMTypeName);
+      _builder.append(_name_2);
       _builder.append(";");
       _builder.newLineIfNotEmpty();
       return _builder.toString();
@@ -440,9 +448,11 @@ public abstract class PromelaStatement implements IPromelaElement, PostConstruct
     @Override
     public String toText() {
       StringConcatenation _builder = new StringConcatenation();
-      _builder.append(this.processStateMTypeVar);
+      String _name = NamespaceContext.getName(this.processStateMTypeVar);
+      _builder.append(_name);
       _builder.append(" = ");
-      _builder.append(this.processStopStateFullName);
+      String _name_1 = NamespaceContext.getName(this.processStopStateFullName);
+      _builder.append(_name_1);
       _builder.append(";");
       _builder.newLineIfNotEmpty();
       return _builder.toString();
@@ -484,9 +494,11 @@ public abstract class PromelaStatement implements IPromelaElement, PostConstruct
     @Override
     public String toText() {
       StringConcatenation _builder = new StringConcatenation();
-      _builder.append(this.processStateMTypeVar);
+      String _name = NamespaceContext.getName(this.processStateMTypeVar);
+      _builder.append(_name);
       _builder.append(" = ");
-      _builder.append(this.processErrorStateFullName);
+      String _name_1 = NamespaceContext.getName(this.processErrorStateFullName);
+      _builder.append(_name_1);
       _builder.append(";");
       _builder.newLineIfNotEmpty();
       return _builder.toString();
@@ -512,7 +524,8 @@ public abstract class PromelaStatement implements IPromelaElement, PostConstruct
       StringConcatenation _builder = new StringConcatenation();
       {
         if ((this.timeoutVarName != null)) {
-          _builder.append(this.timeoutVarName);
+          String _name = NamespaceContext.getName(this.timeoutVarName);
+          _builder.append(_name);
           _builder.append(" = 1;");
           _builder.newLineIfNotEmpty();
         }
@@ -560,7 +573,8 @@ public abstract class PromelaStatement implements IPromelaElement, PostConstruct
         final String timeoutVarName = this.timeoutVar.getName();
         StringConcatenation _builder = new StringConcatenation();
         _builder.append("if :: ");
-        _builder.append(timeoutVarName);
+        String _name = NamespaceContext.getName(timeoutVarName);
+        _builder.append(_name);
         _builder.append(" >= ");
         String _text = this.timeoutValue.toText();
         _builder.append(_text);
@@ -572,9 +586,11 @@ public abstract class PromelaStatement implements IPromelaElement, PostConstruct
         _builder.newLineIfNotEmpty();
         _builder.append("} :: else -> skip; fi;");
         _builder.newLine();
-        _builder.append(timeoutVarName);
+        String _name_1 = NamespaceContext.getName(timeoutVarName);
+        _builder.append(_name_1);
         _builder.append(" = ");
-        _builder.append(timeoutVarName);
+        String _name_2 = NamespaceContext.getName(timeoutVarName);
+        _builder.append(_name_2);
         _builder.append(" + 1;");
         _builder.newLineIfNotEmpty();
         _xblockexpression = _builder.toString();

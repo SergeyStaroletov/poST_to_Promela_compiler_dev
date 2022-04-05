@@ -2,6 +2,7 @@ package su.nsk.iae.post.generator.promela.model;
 
 import org.eclipse.xtend2.lib.StringConcatenation;
 import su.nsk.iae.post.generator.promela.context.CurrentContext;
+import su.nsk.iae.post.generator.promela.context.NamespaceContext;
 import su.nsk.iae.post.generator.promela.statements.PromelaStatement;
 import su.nsk.iae.post.generator.promela.statements.PromelaStatementsHelper;
 import su.nsk.iae.post.poST.State;
@@ -54,9 +55,11 @@ public class PromelaState implements IPromelaElement {
   public String toText() {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append(":: ");
-    _builder.append(this.stateMType);
+    String _name = NamespaceContext.getName(this.stateMType);
+    _builder.append(_name);
     _builder.append(" == ");
-    _builder.append(this.stateVarMType);
+    String _name_1 = NamespaceContext.getName(this.stateVarMType);
+    _builder.append(_name_1);
     _builder.append(" -> {");
     _builder.newLineIfNotEmpty();
     _builder.append("\t");
@@ -65,15 +68,6 @@ public class PromelaState implements IPromelaElement {
     _builder.newLineIfNotEmpty();
     {
       if ((this.timeout != null)) {
-        {
-          boolean _isEmpty = this.statements.isEmpty();
-          boolean _not = (!_isEmpty);
-          if (_not) {
-            _builder.append("\t");
-            _builder.append("\t");
-            _builder.newLine();
-          }
-        }
         _builder.append("\t");
         String _text_1 = this.timeout.toText();
         _builder.append(_text_1, "\t");

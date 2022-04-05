@@ -66,7 +66,8 @@ public class PromelaProcess implements IPromelaElement {
     State _findFirst = IterableExtensions.<State>findFirst(p.getStates(), _function);
     boolean _tripleNotEquals = (_findFirst != null);
     if (_tripleNotEquals) {
-      PromelaVar.TimeInterval _timeInterval = new PromelaVar.TimeInterval(((("timeout__" + this.programName) + "__") + this.shortName));
+      final String timeoutVarFullName = NamespaceContext.addId(this.shortName, "timeout");
+      PromelaVar.TimeInterval _timeInterval = new PromelaVar.TimeInterval(timeoutVarFullName);
       this.timeoutVar = _timeInterval;
     }
     NamespaceContext.startNamespace(p.getName());
@@ -152,33 +153,39 @@ public class PromelaProcess implements IPromelaElement {
   public CharSequence getStatesMTypeText() {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("mtype:");
-    _builder.append(this.stateTypeMType);
+    String _name = NamespaceContext.getName(this.stateTypeMType);
+    _builder.append(_name);
     _builder.append(" = {");
     _builder.newLineIfNotEmpty();
     {
       for(final PromelaState s : this.states) {
         _builder.append("\t");
-        String _stateMType = s.getStateMType();
-        _builder.append(_stateMType, "\t");
+        String _name_1 = NamespaceContext.getName(s.getStateMType());
+        _builder.append(_name_1, "\t");
         _builder.append(",");
         _builder.newLineIfNotEmpty();
       }
     }
     _builder.append("\t");
-    _builder.append(this.stateStopMType, "\t");
+    String _name_2 = NamespaceContext.getName(this.stateStopMType);
+    _builder.append(_name_2, "\t");
     _builder.append(",");
     _builder.newLineIfNotEmpty();
     _builder.append("\t");
-    _builder.append(this.stateErrorMType, "\t");
+    String _name_3 = NamespaceContext.getName(this.stateErrorMType);
+    _builder.append(_name_3, "\t");
     _builder.newLineIfNotEmpty();
     _builder.append("}");
     _builder.newLine();
     _builder.append("mtype:");
-    _builder.append(this.stateTypeMType);
+    String _name_4 = NamespaceContext.getName(this.stateTypeMType);
+    _builder.append(_name_4);
     _builder.append(" ");
-    _builder.append(this.stateVarMType);
+    String _name_5 = NamespaceContext.getName(this.stateVarMType);
+    _builder.append(_name_5);
     _builder.append(" = ");
-    _builder.append(this.stateStopMType);
+    String _name_6 = NamespaceContext.getName(this.stateStopMType);
+    _builder.append(_name_6);
     _builder.append(";");
     _builder.newLineIfNotEmpty();
     return _builder;
@@ -191,7 +198,8 @@ public class PromelaProcess implements IPromelaElement {
     _builder.append("//-----------------------------------------------------------------------------");
     _builder.newLine();
     _builder.append("//");
-    _builder.append(this.fullName);
+    String _name = NamespaceContext.getName(this.fullName);
+    _builder.append(_name);
     _builder.newLineIfNotEmpty();
     _builder.append("//-----------------------------------------------------------------------------");
     _builder.newLine();
@@ -257,12 +265,17 @@ public class PromelaProcess implements IPromelaElement {
       }
     }
     _builder.append("active proctype ");
-    _builder.append(this.fullName);
+    String _name_1 = NamespaceContext.getName(this.fullName);
+    _builder.append(_name_1);
     _builder.append("() {");
     _builder.newLineIfNotEmpty();
     _builder.append("\t");
-    _builder.append("do :: __currentProcess ? ");
-    _builder.append(this.nameMType, "\t");
+    _builder.append("do :: ");
+    String _name_2 = NamespaceContext.getName("__currentProcess");
+    _builder.append(_name_2, "\t");
+    _builder.append(" ? ");
+    String _name_3 = NamespaceContext.getName(this.nameMType);
+    _builder.append(_name_3, "\t");
     _builder.append(" ->");
     _builder.newLineIfNotEmpty();
     _builder.append("\t\t");
@@ -282,8 +295,11 @@ public class PromelaProcess implements IPromelaElement {
     _builder.append("fi;");
     _builder.newLine();
     _builder.append("\t\t\t");
-    _builder.append("__currentProcess ! ");
-    _builder.append(this.nextMType, "\t\t\t");
+    String _name_4 = NamespaceContext.getName("__currentProcess");
+    _builder.append(_name_4, "\t\t\t");
+    _builder.append(" ! ");
+    String _name_5 = NamespaceContext.getName(this.nextMType);
+    _builder.append(_name_5, "\t\t\t");
     _builder.append(";");
     _builder.newLineIfNotEmpty();
     _builder.append("\t\t");

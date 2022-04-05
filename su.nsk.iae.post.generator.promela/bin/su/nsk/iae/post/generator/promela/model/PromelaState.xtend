@@ -38,12 +38,9 @@ class PromelaState implements IPromelaElement {
 	
 	override toText() {
 		'''
-			:: «stateMType» == «stateVarMType» -> {
+			:: «NamespaceContext.getName(stateMType)» == «NamespaceContext.getName(stateVarMType)» -> {
 				«statements.toText»
 				«IF timeout !== null»
-					«IF !statements.empty»
-						«»
-					«ENDIF»
 					«timeout.toText»
 				«ENDIF»
 			}

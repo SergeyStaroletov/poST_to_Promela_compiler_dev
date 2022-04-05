@@ -10,7 +10,9 @@ class FullIdsToNamesMapper {
 	
 	def processNamespace(Namespace namespace) {
 		namespace.childrenNamespaces.forEach[processNamespace];
-		namespace.fullIds.forEach[id, fullId | fullIdsToNames.put(fullId, fullId + "_____")];
+		namespace.fullIds.forEach[id, fullId | {
+			fullIdsToNames.put(fullId, fullId);
+		}];
 	}
 	
 	def getName(String fullId) {

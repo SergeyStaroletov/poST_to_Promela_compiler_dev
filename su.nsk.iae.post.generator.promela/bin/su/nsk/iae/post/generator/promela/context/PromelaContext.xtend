@@ -39,10 +39,10 @@ class PromelaContext {
 		'''			
 			mtype:P__ = {
 				«FOR process : allProcesses SEPARATOR ','»
-					«process.nameMType»
+					«NamespaceContext.getName(process.nameMType)»
 				«ENDFOR»
 			}
-			chan __currentProcess = [1] of { mtype:P__ };
+			chan «NamespaceContext.getName("__currentProcess")» = [1] of { mtype:P__ };
 			
 			«FOR process : allProcesses»
 				«process.statesMTypeText»
@@ -52,7 +52,7 @@ class PromelaContext {
 				
 			«ENDFOR»
 			init {
-				__currentProcess ! «allProcesses.get(0).nameMType»;
+				«NamespaceContext.getName("__currentProcess")» ! «NamespaceContext.getName(allProcesses.get(0).nameMType)»;
 			}
 			
 		'''

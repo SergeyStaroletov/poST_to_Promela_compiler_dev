@@ -26,6 +26,7 @@ public class PromelaModel implements IPromelaElement {
       this.programs.add(_promelaProgram);
     };
     m.getPrograms().forEach(_function);
+    NamespaceContext.addId("__currentProcess");
     this.setTimeValues();
     this.setTimeoutVars();
     this.setNextProcesses();

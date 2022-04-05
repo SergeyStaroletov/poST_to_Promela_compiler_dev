@@ -47,7 +47,7 @@ abstract class PromelaStatement implements IPromelaElement, IPostConstuctible {
 		
 		override toText() {
 			'''
-				«fullVarName» = «value.toText»;
+				«NamespaceContext.getName(fullVarName)» = «value.toText»;
 			'''
 		}
 	}
@@ -119,7 +119,7 @@ abstract class PromelaStatement implements IPromelaElement, IPostConstuctible {
 		
 		override toText() {
 			'''
-				int «caseConditionValueVarName» = «cond.toText»;
+				int «NamespaceContext.getName(caseConditionValueVarName)» = «cond.toText»;
 				if
 «««				
 					«FOR e : caseElements»
@@ -169,9 +169,9 @@ abstract class PromelaStatement implements IPromelaElement, IPostConstuctible {
 		override toText() {
 			'''
 				«IF timeoutVarName !== null»
-					«timeoutVarName» = 1;
+					«NamespaceContext.getName(timeoutVarName)» = 1;
 				«ENDIF»
-				«processStateMTypeVar» = «processFirstStateMTypeName»;
+				«NamespaceContext.getName(processStateMTypeVar)» = «NamespaceContext.getName(processFirstStateMTypeName)»;
 			'''
 		}
 	}
@@ -208,9 +208,9 @@ abstract class PromelaStatement implements IPromelaElement, IPostConstuctible {
 		override toText() {
 			'''
 				«IF timeoutVarName !== null»
-					«timeoutVarName» = 1;
+					«NamespaceContext.getName(timeoutVarName)» = 1;
 				«ENDIF»
-				«processStateMTypeVar» = «stateMTypeName»;
+				«NamespaceContext.getName(processStateMTypeVar)» = «NamespaceContext.getName(stateMTypeName)»;
 			'''
 		}
 	}
@@ -236,7 +236,7 @@ abstract class PromelaStatement implements IPromelaElement, IPostConstuctible {
 		
 		override toText() {
 			'''
-				«processStateMTypeVar» = «processStopStateFullName»;
+				«NamespaceContext.getName(processStateMTypeVar)» = «NamespaceContext.getName(processStopStateFullName)»;
 			'''
 		}
 	}
@@ -262,7 +262,7 @@ abstract class PromelaStatement implements IPromelaElement, IPostConstuctible {
 		
 		override toText() {
 			'''
-				«processStateMTypeVar» = «processErrorStateFullName»;
+				«NamespaceContext.getName(processStateMTypeVar)» = «NamespaceContext.getName(processErrorStateFullName)»;
 			'''
 		}
 	}
@@ -278,7 +278,7 @@ abstract class PromelaStatement implements IPromelaElement, IPostConstuctible {
 		override toText() {
 			'''
 				«IF timeoutVarName !== null»
-					«timeoutVarName» = 1;
+					«NamespaceContext.getName(timeoutVarName)» = 1;
 				«ENDIF»
 			'''
 		}
@@ -314,10 +314,10 @@ abstract class PromelaStatement implements IPromelaElement, IPostConstuctible {
 		override toText() {
 			val timeoutVarName = timeoutVar.name;
 			'''
-				if :: «timeoutVarName» >= «timeoutValue.toText» -> {
+				if :: «NamespaceContext.getName(timeoutVarName)» >= «timeoutValue.toText» -> {
 					«timeoutStatements.toText»
 				} :: else -> skip; fi;
-				«timeoutVarName» = «timeoutVarName» + 1;
+				«NamespaceContext.getName(timeoutVarName)» = «NamespaceContext.getName(timeoutVarName)» + 1;
 			'''
 		}
 		

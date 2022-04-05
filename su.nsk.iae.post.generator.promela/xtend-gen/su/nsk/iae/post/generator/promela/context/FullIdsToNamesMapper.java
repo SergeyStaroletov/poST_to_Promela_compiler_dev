@@ -17,7 +17,7 @@ public class FullIdsToNamesMapper {
     };
     namespace.getChildrenNamespaces().forEach(_function);
     final BiConsumer<String, String> _function_1 = (String id, String fullId) -> {
-      this.fullIdsToNames.put(fullId, (fullId + "_____"));
+      this.fullIdsToNames.put(fullId, fullId);
     };
     namespace.getFullIds().forEach(_function_1);
     return null;
