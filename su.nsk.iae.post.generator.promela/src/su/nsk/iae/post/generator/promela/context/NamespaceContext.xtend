@@ -93,5 +93,13 @@ class NamespaceContext {
 		def getChildrenNamespaces() {
 			return children;
 		}
+		
+		def getName() {
+			return name;
+		}
+		
+		def getFullName() {
+			return fullName;
+		}
 	}
 }

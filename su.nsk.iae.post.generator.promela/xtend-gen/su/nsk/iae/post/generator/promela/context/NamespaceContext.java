@@ -46,6 +46,14 @@ public class NamespaceContext {
     public List<NamespaceContext.Namespace> getChildrenNamespaces() {
       return this.children;
     }
+    
+    public String getName() {
+      return this.name;
+    }
+    
+    public String getFullName() {
+      return this.fullName;
+    }
   }
   
   private static NamespaceContext.Namespace rootNamespace = new NamespaceContext.Namespace(null, null);
@@ -127,8 +135,8 @@ public class NamespaceContext {
     return NamespaceContext.getFullId(id, null);
   }
   
-  public static Object prepareNamesMapping() {
-    return NamespaceContext.namesMapper.processNamespace(NamespaceContext.rootNamespace);
+  public static void prepareNamesMapping() {
+    NamespaceContext.namesMapper.processNamespace(NamespaceContext.rootNamespace);
   }
   
   public static String getName(final String fullId) {
