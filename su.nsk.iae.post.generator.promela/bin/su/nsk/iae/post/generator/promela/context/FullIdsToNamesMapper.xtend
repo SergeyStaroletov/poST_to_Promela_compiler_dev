@@ -7,6 +7,7 @@ import su.nsk.iae.post.generator.promela.context.NamespaceContext.Namespace
 import java.util.List
 import java.util.ArrayList
 import java.util.AbstractMap
+import java.util.LinkedList
 
 class FullIdsToNamesMapper {
 	Map<String, String> fullIdsToNames = new HashMap();
@@ -14,7 +15,7 @@ class FullIdsToNamesMapper {
 	
 	def processNamespace(Namespace namespace) {
 		copyToSimplifyingNamespace(namespace, rootNamespace);
-		moveFromChildrenNamespaces(rootNamespace);
+//		moveFromChildrenNamespaces(rootNamespace);
 		return;
 	}
 	
@@ -30,7 +31,8 @@ class FullIdsToNamesMapper {
 		namespace.childrenNamespaces.forEach[ns | copyToSimplifyingNamespace(ns,
 			simplifyingNamespace.addChildNamespace(ns.name)
 		)];
-		namespace.fullIds.forEach[id, fullId | 
+		namespace.fullIdParts.forEach[id, fullIdParts |
+			val fullId = fullIdParts.fullId;
 			simplifyingNamespace.addFullId(fullId);
 			fullIdsToNames.put(fullId, fullId);
 		];
@@ -76,7 +78,7 @@ class FullIdsToNamesMapper {
 	private static class SimplifyingNamespace {
 		String name;//short name
 		List<SimplifyingNamespace> children = new ArrayList();
-		List<String> fullIds = new ArrayList();
+		List<String> fullIds = new LinkedList();
 		
 		new (String name) {
 			this.name = name;

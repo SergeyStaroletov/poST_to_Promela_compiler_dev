@@ -38,6 +38,13 @@ class NamespaceContext {
 		val namespacePrefix = current.fullName !== null ? current.fullName + "__" : "";
 		val fullId = attributePrefix + namespacePrefix + id;
 		current.fullIds.put(attributePrefix + id, fullId);
+		current.fullIdParts.put(attributePrefix + id,
+			new FullIdParts(
+				attribute,
+				current.fullName === null ? new ArrayList() : current.fullName.split("__"),
+				id
+			)
+		);
 		return fullId;
 	}
 	
@@ -78,6 +85,7 @@ class NamespaceContext {
 		String name;
 		String fullName;
 		Map<String, String> fullIds = new HashMap();//id -> fullId
+		Map<String, FullIdParts> fullIdParts = new HashMap();//id -> fullIdParts
 		
 		new (Namespace parent, String name) {
 			val prefix = parent !== null && parent.fullName !== null ? parent.fullName + "__" : "";
@@ -90,6 +98,10 @@ class NamespaceContext {
 			return fullIds;
 		}
 		
+		def getFullIdParts() {
+			return fullIdParts;
+		}
+		
 		def getChildrenNamespaces() {
 			return children;
 		}
@@ -100,6 +112,35 @@ class NamespaceContext {
 		
 		def getFullName() {
 			return fullName;
+		}
+	}
+	
+	public static class FullIdParts {
+		String prefix;
+		List<String> namespaceNames;
+		String id;
+		
+		new (String prefix, List<String> namespaceNames, String id) {
+			this.prefix = prefix;
+			this.namespaceNames = namespaceNames;
+			this.id = id;
+		}
+		
+		def getPrefix() {
+			return prefix;
+		}
+		
+		def getNamespaceNames() {
+			return namespaceNames;
+		}
+		
+		def getId() {
+			return id;
+		}
+		
+		def getFullId() {
+			val prefixPart = prefix !== null ? prefix + "__" : "";
+			return prefixPart + namespaceNames.map[n | n + "__"].join() + id;
 		}
 	}
 }

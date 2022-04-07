@@ -4,6 +4,7 @@ import com.google.common.base.Objects;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
@@ -21,7 +22,7 @@ public class FullIdsToNamesMapper {
     
     private List<FullIdsToNamesMapper.SimplifyingNamespace> children = new ArrayList<FullIdsToNamesMapper.SimplifyingNamespace>();
     
-    private List<String> fullIds = new ArrayList<String>();
+    private List<String> fullIds = new LinkedList<String>();
     
     public SimplifyingNamespace(final String name) {
       this.name = name;
@@ -44,7 +45,6 @@ public class FullIdsToNamesMapper {
   
   public void processNamespace(final NamespaceContext.Namespace namespace) {
     this.copyToSimplifyingNamespace(namespace, this.rootNamespace);
-    this.moveFromChildrenNamespaces(this.rootNamespace);
     return;
   }
   
@@ -62,14 +62,15 @@ public class FullIdsToNamesMapper {
         simplifyingNamespace.addChildNamespace(ns.getName()));
     };
     namespace.getChildrenNamespaces().forEach(_function);
-    final BiConsumer<String, String> _function_1 = (String id, String fullId) -> {
+    final BiConsumer<String, NamespaceContext.FullIdParts> _function_1 = (String id, NamespaceContext.FullIdParts fullIdParts) -> {
+      final String fullId = fullIdParts.getFullId();
       simplifyingNamespace.addFullId(fullId);
       this.fullIdsToNames.put(fullId, fullId);
     };
-    namespace.getFullIds().forEach(_function_1);
+    namespace.getFullIdParts().forEach(_function_1);
   }
   
-  private void moveFromChildrenNamespaces(final FullIdsToNamesMapper.SimplifyingNamespace namespace) {
+  private Object moveFromChildrenNamespaces(final FullIdsToNamesMapper.SimplifyingNamespace namespace) {
     final Consumer<FullIdsToNamesMapper.SimplifyingNamespace> _function = (FullIdsToNamesMapper.SimplifyingNamespace ns) -> {
       this.moveFromChildrenNamespaces(ns);
     };
@@ -105,6 +106,7 @@ public class FullIdsToNamesMapper {
       }
     };
     idsNamespaces.forEach(_function_3);
+    return null;
   }
   
   private String deleteLastNamespacePart(final String fullId) {

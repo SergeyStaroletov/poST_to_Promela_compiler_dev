@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.eclipse.xtext.xbase.lib.Conversions;
+import org.eclipse.xtext.xbase.lib.Functions.Function1;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
+import org.eclipse.xtext.xbase.lib.ListExtensions;
 import su.nsk.iae.post.generator.promela.model.WrongModelStateException;
 
 @SuppressWarnings("all")
@@ -19,6 +22,8 @@ public class NamespaceContext {
     private String fullName;
     
     private Map<String, String> fullIds = new HashMap<String, String>();
+    
+    private Map<String, NamespaceContext.FullIdParts> fullIdParts = new HashMap<String, NamespaceContext.FullIdParts>();
     
     public Namespace(final NamespaceContext.Namespace parent, final String name) {
       String _xifexpression = null;
@@ -43,6 +48,10 @@ public class NamespaceContext {
       return this.fullIds;
     }
     
+    public Map<String, NamespaceContext.FullIdParts> getFullIdParts() {
+      return this.fullIdParts;
+    }
+    
     public List<NamespaceContext.Namespace> getChildrenNamespaces() {
       return this.children;
     }
@@ -53,6 +62,48 @@ public class NamespaceContext {
     
     public String getFullName() {
       return this.fullName;
+    }
+  }
+  
+  public static class FullIdParts {
+    private String prefix;
+    
+    private List<String> namespaceNames;
+    
+    private String id;
+    
+    public FullIdParts(final String prefix, final List<String> namespaceNames, final String id) {
+      this.prefix = prefix;
+      this.namespaceNames = namespaceNames;
+      this.id = id;
+    }
+    
+    public String getPrefix() {
+      return this.prefix;
+    }
+    
+    public List<String> getNamespaceNames() {
+      return this.namespaceNames;
+    }
+    
+    public String getId() {
+      return this.id;
+    }
+    
+    public String getFullId() {
+      String _xifexpression = null;
+      if ((this.prefix != null)) {
+        _xifexpression = (this.prefix + "__");
+      } else {
+        _xifexpression = "";
+      }
+      final String prefixPart = _xifexpression;
+      final Function1<String, String> _function = (String n) -> {
+        return (n + "__");
+      };
+      String _join = IterableExtensions.join(ListExtensions.<String, String>map(this.namespaceNames, _function));
+      String _plus = (prefixPart + _join);
+      return (_plus + this.id);
     }
   }
   
@@ -102,6 +153,14 @@ public class NamespaceContext {
     final String namespacePrefix = _xifexpression_1;
     final String fullId = ((attributePrefix + namespacePrefix) + id);
     NamespaceContext.current.fullIds.put((attributePrefix + id), fullId);
+    List<String> _xifexpression_2 = null;
+    if ((NamespaceContext.current.fullName == null)) {
+      _xifexpression_2 = new ArrayList<String>();
+    } else {
+      _xifexpression_2 = (List<String>)Conversions.doWrapArray(NamespaceContext.current.fullName.split("__"));
+    }
+    NamespaceContext.FullIdParts _fullIdParts = new NamespaceContext.FullIdParts(attribute, _xifexpression_2, id);
+    NamespaceContext.current.fullIdParts.put((attributePrefix + id), _fullIdParts);
     return fullId;
   }
   
