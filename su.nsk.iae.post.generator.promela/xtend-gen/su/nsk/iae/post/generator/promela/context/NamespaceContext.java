@@ -201,4 +201,16 @@ public class NamespaceContext {
   public static String getName(final String fullId) {
     return NamespaceContext.namesMapper.getName(fullId);
   }
+  
+  public static FullIdsToNamesMapper clearContext() {
+    FullIdsToNamesMapper _xblockexpression = null;
+    {
+      NamespaceContext.Namespace _namespace = new NamespaceContext.Namespace(null, null);
+      NamespaceContext.rootNamespace = _namespace;
+      NamespaceContext.current = NamespaceContext.rootNamespace;
+      FullIdsToNamesMapper _fullIdsToNamesMapper = new FullIdsToNamesMapper();
+      _xblockexpression = NamespaceContext.namesMapper = _fullIdsToNamesMapper;
+    }
+    return _xblockexpression;
+  }
 }

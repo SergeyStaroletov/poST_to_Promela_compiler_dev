@@ -78,6 +78,12 @@ class NamespaceContext {
 		return namesMapper.getName(fullId);
 	}
 	
+	static def clearContext() {
+		rootNamespace = new Namespace(null, null);
+		current = rootNamespace;
+		namesMapper = new FullIdsToNamesMapper();
+	}
+	
 	
 	public static class Namespace {
 		Namespace parent;

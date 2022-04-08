@@ -13,6 +13,7 @@ import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.Functions.Function2;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.ListExtensions;
+import su.nsk.iae.post.generator.promela.context.CurrentContext;
 import su.nsk.iae.post.generator.promela.context.NamespaceContext;
 import su.nsk.iae.post.generator.promela.context.PostConstructContext;
 import su.nsk.iae.post.generator.promela.context.PromelaContext;
@@ -52,44 +53,42 @@ public class PromelaModel implements IPromelaElement {
   
   @Override
   public String toText() {
-    String _xblockexpression = null;
+    PromelaContext context = PromelaContext.getContext();
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("//-----------------------------------------------------------------------------");
+    _builder.newLine();
+    _builder.append("//-----------------------------------------------------------------------------");
+    _builder.newLine();
+    _builder.append("//metadata && init");
+    _builder.newLine();
+    _builder.append("//-----------------------------------------------------------------------------");
+    _builder.newLine();
+    _builder.append("//-----------------------------------------------------------------------------");
+    _builder.newLine();
+    _builder.append("\t\t\t");
+    _builder.newLine();
+    CharSequence _metadataAndInitText = context.getMetadataAndInitText();
+    _builder.append(_metadataAndInitText);
+    _builder.newLineIfNotEmpty();
+    _builder.newLine();
+    _builder.newLine();
+    String _text = this.programs.toText();
+    _builder.append(_text);
+    _builder.newLineIfNotEmpty();
     {
-      PromelaContext context = PromelaContext.getContext();
-      StringConcatenation _builder = new StringConcatenation();
-      _builder.append("//-----------------------------------------------------------------------------");
-      _builder.newLine();
-      _builder.append("//-----------------------------------------------------------------------------");
-      _builder.newLine();
-      _builder.append("//metadata && init");
-      _builder.newLine();
-      _builder.append("//-----------------------------------------------------------------------------");
-      _builder.newLine();
-      _builder.append("//-----------------------------------------------------------------------------");
-      _builder.newLine();
-      _builder.append("\t\t\t");
-      _builder.newLine();
-      CharSequence _metadataAndInitText = context.getMetadataAndInitText();
-      _builder.append(_metadataAndInitText);
-      _builder.newLineIfNotEmpty();
-      _builder.newLine();
-      _builder.newLine();
-      String _text = this.programs.toText();
-      _builder.append(_text);
-      _builder.newLineIfNotEmpty();
-      {
-        VarSettingProgram _varSettingProgram = context.getVarSettingProgram();
-        boolean _tripleNotEquals = (_varSettingProgram != null);
-        if (_tripleNotEquals) {
-          _builder.newLine();
-          _builder.newLine();
-          String _text_1 = context.getVarSettingProgram().toText();
-          _builder.append(_text_1);
-          _builder.newLineIfNotEmpty();
-        }
+      VarSettingProgram _varSettingProgram = context.getVarSettingProgram();
+      boolean _tripleNotEquals = (_varSettingProgram != null);
+      if (_tripleNotEquals) {
+        _builder.newLine();
+        _builder.newLine();
+        String _text_1 = context.getVarSettingProgram().toText();
+        _builder.append(_text_1);
+        _builder.newLineIfNotEmpty();
       }
-      _xblockexpression = _builder.toString();
     }
-    return _xblockexpression;
+    final String res = _builder.toString();
+    this.clearContexts();
+    return res;
   }
   
   private long getIntervalOfPromelaVerificationTask(final Configuration config) {
@@ -328,5 +327,16 @@ public class PromelaModel implements IPromelaElement {
       }
     }
     return a;
+  }
+  
+  private PromelaContext clearContexts() {
+    PromelaContext _xblockexpression = null;
+    {
+      CurrentContext.clearContext();
+      NamespaceContext.clearContext();
+      PostConstructContext.clearContext();
+      _xblockexpression = PromelaContext.clearContext();
+    }
+    return _xblockexpression;
   }
 }

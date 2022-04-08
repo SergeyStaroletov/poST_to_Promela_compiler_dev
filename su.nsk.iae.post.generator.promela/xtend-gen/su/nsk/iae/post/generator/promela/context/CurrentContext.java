@@ -50,4 +50,14 @@ public class CurrentContext {
   public static PromelaState getCurState() {
     return CurrentContext.curState;
   }
+  
+  public static PromelaState clearContext() {
+    PromelaState _xblockexpression = null;
+    {
+      CurrentContext.curProgram = null;
+      CurrentContext.curProcess = null;
+      _xblockexpression = CurrentContext.curState = null;
+    }
+    return _xblockexpression;
+  }
 }

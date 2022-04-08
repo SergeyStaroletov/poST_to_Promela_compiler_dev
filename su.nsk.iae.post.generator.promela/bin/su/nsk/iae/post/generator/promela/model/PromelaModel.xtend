@@ -12,6 +12,7 @@ import java.util.ArrayList
 import java.util.HashMap
 import su.nsk.iae.post.generator.promela.exceptions.ConflictingOutputsOrInOutsException
 import su.nsk.iae.post.poST.Configuration
+import su.nsk.iae.post.generator.promela.context.CurrentContext
 
 class PromelaModel implements IPromelaElement {
 	static val promelaVerificationTaskName = "PromelaVerificationTask";
@@ -36,7 +37,7 @@ class PromelaModel implements IPromelaElement {
 	
 	override toText() {
 		var context = PromelaContext.getContext();
-		'''
+		val res = '''
 			//-----------------------------------------------------------------------------
 			//-----------------------------------------------------------------------------
 			//metadata && init
@@ -53,6 +54,8 @@ class PromelaModel implements IPromelaElement {
 				«context.varSettingProgram.toText()»
 			«ENDIF»
 		''';
+		clearContexts();
+		return res;
 	}
 	
 	private def getIntervalOfPromelaVerificationTask(Configuration config) {
@@ -217,6 +220,13 @@ class PromelaModel implements IPromelaElement {
 			b = remainder;
 		}
 		return a;
+	}
+	
+	private def clearContexts() {
+		CurrentContext.clearContext();
+		NamespaceContext.clearContext();
+		PostConstructContext.clearContext();
+		PromelaContext.clearContext();
 	}
 	
 }

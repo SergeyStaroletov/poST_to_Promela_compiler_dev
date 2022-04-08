@@ -6,17 +6,12 @@ import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IFileSystemAccess2
 import org.eclipse.xtext.generator.IGeneratorContext
 import su.nsk.iae.post.generator.promela.model.PromelaProgram
+import su.nsk.iae.post.generator.promela.model.PromelaModel
 
 class PromelaGenerator implements IPoSTGenerator {
 	
 	override setModel(Model model) {
-		System.out.println('''
-		---------
-		
-		«new PromelaProgram(model.programs.get(0)).toText()»
-		
-		---------
-		''');
+		System.out.println(new PromelaModel(model).toText());
 	}
 	
 	override beforeGenerate(

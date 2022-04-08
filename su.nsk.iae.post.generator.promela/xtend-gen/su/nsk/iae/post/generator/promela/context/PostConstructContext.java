@@ -22,4 +22,9 @@ public class PostConstructContext {
     };
     PostConstructContext.elements.forEach(_function);
   }
+  
+  public static List<PostConstructContext.IPostConstuctible> clearContext() {
+    ArrayList<PostConstructContext.IPostConstuctible> _arrayList = new ArrayList<PostConstructContext.IPostConstuctible>();
+    return PostConstructContext.elements = _arrayList;
+  }
 }

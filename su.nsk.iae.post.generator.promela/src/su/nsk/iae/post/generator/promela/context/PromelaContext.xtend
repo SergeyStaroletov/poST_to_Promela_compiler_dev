@@ -18,6 +18,10 @@ class PromelaContext {
 		return context;
 	}
 	
+	static def clearContext() {
+		context = null;
+	}
+	
 	var List<PromelaVar.TimeInterval> timeVars = new ArrayList();
 	var List<PromelaExpression.TimeConstant> timeVals = new ArrayList();
 	var List<PromelaProcess> allProcesses = new ArrayList();

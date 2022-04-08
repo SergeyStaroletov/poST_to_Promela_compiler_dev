@@ -14,6 +14,11 @@ class PostConstructContext {
 		elements.forEach[e | e.postConstruct()];
 	}
 	
+	static def clearContext() {
+		elements = new ArrayList();
+	}
+	
+	
 	interface IPostConstuctible {
 		def void postConstruct();
 	}

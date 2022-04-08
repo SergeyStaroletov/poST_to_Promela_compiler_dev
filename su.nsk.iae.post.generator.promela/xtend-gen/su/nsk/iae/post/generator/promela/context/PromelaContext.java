@@ -20,6 +20,10 @@ public class PromelaContext {
     return PromelaContext.context;
   }
   
+  public static PromelaContext clearContext() {
+    return PromelaContext.context = null;
+  }
+  
   private List<PromelaVar.TimeInterval> timeVars = new ArrayList<PromelaVar.TimeInterval>();
   
   private List<PromelaExpression.TimeConstant> timeVals = new ArrayList<PromelaExpression.TimeConstant>();

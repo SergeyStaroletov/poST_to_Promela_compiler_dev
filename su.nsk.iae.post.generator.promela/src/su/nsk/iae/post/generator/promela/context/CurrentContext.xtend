@@ -42,4 +42,10 @@ class CurrentContext {
 		return curState;
 	}
 	
+	static def clearContext() {
+		curProgram = null;
+		curProcess = null;
+		curState = null;
+	}
+	
 }
