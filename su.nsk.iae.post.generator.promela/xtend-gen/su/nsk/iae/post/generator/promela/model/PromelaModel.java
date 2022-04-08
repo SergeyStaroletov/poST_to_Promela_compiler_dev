@@ -18,7 +18,7 @@ import su.nsk.iae.post.poST.Program;
 
 @SuppressWarnings("all")
 public class PromelaModel implements IPromelaElement {
-  private final PromelaElementList<PromelaProgram> programs = new PromelaElementList<PromelaProgram>("\r\n");
+  private final PromelaElementList<PromelaProgram> programs = new PromelaElementList<PromelaProgram>("\r\n\r\n");
   
   public PromelaModel(final Model m) {
     final Consumer<Program> _function = (Program p) -> {

@@ -9,7 +9,7 @@ import su.nsk.iae.post.generator.promela.expressions.PromelaExpression.TimeConst
 import su.nsk.iae.post.generator.promela.context.NamespaceContext
 
 class PromelaModel implements IPromelaElement {
-	final PromelaElementList<PromelaProgram> programs = new PromelaElementList("\r\n");
+	final PromelaElementList<PromelaProgram> programs = new PromelaElementList("\r\n\r\n");
 	
 	new(Model m) {
 		m.programs.forEach[p | programs.add(new PromelaProgram(p))];

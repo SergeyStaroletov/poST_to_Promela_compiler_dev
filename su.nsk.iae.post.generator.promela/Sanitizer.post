@@ -78,3 +78,17 @@ PROGRAM Sanitizer
     END_PROCESS
 
 END_PROGRAM
+
+PROGRAM Test
+	
+	PROCESS Test
+		VAR
+			tmpVar : BOOL := TRUE;
+		END_VAR
+		
+		STATE Test
+			tmpVar := NOT tmpVar;
+		END_STATE
+	END_PROCESS
+	
+END_PROGRAM
