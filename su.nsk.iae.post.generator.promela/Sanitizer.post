@@ -44,6 +44,16 @@ PROGRAM Sanitizer
         END_STATE
 
     END_PROCESS
+    
+    PROCESS ControllerTest
+    	VAR CONSTANT
+            TMP_VAR : INT := 17;
+        END_VAR
+        
+    	STATE Init
+            pump := FALSE;
+        END_STATE
+    END_PROCESS
 
     PROCESS DurationControl
 

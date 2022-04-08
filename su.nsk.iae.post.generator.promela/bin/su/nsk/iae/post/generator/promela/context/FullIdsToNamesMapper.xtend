@@ -40,7 +40,7 @@ class FullIdsToNamesMapper {
 	
 	private def shortenChildrenNamespaceNames(SimplifyingNamespace namespace) {
 		val prefixToName = new HashMap<String, List<String>>();
-		val conflictingPrefixes = new ArrayList<String>();
+		var conflictingPrefixes = new ArrayList<String>();
 		for (c : namespace.children) {
 			val prefix = c.name.substring(0, 1);
 			val names = prefixToName.computeIfAbsent(prefix, [new ArrayList()]);
@@ -50,18 +50,20 @@ class FullIdsToNamesMapper {
 			}
 		}
 		while (!conflictingPrefixes.isEmpty()) {
+			val newConflictingPrefixes = new ArrayList<String>();
 			for (conflictingPrefix : conflictingPrefixes) {
 				val prefixLength = conflictingPrefix.length + 1;
 				val conflictingNames = prefixToName.remove(conflictingPrefix);
 				for (name : conflictingNames) {
-					val prefix = name.substring(0, prefixLength);
+					val prefix = name.substring(0, Math.min(prefixLength, name.length));
 					val names = prefixToName.computeIfAbsent(prefix, [new ArrayList()]);
 					names.add(name);
 					if (names.size == 2) {
-						conflictingPrefixes.add(prefix);
+						newConflictingPrefixes.add(prefix);
 					}
 				}
 			}
+			conflictingPrefixes = newConflictingPrefixes;
 		}
 		
 		val nameToPrefix = new HashMap<String, String>();

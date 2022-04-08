@@ -82,7 +82,7 @@ public class FullIdsToNamesMapper {
   
   private void shortenChildrenNamespaceNames(final FullIdsToNamesMapper.SimplifyingNamespace namespace) {
     final HashMap<String, List<String>> prefixToName = new HashMap<String, List<String>>();
-    final ArrayList<String> conflictingPrefixes = new ArrayList<String>();
+    ArrayList<String> conflictingPrefixes = new ArrayList<String>();
     for (final FullIdsToNamesMapper.SimplifyingNamespace c : namespace.children) {
       {
         final String prefix = c.name.substring(0, 1);
@@ -99,27 +99,31 @@ public class FullIdsToNamesMapper {
       }
     }
     while ((!conflictingPrefixes.isEmpty())) {
-      for (final String conflictingPrefix : conflictingPrefixes) {
-        {
-          int _length = conflictingPrefix.length();
-          final int prefixLength = (_length + 1);
-          final List<String> conflictingNames = prefixToName.remove(conflictingPrefix);
-          for (final String name : conflictingNames) {
-            {
-              final String prefix = name.substring(0, prefixLength);
-              final Function<String, List<String>> _function = (String it) -> {
-                return new ArrayList<String>();
-              };
-              final List<String> names = prefixToName.computeIfAbsent(prefix, _function);
-              names.add(name);
-              int _size = names.size();
-              boolean _equals = (_size == 2);
-              if (_equals) {
-                conflictingPrefixes.add(prefix);
+      {
+        final ArrayList<String> newConflictingPrefixes = new ArrayList<String>();
+        for (final String conflictingPrefix : conflictingPrefixes) {
+          {
+            int _length = conflictingPrefix.length();
+            final int prefixLength = (_length + 1);
+            final List<String> conflictingNames = prefixToName.remove(conflictingPrefix);
+            for (final String name : conflictingNames) {
+              {
+                final String prefix = name.substring(0, Math.min(prefixLength, name.length()));
+                final Function<String, List<String>> _function = (String it) -> {
+                  return new ArrayList<String>();
+                };
+                final List<String> names = prefixToName.computeIfAbsent(prefix, _function);
+                names.add(name);
+                int _size = names.size();
+                boolean _equals = (_size == 2);
+                if (_equals) {
+                  newConflictingPrefixes.add(prefix);
+                }
               }
             }
           }
         }
+        conflictingPrefixes = newConflictingPrefixes;
       }
     }
     final HashMap<String, String> nameToPrefix = new HashMap<String, String>();
