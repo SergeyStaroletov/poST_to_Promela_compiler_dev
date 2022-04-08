@@ -5,6 +5,7 @@ import java.util.List;
 import org.eclipse.xtend2.lib.StringConcatenation;
 import su.nsk.iae.post.generator.promela.expressions.PromelaExpression;
 import su.nsk.iae.post.generator.promela.model.PromelaProcess;
+import su.nsk.iae.post.generator.promela.model.VarSettingProgram;
 import su.nsk.iae.post.generator.promela.model.vars.PromelaVar;
 
 @SuppressWarnings("all")
@@ -25,6 +26,8 @@ public class PromelaContext {
   
   private List<PromelaProcess> allProcesses = new ArrayList<PromelaProcess>();
   
+  private VarSettingProgram varSettingProgram;
+  
   public PromelaVar.TimeInterval addTimeVar(final String name) {
     final PromelaVar.TimeInterval res = new PromelaVar.TimeInterval(name);
     this.timeVars.add(res);
@@ -39,63 +42,94 @@ public class PromelaContext {
     return this.allProcesses.add(process);
   }
   
+  public VarSettingProgram setVarSettingProgram(final VarSettingProgram varSettingProgram) {
+    return this.varSettingProgram = varSettingProgram;
+  }
+  
   public CharSequence getMetadataAndInitText() {
-    StringConcatenation _builder = new StringConcatenation();
-    _builder.append("mtype:P__ = {");
-    _builder.newLine();
+    CharSequence _xblockexpression = null;
     {
-      boolean _hasElements = false;
-      for(final PromelaProcess process : this.allProcesses) {
-        if (!_hasElements) {
-          _hasElements = true;
-        } else {
-          _builder.appendImmediate(",", "\t");
-        }
-        _builder.append("\t");
-        String _name = NamespaceContext.getName(process.getNameMType());
-        _builder.append(_name, "\t");
-        _builder.newLineIfNotEmpty();
+      String _xifexpression = null;
+      if ((this.varSettingProgram != null)) {
+        _xifexpression = this.varSettingProgram.getProcessMTypes().get(0);
+      } else {
+        _xifexpression = NamespaceContext.getName(this.allProcesses.get(0).getNameMType());
       }
-    }
-    _builder.append("}");
-    _builder.newLine();
-    _builder.append("chan ");
-    String _name_1 = NamespaceContext.getName("__currentProcess");
-    _builder.append(_name_1);
-    _builder.append(" = [1] of { mtype:P__ };");
-    _builder.newLineIfNotEmpty();
-    _builder.newLine();
-    {
-      for(final PromelaProcess process_1 : this.allProcesses) {
-        CharSequence _statesMTypeText = process_1.getStatesMTypeText();
-        _builder.append(_statesMTypeText);
-        _builder.newLineIfNotEmpty();
-        {
-          PromelaVar.TimeInterval _timeoutVar = process_1.getTimeoutVar();
-          boolean _tripleNotEquals = (_timeoutVar != null);
-          if (_tripleNotEquals) {
-            String _text = process_1.getTimeoutVar().toText();
-            _builder.append(_text);
-            _builder.newLineIfNotEmpty();
+      final String startProcessMType = _xifexpression;
+      StringConcatenation _builder = new StringConcatenation();
+      _builder.append("mtype:P__ = {");
+      _builder.newLine();
+      {
+        if ((this.varSettingProgram != null)) {
+          {
+            ArrayList<String> _processMTypes = this.varSettingProgram.getProcessMTypes();
+            for(final String varSetterProcessMType : _processMTypes) {
+              _builder.append("\t");
+              _builder.append(varSetterProcessMType, "\t");
+              _builder.append(",");
+              _builder.newLineIfNotEmpty();
+            }
           }
         }
-        _builder.newLine();
       }
+      {
+        boolean _hasElements = false;
+        for(final PromelaProcess process : this.allProcesses) {
+          if (!_hasElements) {
+            _hasElements = true;
+          } else {
+            _builder.appendImmediate(",", "\t");
+          }
+          _builder.append("\t");
+          String _name = NamespaceContext.getName(process.getNameMType());
+          _builder.append(_name, "\t");
+          _builder.newLineIfNotEmpty();
+        }
+      }
+      _builder.append("}");
+      _builder.newLine();
+      _builder.append("chan ");
+      String _name_1 = NamespaceContext.getName("__currentProcess");
+      _builder.append(_name_1);
+      _builder.append(" = [1] of { mtype:P__ };");
+      _builder.newLineIfNotEmpty();
+      _builder.newLine();
+      {
+        for(final PromelaProcess process_1 : this.allProcesses) {
+          CharSequence _statesMTypeText = process_1.getStatesMTypeText();
+          _builder.append(_statesMTypeText);
+          _builder.newLineIfNotEmpty();
+          {
+            PromelaVar.TimeInterval _timeoutVar = process_1.getTimeoutVar();
+            boolean _tripleNotEquals = (_timeoutVar != null);
+            if (_tripleNotEquals) {
+              String _text = process_1.getTimeoutVar().toText();
+              _builder.append(_text);
+              _builder.newLineIfNotEmpty();
+            }
+          }
+          _builder.newLine();
+        }
+      }
+      _builder.append("init {");
+      _builder.newLine();
+      _builder.append("\t");
+      String _name_2 = NamespaceContext.getName("__currentProcess");
+      _builder.append(_name_2, "\t");
+      _builder.append(" ! ");
+      _builder.append(startProcessMType, "\t");
+      _builder.append(";");
+      _builder.newLineIfNotEmpty();
+      _builder.append("}");
+      _builder.newLine();
+      _builder.newLine();
+      _xblockexpression = _builder;
     }
-    _builder.append("init {");
-    _builder.newLine();
-    _builder.append("\t");
-    String _name_2 = NamespaceContext.getName("__currentProcess");
-    _builder.append(_name_2, "\t");
-    _builder.append(" ! ");
-    String _name_3 = NamespaceContext.getName(this.allProcesses.get(0).getNameMType());
-    _builder.append(_name_3, "\t");
-    _builder.append(";");
-    _builder.newLineIfNotEmpty();
-    _builder.append("}");
-    _builder.newLine();
-    _builder.newLine();
-    return _builder;
+    return _xblockexpression;
+  }
+  
+  public VarSettingProgram getVarSettingProgram() {
+    return this.varSettingProgram;
   }
   
   public List<PromelaVar.TimeInterval> getTimeVars() {

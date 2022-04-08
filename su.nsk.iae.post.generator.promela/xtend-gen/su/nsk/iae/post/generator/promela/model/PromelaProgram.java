@@ -155,4 +155,16 @@ public class PromelaProgram implements IPromelaElement {
   public String getShortName() {
     return this.shortName;
   }
+  
+  public PromelaElementList<PromelaVar> getInVars() {
+    return this.inVars;
+  }
+  
+  public PromelaElementList<PromelaVar> getOutVars() {
+    return this.outVars;
+  }
+  
+  public PromelaElementList<PromelaVar> getInOutVars() {
+    return this.inOutVars;
+  }
 }

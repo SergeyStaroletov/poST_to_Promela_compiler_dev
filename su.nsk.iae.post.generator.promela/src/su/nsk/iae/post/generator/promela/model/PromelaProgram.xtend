@@ -81,4 +81,15 @@ class PromelaProgram implements IPromelaElement {
 		return shortName;
 	}
 	
+	def getInVars() {
+		return inVars;
+	}
+	
+	def getOutVars() {
+		return outVars;
+	}
+	
+	def getInOutVars() {
+		return inOutVars;
+	}
 }

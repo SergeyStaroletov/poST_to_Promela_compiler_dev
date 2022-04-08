@@ -1,7 +1,12 @@
 package su.nsk.iae.post.generator.promela.model;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.Functions.Function2;
@@ -10,6 +15,7 @@ import org.eclipse.xtext.xbase.lib.ListExtensions;
 import su.nsk.iae.post.generator.promela.context.NamespaceContext;
 import su.nsk.iae.post.generator.promela.context.PostConstructContext;
 import su.nsk.iae.post.generator.promela.context.PromelaContext;
+import su.nsk.iae.post.generator.promela.exceptions.ConflictingOutputsOrInOutsException;
 import su.nsk.iae.post.generator.promela.expressions.PromelaExpression;
 import su.nsk.iae.post.generator.promela.model.vars.PromelaVar;
 import su.nsk.iae.post.generator.promela.statements.PromelaStatement;
@@ -18,7 +24,7 @@ import su.nsk.iae.post.poST.Program;
 
 @SuppressWarnings("all")
 public class PromelaModel implements IPromelaElement {
-  private final PromelaElementList<PromelaProgram> programs = new PromelaElementList<PromelaProgram>("\r\n\r\n");
+  private final PromelaElementList<PromelaProgram> programs = new PromelaElementList<PromelaProgram>("\r\n\r\n\r\n");
   
   public PromelaModel(final Model m) {
     final Consumer<Program> _function = (Program p) -> {
@@ -29,7 +35,9 @@ public class PromelaModel implements IPromelaElement {
     NamespaceContext.addId("__currentProcess");
     this.setTimeValues();
     this.setTimeoutVars();
-    this.setNextProcesses();
+    final VarSettingProgram varSettingProgram = this.defineGremlinVarsAndOutputToInputConnections();
+    PromelaContext.getContext().setVarSettingProgram(varSettingProgram);
+    this.setNextProcesses(varSettingProgram);
     PostConstructContext.postConstruct();
     NamespaceContext.prepareNamesMapping();
   }
@@ -56,9 +64,21 @@ public class PromelaModel implements IPromelaElement {
       _builder.append(_metadataAndInitText);
       _builder.newLineIfNotEmpty();
       _builder.newLine();
+      _builder.newLine();
       String _text = this.programs.toText();
       _builder.append(_text);
       _builder.newLineIfNotEmpty();
+      {
+        VarSettingProgram _varSettingProgram = context.getVarSettingProgram();
+        boolean _tripleNotEquals = (_varSettingProgram != null);
+        if (_tripleNotEquals) {
+          _builder.newLine();
+          _builder.newLine();
+          String _text_1 = context.getVarSettingProgram().toText();
+          _builder.append(_text_1);
+          _builder.newLineIfNotEmpty();
+        }
+      }
       _xblockexpression = _builder.toString();
     }
     return _xblockexpression;
@@ -139,16 +159,113 @@ public class PromelaModel implements IPromelaElement {
     allProcesses.forEach(_function);
   }
   
-  private void setNextProcesses() {
-    final List<PromelaProcess> processes = PromelaContext.getContext().getAllProcesses();
-    int _size = processes.size();
-    int _minus = (_size - 1);
-    PromelaProcess prev = processes.get(_minus);
-    for (final PromelaProcess cur : processes) {
-      {
-        prev.setNextMType(cur.getNameMType());
-        prev = cur;
+  private String setNextProcesses(final VarSettingProgram varSettingProgram) {
+    String _xblockexpression = null;
+    {
+      final List<PromelaProcess> processes = PromelaContext.getContext().getAllProcesses();
+      int _size = processes.size();
+      int _minus = (_size - 1);
+      PromelaProcess prev = processes.get(_minus);
+      for (final PromelaProcess cur : processes) {
+        {
+          prev.setNextMType(cur.getNameMType());
+          prev = cur;
+        }
       }
+      String _xifexpression = null;
+      if ((varSettingProgram != null)) {
+        _xifexpression = varSettingProgram.setFirstProcess(processes.get(0).getNameMType());
+      }
+      _xblockexpression = _xifexpression;
+    }
+    return _xblockexpression;
+  }
+  
+  private VarSettingProgram defineGremlinVarsAndOutputToInputConnections() {
+    final ArrayList<PromelaVar> gremlinVars = new ArrayList<PromelaVar>();
+    final HashMap<String, List<String>> outputToInputVars = new HashMap<String, List<String>>();
+    final HashMap<String, List<PromelaVar>> inputs = new HashMap<String, List<PromelaVar>>();
+    final HashMap<String, PromelaVar> outputsAndInOuts = new HashMap<String, PromelaVar>();
+    for (final PromelaProgram pr : this.programs) {
+      {
+        PromelaElementList<PromelaVar> _inVars = pr.getInVars();
+        for (final PromelaVar in : _inVars) {
+          {
+            final String[] fullIdParts = in.getName().split("__");
+            int _length = fullIdParts.length;
+            int _minus = (_length - 1);
+            final String shortId = fullIdParts[_minus];
+            final Function<String, List<PromelaVar>> _function = (String it) -> {
+              return new ArrayList<PromelaVar>();
+            };
+            final List<PromelaVar> inputsOfThisId = inputs.computeIfAbsent(shortId, _function);
+            inputsOfThisId.add(in);
+          }
+        }
+        PromelaElementList<PromelaVar> _outVars = pr.getOutVars();
+        for (final PromelaVar out : _outVars) {
+          {
+            final String[] fullIdParts = out.getName().split("__");
+            int _length = fullIdParts.length;
+            int _minus = (_length - 1);
+            final String shortId = fullIdParts[_minus];
+            final PromelaVar prev = outputsAndInOuts.putIfAbsent(shortId, out);
+            if ((prev != null)) {
+              String _name = prev.getName();
+              String _name_1 = out.getName();
+              throw new ConflictingOutputsOrInOutsException(_name, _name_1);
+            }
+          }
+        }
+        PromelaElementList<PromelaVar> _inOutVars = pr.getInOutVars();
+        for (final PromelaVar inOut : _inOutVars) {
+          {
+            final String[] fullIdParts = inOut.getName().split("__");
+            int _length = fullIdParts.length;
+            int _minus = (_length - 1);
+            final String shortId = fullIdParts[_minus];
+            final PromelaVar prev = outputsAndInOuts.putIfAbsent(shortId, inOut);
+            if ((prev != null)) {
+              String _name = prev.getName();
+              String _name_1 = inOut.getName();
+              throw new ConflictingOutputsOrInOutsException(_name, _name_1);
+            }
+          }
+        }
+      }
+    }
+    Set<Map.Entry<String, List<PromelaVar>>> _entrySet = inputs.entrySet();
+    for (final Map.Entry<String, List<PromelaVar>> inShortIdAndVars : _entrySet) {
+      {
+        final String shortId = inShortIdAndVars.getKey();
+        final List<PromelaVar> ins = inShortIdAndVars.getValue();
+        final PromelaVar out = outputsAndInOuts.get(shortId);
+        if ((out == null)) {
+          final Consumer<PromelaVar> _function = (PromelaVar in) -> {
+            gremlinVars.add(in);
+          };
+          ins.forEach(_function);
+        } else {
+          final Function1<PromelaVar, String> _function_1 = (PromelaVar in) -> {
+            return in.getName();
+          };
+          outputToInputVars.put(out.getName(), ListExtensions.<PromelaVar, String>map(ins, _function_1));
+        }
+      }
+    }
+    if ((gremlinVars.isEmpty() && outputToInputVars.isEmpty())) {
+      return null;
+    } else {
+      final VarSettingProgram res = new VarSettingProgram();
+      final Consumer<PromelaVar> _function = (PromelaVar v) -> {
+        res.addGremlinVar(v);
+      };
+      gremlinVars.forEach(_function);
+      final Consumer<Map.Entry<String, List<String>>> _function_1 = (Map.Entry<String, List<String>> outToInputs) -> {
+        res.addOutputToInputAssignments(outToInputs.getKey(), outToInputs.getValue());
+      };
+      outputToInputVars.entrySet().forEach(_function_1);
+      return res;
     }
   }
   

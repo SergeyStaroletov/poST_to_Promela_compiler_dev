@@ -1,3 +1,9 @@
+CONFIGURATION testConfig
+	RESOURCE testResource ON TestCPU
+		TASK PromelaTask (INTERVAL := T#100ms);
+	END_RESOURCE
+END_CONFIGURATION
+
 PROGRAM Sanitizer
 
     VAR CONSTANT
@@ -80,6 +86,9 @@ PROGRAM Sanitizer
 END_PROGRAM
 
 PROGRAM Test
+	VAR_INPUT
+        pump : BOOL;
+    END_VAR
 	
 	PROCESS Test
 		VAR
