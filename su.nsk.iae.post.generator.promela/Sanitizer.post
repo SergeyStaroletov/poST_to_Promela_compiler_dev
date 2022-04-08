@@ -4,6 +4,48 @@ CONFIGURATION testConfig
 	END_RESOURCE
 END_CONFIGURATION
 
+PROGRAM Gremlin
+	
+	//"gremlin" vars
+	VAR_INPUT
+        activeUserInit : BOOL;
+        activeUserHands : BOOL;
+    END_VAR
+    
+    VAR
+    	activeUser : BOOL;
+    END_VAR
+
+	VAR_INPUT
+        pump : BOOL;
+    END_VAR
+    
+    VAR_OUTPUT
+        hands : BOOL;
+    END_VAR
+	
+	PROCESS User
+		STATE Init
+			activeUser := activeUserInit;
+			IF activeUser THEN
+				hands := activeUserHands;
+			ELSE
+				hands := FALSE;
+			END_IF
+			SET NEXT;
+		END_STATE
+		
+		STATE Action
+			IF activeUser THEN
+				hands := activeUserHands;
+			ELSE
+				hands := FALSE;
+			END_IF
+		END_STATE
+	END_PROCESS
+	
+END_PROGRAM
+
 PROGRAM Sanitizer
 
     VAR CONSTANT
@@ -28,18 +70,14 @@ PROGRAM Sanitizer
 
         STATE Init
             pump := OFF AND (pump XOR pump) OR (pump XOR pump);
-            TIMEOUT T#200ms then
-            	SET NEXT;
-            END_TIMEOUT
+            SET NEXT;
         END_STATE
 
         STATE Idle
             IF hands THEN
                 pump := ONN;
                 START PROCESS DurationControl;
-                TIMEOUT T#200ms then
-            		SET NEXT;
-            	END_TIMEOUT
+                SET NEXT;
             END_IF
         END_STATE
 
@@ -53,16 +91,6 @@ PROGRAM Sanitizer
             END_TIMEOUT
         END_STATE
 
-    END_PROCESS
-    
-    PROCESS TmpSanitizerProcess
-    	VAR CONSTANT
-            TMP_VAR : INT := 17;
-        END_VAR
-        
-    	STATE Init
-            pump := FALSE;
-        END_STATE
     END_PROCESS
 
     PROCESS DurationControl
@@ -87,21 +115,4 @@ PROGRAM Sanitizer
 
     END_PROCESS
 
-END_PROGRAM
-
-PROGRAM Test
-	VAR_INPUT
-        pump : BOOL;
-    END_VAR
-	
-	PROCESS Test
-		VAR
-			tmpVar : BOOL := TRUE;
-		END_VAR
-		
-		STATE Test
-			tmpVar := NOT tmpVar;
-		END_STATE
-	END_PROCESS
-	
 END_PROGRAM
