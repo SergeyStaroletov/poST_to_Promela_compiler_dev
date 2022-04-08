@@ -56,7 +56,9 @@ class PromelaExpressionsHelper {
 			}
 		}
 		else if (expr instanceof UnaryExpression) {
-			return new PromelaExpression.Not(getExpr(expr.right));
+			return "-".equals(expr.unOp.literal) ?
+				new PromelaExpression.Invert(getExpr(expr.right)) :
+				new PromelaExpression.Not(getExpr(expr.right));
 		}
 		else {
 			val left = getExpr(expr.left);

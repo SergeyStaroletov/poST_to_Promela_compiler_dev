@@ -78,8 +78,16 @@ public class PromelaExpressionsHelper {
       }
     } else {
       if ((expr instanceof UnaryExpression)) {
-        PromelaExpression _expr_1 = PromelaExpressionsHelper.getExpr(((UnaryExpression)expr).getRight());
-        return new PromelaExpression.Not(_expr_1);
+        PromelaExpression _xifexpression = null;
+        boolean _equals_2 = "-".equals(((UnaryExpression)expr).getUnOp().getLiteral());
+        if (_equals_2) {
+          PromelaExpression _expr_1 = PromelaExpressionsHelper.getExpr(((UnaryExpression)expr).getRight());
+          _xifexpression = new PromelaExpression.Invert(_expr_1);
+        } else {
+          PromelaExpression _expr_2 = PromelaExpressionsHelper.getExpr(((UnaryExpression)expr).getRight());
+          _xifexpression = new PromelaExpression.Not(_expr_2);
+        }
+        return _xifexpression;
       } else {
         final PromelaExpression left = PromelaExpressionsHelper.getExpr(expr.getLeft());
         final PromelaExpression right = PromelaExpressionsHelper.getExpr(expr.getRight());

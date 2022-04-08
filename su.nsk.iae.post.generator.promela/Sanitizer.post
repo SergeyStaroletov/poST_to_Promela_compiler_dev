@@ -64,10 +64,6 @@ PROGRAM Sanitizer
 
     PROCESS Controller
 
-        VAR CONSTANT
-            TMP_VAR : INT := 17;
-        END_VAR
-
         STATE Init
             pump := OFF AND (pump XOR pump) OR (pump XOR pump);
             SET NEXT;

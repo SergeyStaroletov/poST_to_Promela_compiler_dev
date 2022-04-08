@@ -84,7 +84,18 @@ abstract class PromelaExpression implements IPromelaElement {
 		override toText() {
 			'''!«this.internal.toText()»'''
 		}
+	}
+	
+	static class Invert extends PromelaExpression {
+		protected PromelaExpression internal;
 		
+		new (PromelaExpression internal) {
+			this.internal = internal;
+		}
+		
+		override toText() {
+			'''-«this.internal.toText()»'''
+		}
 	}
 	
 	static class Primary extends PromelaExpression {

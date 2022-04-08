@@ -108,6 +108,23 @@ public abstract class PromelaExpression implements IPromelaElement {
     }
   }
   
+  public static class Invert extends PromelaExpression {
+    protected PromelaExpression internal;
+    
+    public Invert(final PromelaExpression internal) {
+      this.internal = internal;
+    }
+    
+    @Override
+    public String toText() {
+      StringConcatenation _builder = new StringConcatenation();
+      _builder.append("-");
+      String _text = this.internal.toText();
+      _builder.append(_text);
+      return _builder.toString();
+    }
+  }
+  
   public static class Primary extends PromelaExpression {
     protected PromelaExpression internal;
     
