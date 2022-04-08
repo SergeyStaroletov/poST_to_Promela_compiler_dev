@@ -8,6 +8,7 @@ import java.util.List
 import java.util.ArrayList
 import java.util.AbstractMap
 import java.util.LinkedList
+import su.nsk.iae.post.generator.promela.context.NamespaceContext.FullIdParts
 
 class FullIdsToNamesMapper {
 	Map<String, String> fullIdsToNames = new HashMap();
@@ -15,7 +16,8 @@ class FullIdsToNamesMapper {
 	
 	def processNamespace(Namespace namespace) {
 		copyToSimplifyingNamespace(namespace, rootNamespace);
-//		moveFromChildrenNamespaces(rootNamespace);
+		shortenChildrenNamespaceNames(rootNamespace);
+		fillNames(rootNamespace, rootNamespace.name);
 		return;
 	}
 	
@@ -32,55 +34,72 @@ class FullIdsToNamesMapper {
 			simplifyingNamespace.addChildNamespace(ns.name)
 		)];
 		namespace.fullIdParts.forEach[id, fullIdParts |
-			val fullId = fullIdParts.fullId;
-			simplifyingNamespace.addFullId(fullId);
-			fullIdsToNames.put(fullId, fullId);
+			simplifyingNamespace.addFullId(fullIdParts);
 		];
 	}
 	
-	private def moveFromChildrenNamespaces(SimplifyingNamespace namespace) {
-		namespace.children.forEach[ns | moveFromChildrenNamespaces(ns)];
-		
-		//newId -> List<Entry<ns, oldId>>
-		val idsNamespaces = new HashMap<String, List<Map.Entry<SimplifyingNamespace, String>>>();
-		namespace.fullIds.forEach[id | {
-			idsNamespaces
-				.computeIfAbsent(id, [new ArrayList()])
-				.add(new AbstractMap.SimpleEntry(namespace, id));
-		}];
-		namespace.children.forEach[ns | ns.fullIds.forEach[fullId |
-			idsNamespaces
-				.computeIfAbsent(deleteLastNamespacePart(fullId/*, ns.name*/), [new ArrayList()])
-				.add(new AbstractMap.SimpleEntry(ns, fullId));
-		]];
-		
-		idsNamespaces.forEach[id, listNsAndFullId | 
-			if (listNsAndFullId.size == 1 || listNsAndFullId.get(0).key != namespace) {
-				val ns = listNsAndFullId.get(0).key;
-				val fullId = listNsAndFullId.get(0).value;
-				ns.fullIds.remove(fullId);
-				namespace.fullIds.add(id);
+	private def shortenChildrenNamespaceNames(SimplifyingNamespace namespace) {
+		val prefixToName = new HashMap<String, List<String>>();
+		val conflictingPrefixes = new ArrayList<String>();
+		for (c : namespace.children) {
+			val prefix = c.name.substring(0, 1);
+			val names = prefixToName.computeIfAbsent(prefix, [new ArrayList()]);
+			names.add(c.name);
+			if (names.size == 2) {
+				conflictingPrefixes.add(prefix);
 			}
-		];
+		}
+		while (!conflictingPrefixes.isEmpty()) {
+			for (conflictingPrefix : conflictingPrefixes) {
+				val prefixLength = conflictingPrefix.length + 1;
+				val conflictingNames = prefixToName.remove(conflictingPrefix);
+				for (name : conflictingNames) {
+					val prefix = name.substring(0, prefixLength);
+					val names = prefixToName.computeIfAbsent(prefix, [new ArrayList()]);
+					names.add(name);
+					if (names.size == 2) {
+						conflictingPrefixes.add(prefix);
+					}
+				}
+			}
+		}
+		
+		val nameToPrefix = new HashMap<String, String>();
+		for (entry : prefixToName.entrySet) {
+			val prefix = entry.key;
+			val name = entry.value.get(0);
+			nameToPrefix.put(name, prefix);
+		}
+		for (c : namespace.children) {
+			c.setName(nameToPrefix.get(c.name));
+		}
+		
+		namespace.children.forEach[shortenChildrenNamespaceNames];
 	}
 	
-	private def deleteLastNamespacePart(String fullId/*, String namespaceName*/) {
-		val fullIdParts = new ArrayList(fullId.split("__").toList());
-//		val newIdParts = fullIdParts.subList(0, fullIdParts.length - 2);
-//		newIdParts.add(fullIdParts.get(fullIdParts.length - 1));
-//		return String.join("__", newIdParts);
-		return fullIdParts
-					.remove(fullIdParts.length - 2/*fullIdParts.lastIndexOf(namespaceName)*/)
-					.join("__");
+	private def fillNames(SimplifyingNamespace namespace, String prevNsPart) {
+		val nsPart = (prevNsPart !== null ? prevNsPart + "__" : "") +
+						(namespace.name !== null ? namespace.name : "");
+		for (fullIdParts : namespace.fullIds) {
+			val prefixPart = fullIdParts.prefix !== null ? fullIdParts.prefix + "___" : "";
+			val idPart = "__" + fullIdParts.id;
+			fullIdsToNames.put(fullIdParts.fullId, prefixPart + nsPart + idPart);
+		}
+		
+		namespace.children.forEach[c | fillNames(c, prevNsPart)];
 	}
 	
 	
 	private static class SimplifyingNamespace {
 		String name;//short name
 		List<SimplifyingNamespace> children = new ArrayList();
-		List<String> fullIds = new LinkedList();
+		List<FullIdParts> fullIds = new LinkedList();
 		
 		new (String name) {
+			this.name = name;
+		}
+		
+		def setName(String name) {
 			this.name = name;
 		}
 		
@@ -90,7 +109,7 @@ class FullIdsToNamesMapper {
 			return child;
 		}
 		
-		def addFullId(String fullId) {
+		def addFullId(FullIdParts fullId) {
 			fullIds.add(fullId);
 		}
 	}
