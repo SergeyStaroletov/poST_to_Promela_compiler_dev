@@ -45,6 +45,8 @@ public abstract class PromelaVar implements IPromelaElement {
   public static class TimeInterval extends PromelaVar {
     private String originalValue;
     
+    private String valueAfterInterval;
+    
     private boolean bitsSet = false;
     
     public TimeInterval(final String name) {
@@ -53,6 +55,63 @@ public abstract class PromelaVar implements IPromelaElement {
     
     public String setOriginalValue(final String originalValue) {
       return this.originalValue = originalValue;
+    }
+    
+    public String setValueAfterInterval(final long interval) {
+      String _xblockexpression = null;
+      {
+        long _value = new PromelaExpression.TimeConstant(this.originalValue).getValue();
+        long _divide = (_value / interval);
+        long ms = (_divide * interval);
+        long s = (ms / 1000);
+        long _ms = ms;
+        ms = (_ms % 1000);
+        long m = (s / 60);
+        long _s = s;
+        s = (_s % 60);
+        long h = (m / 60);
+        long _m = m;
+        m = (_m % 60);
+        long d = (h / 24);
+        long _h = h;
+        h = (_h % 24);
+        String _xifexpression = null;
+        if ((d > 0)) {
+          _xifexpression = (Long.valueOf(d) + "d");
+        } else {
+          _xifexpression = "";
+        }
+        String _xifexpression_1 = null;
+        if ((h > 0)) {
+          _xifexpression_1 = (Long.valueOf(h) + "h");
+        } else {
+          _xifexpression_1 = "";
+        }
+        String _plus = (_xifexpression + _xifexpression_1);
+        String _xifexpression_2 = null;
+        if ((m > 0)) {
+          _xifexpression_2 = (Long.valueOf(m) + "m");
+        } else {
+          _xifexpression_2 = "";
+        }
+        String _plus_1 = (_plus + _xifexpression_2);
+        String _xifexpression_3 = null;
+        if ((s > 0)) {
+          _xifexpression_3 = (Long.valueOf(s) + "s");
+        } else {
+          _xifexpression_3 = "";
+        }
+        String _plus_2 = (_plus_1 + _xifexpression_3);
+        String _xifexpression_4 = null;
+        if ((ms > 0)) {
+          _xifexpression_4 = (Long.valueOf(ms) + "ms");
+        } else {
+          _xifexpression_4 = "";
+        }
+        String _plus_3 = (_plus_2 + _xifexpression_4);
+        _xblockexpression = this.valueAfterInterval = _plus_3;
+      }
+      return _xblockexpression;
     }
     
     public String setBits(final int bits) {
@@ -73,16 +132,26 @@ public abstract class PromelaVar implements IPromelaElement {
         }
         StringConcatenation _builder = new StringConcatenation();
         {
-          if ((this.originalValue != null)) {
+          if ((((this.valueAfterInterval != null) && (this.originalValue != null)) && (!this.valueAfterInterval.equals(this.originalValue)))) {
             String _trim = super.toText().trim();
             _builder.append(_trim);
             _builder.append(" //");
             _builder.append(this.originalValue);
+            _builder.append(" -> ");
+            _builder.append(this.valueAfterInterval);
             _builder.newLineIfNotEmpty();
           } else {
-            String _text = super.toText();
-            _builder.append(_text);
-            _builder.newLineIfNotEmpty();
+            if ((this.originalValue != null)) {
+              String _trim_1 = super.toText().trim();
+              _builder.append(_trim_1);
+              _builder.append(" //");
+              _builder.append(this.originalValue);
+              _builder.newLineIfNotEmpty();
+            } else {
+              String _text = super.toText();
+              _builder.append(_text);
+              _builder.newLineIfNotEmpty();
+            }
           }
         }
         _xblockexpression = _builder.toString();

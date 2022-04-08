@@ -11,15 +11,19 @@ import java.util.List
 import java.util.ArrayList
 import java.util.HashMap
 import su.nsk.iae.post.generator.promela.exceptions.ConflictingOutputsOrInOutsException
+import su.nsk.iae.post.poST.Configuration
 
 class PromelaModel implements IPromelaElement {
+	static val promelaVerificationTaskName = "PromelaVerificationTask";
+	
 	final PromelaElementList<PromelaProgram> programs = new PromelaElementList("\r\n\r\n\r\n");
 	
 	new(Model m) {
 		m.programs.forEach[p | programs.add(new PromelaProgram(p))];
 		NamespaceContext.addId("__currentProcess");
 		
-		setTimeValues();
+		val interval = getIntervalOfPromelaVerificationTask(m.conf);
+		setTimeValues(interval);
 		setTimeoutVars();
 		val varSettingProgram = defineGremlinVarsAndOutputToInputConnections();
 		PromelaContext.getContext().setVarSettingProgram(varSettingProgram);
@@ -51,7 +55,25 @@ class PromelaModel implements IPromelaElement {
 		''';
 	}
 	
-	private def long setTimeValues() {
+	private def getIntervalOfPromelaVerificationTask(Configuration config) {
+		if (config !== null) {
+			for (res : config.resources) {
+				for (task : res.resStatement.tasks) {
+					if (promelaVerificationTaskName.equals(task.name)) {
+						if (task.init.interval !== null) {
+							return new PromelaExpression.TimeConstant(task.init.interval.time.interval).value;
+						}
+						else {
+							throw new NotSupportedElementException();
+						}
+					}
+				}
+			}
+		}
+		return 1l;
+	}
+	
+	private def long setTimeValues(long interval) {
 		val timeVals = PromelaContext.getContext().getTimeVals();
 		if (timeVals.isEmpty()) {
 			val timeVars = PromelaContext.getContext().getTimeVars();
@@ -59,6 +81,12 @@ class PromelaModel implements IPromelaElement {
 			return 0;
 		}
 		else {
+			for (tVar : PromelaContext.getContext().getTimeVars()) {
+				tVar.setValueAfterInterval(interval);
+			}
+			for (tv : timeVals) {
+				tv.setValue(tv.value / interval);
+			}
 			var divider = timeVals.get(0).value;
 			for (tv : timeVals) {
 				divider = gcd(divider, tv.value);

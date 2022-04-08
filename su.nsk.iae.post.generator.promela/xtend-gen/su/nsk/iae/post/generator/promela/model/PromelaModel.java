@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.Functions.Function2;
@@ -19,11 +20,17 @@ import su.nsk.iae.post.generator.promela.exceptions.ConflictingOutputsOrInOutsEx
 import su.nsk.iae.post.generator.promela.expressions.PromelaExpression;
 import su.nsk.iae.post.generator.promela.model.vars.PromelaVar;
 import su.nsk.iae.post.generator.promela.statements.PromelaStatement;
+import su.nsk.iae.post.poST.Configuration;
+import su.nsk.iae.post.poST.Constant;
 import su.nsk.iae.post.poST.Model;
 import su.nsk.iae.post.poST.Program;
+import su.nsk.iae.post.poST.Resource;
+import su.nsk.iae.post.poST.Task;
 
 @SuppressWarnings("all")
 public class PromelaModel implements IPromelaElement {
+  private static final String promelaVerificationTaskName = "PromelaVerificationTask";
+  
   private final PromelaElementList<PromelaProgram> programs = new PromelaElementList<PromelaProgram>("\r\n\r\n\r\n");
   
   public PromelaModel(final Model m) {
@@ -33,7 +40,8 @@ public class PromelaModel implements IPromelaElement {
     };
     m.getPrograms().forEach(_function);
     NamespaceContext.addId("__currentProcess");
-    this.setTimeValues();
+    final long interval = this.getIntervalOfPromelaVerificationTask(m.getConf());
+    this.setTimeValues(interval);
     this.setTimeoutVars();
     final VarSettingProgram varSettingProgram = this.defineGremlinVarsAndOutputToInputConnections();
     PromelaContext.getContext().setVarSettingProgram(varSettingProgram);
@@ -84,7 +92,30 @@ public class PromelaModel implements IPromelaElement {
     return _xblockexpression;
   }
   
-  private long setTimeValues() {
+  private long getIntervalOfPromelaVerificationTask(final Configuration config) {
+    if ((config != null)) {
+      EList<Resource> _resources = config.getResources();
+      for (final Resource res : _resources) {
+        EList<Task> _tasks = res.getResStatement().getTasks();
+        for (final Task task : _tasks) {
+          boolean _equals = PromelaModel.promelaVerificationTaskName.equals(task.getName());
+          if (_equals) {
+            Constant _interval = task.getInit().getInterval();
+            boolean _tripleNotEquals = (_interval != null);
+            if (_tripleNotEquals) {
+              String _interval_1 = task.getInit().getInterval().getTime().getInterval();
+              return new PromelaExpression.TimeConstant(_interval_1).getValue();
+            } else {
+              throw new NotSupportedElementException();
+            }
+          }
+        }
+      }
+    }
+    return 1l;
+  }
+  
+  private long setTimeValues(final long interval) {
     final List<PromelaExpression.TimeConstant> timeVals = PromelaContext.getContext().getTimeVals();
     boolean _isEmpty = timeVals.isEmpty();
     if (_isEmpty) {
@@ -95,14 +126,23 @@ public class PromelaModel implements IPromelaElement {
       timeVars.forEach(_function);
       return 0;
     } else {
-      long divider = timeVals.get(0).getValue();
-      for (final PromelaExpression.TimeConstant tv : timeVals) {
-        divider = this.gcd(divider, tv.getValue());
+      List<PromelaVar.TimeInterval> _timeVars = PromelaContext.getContext().getTimeVars();
+      for (final PromelaVar.TimeInterval tVar : _timeVars) {
+        tVar.setValueAfterInterval(interval);
       }
+      for (final PromelaExpression.TimeConstant tv : timeVals) {
+        long _value = tv.getValue();
+        long _divide = (_value / interval);
+        tv.setValue(_divide);
+      }
+      long divider = timeVals.get(0).getValue();
       for (final PromelaExpression.TimeConstant tv_1 : timeVals) {
-        long _value = tv_1.getValue();
-        long _divide = (_value / divider);
-        tv_1.setValue(_divide);
+        divider = this.gcd(divider, tv_1.getValue());
+      }
+      for (final PromelaExpression.TimeConstant tv_2 : timeVals) {
+        long _value_1 = tv_2.getValue();
+        long _divide_1 = (_value_1 / divider);
+        tv_2.setValue(_divide_1);
       }
       return divider;
     }

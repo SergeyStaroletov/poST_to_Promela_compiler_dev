@@ -111,6 +111,7 @@ abstract class PromelaVar implements IPromelaElement {
 	
 	static class TimeInterval extends PromelaVar {
 		String originalValue;
+		String valueAfterInterval;
 		boolean bitsSet = false;
 		
 		new(String name) {
@@ -119,6 +120,24 @@ abstract class PromelaVar implements IPromelaElement {
 		
 		def setOriginalValue(String originalValue) {
 			this.originalValue = originalValue;
+		}
+		
+		def setValueAfterInterval(long interval) {
+			var ms = new PromelaExpression.TimeConstant(originalValue).value / interval * interval;
+			var s = ms / 1000;
+			ms %= 1000;
+			var m = s / 60;
+			s %= 60;
+			var h = m / 60;
+			m %= 60;
+			var d = h / 24;
+			h %= 24;
+			this.valueAfterInterval =
+						(d > 0 ? d + "d" : "") +
+						(h > 0 ? h + "h" : "") +
+						(m > 0 ? m + "m" : "") +
+						(s > 0 ? s + "s" : "") +
+						(ms > 0 ? ms + "ms" : "");
 		}
 		
 		def setBits(int bits) {
@@ -131,7 +150,9 @@ abstract class PromelaVar implements IPromelaElement {
 				throw new WrongModelStateException();
 			}
 			'''
-				«IF originalValue !== null»
+				«IF valueAfterInterval !== null && originalValue !== null && !valueAfterInterval.equals(originalValue)»
+					«super.toText.trim» //«originalValue» -> «valueAfterInterval»
+				«ELSEIF originalValue !== null»
 					«super.toText.trim» //«originalValue»
 				«ELSE»
 					«super.toText»

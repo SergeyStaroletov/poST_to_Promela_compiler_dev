@@ -1,6 +1,6 @@
 CONFIGURATION testConfig
 	RESOURCE testResource ON TestCPU
-		TASK PromelaTask (INTERVAL := T#100ms);
+		TASK PromelaVerificationTask (INTERVAL := T#100ms);
 	END_RESOURCE
 END_CONFIGURATION
 
