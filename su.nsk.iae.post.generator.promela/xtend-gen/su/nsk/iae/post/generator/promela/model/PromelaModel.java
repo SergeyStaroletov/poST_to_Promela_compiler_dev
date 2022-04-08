@@ -174,7 +174,15 @@ public class PromelaModel implements IPromelaElement {
       }
       String _xifexpression = null;
       if ((varSettingProgram != null)) {
-        _xifexpression = varSettingProgram.setFirstProcess(processes.get(0).getNameMType());
+        String _xblockexpression_1 = null;
+        {
+          varSettingProgram.setFirstProcess(processes.get(0).getNameMType());
+          int _size_1 = processes.size();
+          int _minus_1 = (_size_1 - 1);
+          PromelaProcess _get = processes.get(_minus_1);
+          _xblockexpression_1 = _get.setNextMType(varSettingProgram.getProcessMTypes().get(0));
+        }
+        _xifexpression = _xblockexpression_1;
       }
       _xblockexpression = _xifexpression;
     }

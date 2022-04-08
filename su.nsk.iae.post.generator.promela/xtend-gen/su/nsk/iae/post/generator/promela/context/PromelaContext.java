@@ -53,7 +53,7 @@ public class PromelaContext {
       if ((this.varSettingProgram != null)) {
         _xifexpression = this.varSettingProgram.getProcessMTypes().get(0);
       } else {
-        _xifexpression = NamespaceContext.getName(this.allProcesses.get(0).getNameMType());
+        _xifexpression = this.allProcesses.get(0).getNameMType();
       }
       final String startProcessMType = _xifexpression;
       StringConcatenation _builder = new StringConcatenation();
@@ -65,7 +65,8 @@ public class PromelaContext {
             ArrayList<String> _processMTypes = this.varSettingProgram.getProcessMTypes();
             for(final String varSetterProcessMType : _processMTypes) {
               _builder.append("\t");
-              _builder.append(varSetterProcessMType, "\t");
+              String _name = NamespaceContext.getName(varSetterProcessMType);
+              _builder.append(_name, "\t");
               _builder.append(",");
               _builder.newLineIfNotEmpty();
             }
@@ -81,16 +82,16 @@ public class PromelaContext {
             _builder.appendImmediate(",", "\t");
           }
           _builder.append("\t");
-          String _name = NamespaceContext.getName(process.getNameMType());
-          _builder.append(_name, "\t");
+          String _name_1 = NamespaceContext.getName(process.getNameMType());
+          _builder.append(_name_1, "\t");
           _builder.newLineIfNotEmpty();
         }
       }
       _builder.append("}");
       _builder.newLine();
       _builder.append("chan ");
-      String _name_1 = NamespaceContext.getName("__currentProcess");
-      _builder.append(_name_1);
+      String _name_2 = NamespaceContext.getName("__currentProcess");
+      _builder.append(_name_2);
       _builder.append(" = [1] of { mtype:P__ };");
       _builder.newLineIfNotEmpty();
       _builder.newLine();
@@ -114,10 +115,11 @@ public class PromelaContext {
       _builder.append("init {");
       _builder.newLine();
       _builder.append("\t");
-      String _name_2 = NamespaceContext.getName("__currentProcess");
-      _builder.append(_name_2, "\t");
+      String _name_3 = NamespaceContext.getName("__currentProcess");
+      _builder.append(_name_3, "\t");
       _builder.append(" ! ");
-      _builder.append(startProcessMType, "\t");
+      String _name_4 = NamespaceContext.getName(startProcessMType);
+      _builder.append(_name_4, "\t");
       _builder.append(";");
       _builder.newLineIfNotEmpty();
       _builder.append("}");

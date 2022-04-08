@@ -96,13 +96,12 @@ class FullIdsToNamesMapper {
 						(namespace.name !== null ? namespace.name : "");
 		for (fullIdParts : namespace.fullIds) {
 			val prefix = translatePrefix(fullIdParts.prefix);
-			val prefixPart = prefix !== null ? prefix + separator + "_" : "";
+			val prefixPart = prefix !== null ?
+								prefix + (!nsPart.isEmpty() ? separator + "_" : "")
+								: "";
 			val prefixAndNsPart = prefixPart + nsPart;
 			val id = fullIdParts.id;
 			val idPart = (prefixAndNsPart.isEmpty() ? "" : separator + "_") + id;
-			if (id.equals("Sanitizer")){
-				val idsdg = "Sanitizer";
-			}
 			fullIdsToNames.put(fullIdParts.fullId, prefixAndNsPart + idPart);
 		}
 		
@@ -111,8 +110,9 @@ class FullIdsToNamesMapper {
 	
 	private def String translatePrefix(String prefix) {
 		switch (prefix) {
-			case "curS": return "cS"
+			case "curS": return "cs"
 			case "timeout": return "t"
+			case "sP": return "sp"
 			default: return prefix
 		}
 	}

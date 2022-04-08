@@ -177,25 +177,29 @@ public class FullIdsToNamesMapper {
         final String prefix = this.translatePrefix(fullIdParts.getPrefix());
         String _xifexpression_2 = null;
         if ((prefix != null)) {
-          _xifexpression_2 = ((prefix + separator) + "_");
+          String _xifexpression_3 = null;
+          boolean _isEmpty = nsPart.isEmpty();
+          boolean _not = (!_isEmpty);
+          if (_not) {
+            _xifexpression_3 = (separator + "_");
+          } else {
+            _xifexpression_3 = "";
+          }
+          _xifexpression_2 = (prefix + _xifexpression_3);
         } else {
           _xifexpression_2 = "";
         }
         final String prefixPart = _xifexpression_2;
         final String prefixAndNsPart = (prefixPart + nsPart);
         final String id = fullIdParts.getId();
-        String _xifexpression_3 = null;
-        boolean _isEmpty = prefixAndNsPart.isEmpty();
-        if (_isEmpty) {
-          _xifexpression_3 = "";
+        String _xifexpression_4 = null;
+        boolean _isEmpty_1 = prefixAndNsPart.isEmpty();
+        if (_isEmpty_1) {
+          _xifexpression_4 = "";
         } else {
-          _xifexpression_3 = (separator + "_");
+          _xifexpression_4 = (separator + "_");
         }
-        final String idPart = (_xifexpression_3 + id);
-        boolean _equals = id.equals("Sanitizer");
-        if (_equals) {
-          final String idsdg = "Sanitizer";
-        }
+        final String idPart = (_xifexpression_4 + id);
         this.fullIdsToNames.put(fullIdParts.getFullId(), (prefixAndNsPart + idPart));
       }
     }
@@ -209,9 +213,11 @@ public class FullIdsToNamesMapper {
     if (prefix != null) {
       switch (prefix) {
         case "curS":
-          return "cS";
+          return "cs";
         case "timeout":
           return "t";
+        case "sP":
+          return "sp";
         default:
           return prefix;
       }

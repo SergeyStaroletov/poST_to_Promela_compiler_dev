@@ -44,12 +44,12 @@ class PromelaContext {
 	def getMetadataAndInitText() {
 		val startProcessMType = varSettingProgram !== null ?
 									varSettingProgram.processMTypes.get(0)
-									: NamespaceContext.getName(allProcesses.get(0).nameMType);
+									: allProcesses.get(0).nameMType;
 		'''			
 			mtype:P__ = {
 				«IF varSettingProgram !== null»
 					«FOR varSetterProcessMType : varSettingProgram.processMTypes»
-						«varSetterProcessMType»,
+						«NamespaceContext.getName(varSetterProcessMType)»,
 					«ENDFOR»
 				«ENDIF»
 				«FOR process : allProcesses SEPARATOR ','»
@@ -66,7 +66,7 @@ class PromelaContext {
 				
 			«ENDFOR»
 			init {
-				«NamespaceContext.getName("__currentProcess")» ! «startProcessMType»;
+				«NamespaceContext.getName("__currentProcess")» ! «NamespaceContext.getName(startProcessMType)»;
 			}
 			
 		'''

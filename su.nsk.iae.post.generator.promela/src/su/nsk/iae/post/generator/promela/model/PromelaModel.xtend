@@ -121,7 +121,7 @@ class PromelaModel implements IPromelaElement {
 		}
 		if (varSettingProgram !== null) {
 			varSettingProgram.setFirstProcess(processes.get(0).nameMType);
-//			processes.get(processes.size - 1).nextMType = varSettingProgram.processMTypes.get(0);
+			processes.get(processes.size - 1).nextMType = varSettingProgram.processMTypes.get(0);
 		}
 	}
 	
