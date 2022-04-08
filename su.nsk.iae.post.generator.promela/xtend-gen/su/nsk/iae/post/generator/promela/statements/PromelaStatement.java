@@ -597,28 +597,30 @@ public abstract class PromelaStatement implements IPromelaElement, PostConstruct
     public String toText() {
       String _xblockexpression = null;
       {
-        final String timeoutVarName = this.timeoutVar.getName();
+        final String timeoutVarName = NamespaceContext.getName(this.timeoutVar.getName());
         StringConcatenation _builder = new StringConcatenation();
         _builder.append("if :: ");
-        String _name = NamespaceContext.getName(timeoutVarName);
-        _builder.append(_name);
-        _builder.append(" >= ");
+        _builder.append(timeoutVarName);
+        _builder.append(" == ");
         String _text = this.timeoutValue.toText();
         _builder.append(_text);
         _builder.append(" -> {");
         _builder.newLineIfNotEmpty();
         _builder.append("\t");
+        _builder.append(timeoutVarName, "\t");
+        _builder.append(" = ");
+        _builder.append(timeoutVarName, "\t");
+        _builder.append(" + 1;");
+        _builder.newLineIfNotEmpty();
+        _builder.append("\t");
         String _text_1 = this.timeoutStatements.toText();
         _builder.append(_text_1, "\t");
         _builder.newLineIfNotEmpty();
-        _builder.append("} :: else -> skip; fi;");
-        _builder.newLine();
-        String _name_1 = NamespaceContext.getName(timeoutVarName);
-        _builder.append(_name_1);
+        _builder.append("} :: else -> ");
+        _builder.append(timeoutVarName);
         _builder.append(" = ");
-        String _name_2 = NamespaceContext.getName(timeoutVarName);
-        _builder.append(_name_2);
-        _builder.append(" + 1;");
+        _builder.append(timeoutVarName);
+        _builder.append(" + 1; fi;");
         _builder.newLineIfNotEmpty();
         _xblockexpression = _builder.toString();
       }

@@ -37,7 +37,9 @@ PROGRAM Sanitizer
             IF hands THEN
                 pump := ONN;
                 START PROCESS DurationControl;
-                SET NEXT;
+                TIMEOUT T#200ms then
+            		SET NEXT;
+            	END_TIMEOUT
             END_IF
         END_STATE
 
