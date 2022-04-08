@@ -143,14 +143,17 @@ abstract class PromelaStatement implements IPromelaElement, IPostConstuctible {
 	
 	static class StartProcess extends PromelaStatement {
 		String curProgramName;
+		String curProcessName;
 		String processShortName;
 		
 		String processStateMTypeVar;
 		String processFirstStateMTypeName;
 		String timeoutVarName;
+		boolean startsInNextCycle;
 		
 		new (StartProcessStatement s) {
 			this.curProgramName = CurrentContext.curProgram.shortName;
+			this.curProcessName = CurrentContext.curProcess.shortName;
 			this.processShortName = s.process.name;
 		}
 		
@@ -164,12 +167,20 @@ abstract class PromelaStatement implements IPromelaElement, IPostConstuctible {
 			val state = process.states.get(0);
 			this.processFirstStateMTypeName = state.stateMType;
 			this.timeoutVarName = state.timeout !== null ? process.timeoutVar.name : null;
+			val firstDefinedProcessShortName = PromelaContext.getContext().allProcesses
+				.filter[p | p.programName.equals(curProgramName)]
+				.map[p | p.shortName]
+				.findFirst[name | name.equals(curProcessName) || name.equals(processShortName)];
+			if (firstDefinedProcessShortName === null) {
+				throw new WrongModelStateException();
+			}
+			this.startsInNextCycle = firstDefinedProcessShortName.equals(processShortName);
 		}
 		
 		override toText() {
 			'''
 				«IF timeoutVarName !== null»
-					«NamespaceContext.getName(timeoutVarName)» = 1;
+					«NamespaceContext.getName(timeoutVarName)» = «startsInNextCycle ? 1 : 0»;
 				«ENDIF»
 				«NamespaceContext.getName(processStateMTypeVar)» = «NamespaceContext.getName(processFirstStateMTypeName)»;
 			'''
@@ -278,7 +289,7 @@ abstract class PromelaStatement implements IPromelaElement, IPostConstuctible {
 		override toText() {
 			'''
 				«IF timeoutVarName !== null»
-					«NamespaceContext.getName(timeoutVarName)» = 1;
+					«NamespaceContext.getName(timeoutVarName)» = 0;
 				«ENDIF»
 			'''
 		}

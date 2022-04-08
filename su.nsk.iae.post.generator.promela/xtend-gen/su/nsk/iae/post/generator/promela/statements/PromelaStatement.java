@@ -282,6 +282,8 @@ public abstract class PromelaStatement implements IPromelaElement, PostConstruct
   public static class StartProcess extends PromelaStatement {
     private String curProgramName;
     
+    private String curProcessName;
+    
     private String processShortName;
     
     private String processStateMTypeVar;
@@ -290,8 +292,11 @@ public abstract class PromelaStatement implements IPromelaElement, PostConstruct
     
     private String timeoutVarName;
     
+    private boolean startsInNextCycle;
+    
     public StartProcess(final StartProcessStatement s) {
       this.curProgramName = CurrentContext.getCurProgram().getShortName();
+      this.curProcessName = CurrentContext.getCurProcess().getShortName();
       this.processShortName = s.getProcess().getName();
     }
     
@@ -316,6 +321,20 @@ public abstract class PromelaStatement implements IPromelaElement, PostConstruct
         _xifexpression = null;
       }
       this.timeoutVarName = _xifexpression;
+      final Function1<PromelaProcess, Boolean> _function_1 = (PromelaProcess p) -> {
+        return Boolean.valueOf(p.getProgramName().equals(this.curProgramName));
+      };
+      final Function1<PromelaProcess, String> _function_2 = (PromelaProcess p) -> {
+        return p.getShortName();
+      };
+      final Function1<String, Boolean> _function_3 = (String name) -> {
+        return Boolean.valueOf((name.equals(this.curProcessName) || name.equals(this.processShortName)));
+      };
+      final String firstDefinedProcessShortName = IterableExtensions.<String>findFirst(IterableExtensions.<PromelaProcess, String>map(IterableExtensions.<PromelaProcess>filter(PromelaContext.getContext().getAllProcesses(), _function_1), _function_2), _function_3);
+      if ((firstDefinedProcessShortName == null)) {
+        throw new WrongModelStateException();
+      }
+      this.startsInNextCycle = firstDefinedProcessShortName.equals(this.processShortName);
     }
     
     @Override
@@ -325,7 +344,15 @@ public abstract class PromelaStatement implements IPromelaElement, PostConstruct
         if ((this.timeoutVarName != null)) {
           String _name = NamespaceContext.getName(this.timeoutVarName);
           _builder.append(_name);
-          _builder.append(" = 1;");
+          _builder.append(" = ");
+          int _xifexpression = (int) 0;
+          if (this.startsInNextCycle) {
+            _xifexpression = 1;
+          } else {
+            _xifexpression = 0;
+          }
+          _builder.append(_xifexpression);
+          _builder.append(";");
           _builder.newLineIfNotEmpty();
         }
       }
@@ -526,7 +553,7 @@ public abstract class PromelaStatement implements IPromelaElement, PostConstruct
         if ((this.timeoutVarName != null)) {
           String _name = NamespaceContext.getName(this.timeoutVarName);
           _builder.append(_name);
-          _builder.append(" = 1;");
+          _builder.append(" = 0;");
           _builder.newLineIfNotEmpty();
         }
       }

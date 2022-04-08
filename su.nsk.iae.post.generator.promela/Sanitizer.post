@@ -28,7 +28,9 @@ PROGRAM Sanitizer
 
         STATE Init
             pump := OFF AND (pump XOR pump) OR (pump XOR pump);
-            SET NEXT;
+            TIMEOUT T#200ms then
+            	SET NEXT;
+            END_TIMEOUT
         END_STATE
 
         STATE Idle
@@ -51,7 +53,7 @@ PROGRAM Sanitizer
 
     END_PROCESS
     
-    PROCESS ControllerTest
+    PROCESS TmpSanitizerProcess
     	VAR CONSTANT
             TMP_VAR : INT := 17;
         END_VAR
