@@ -6,7 +6,6 @@ import su.nsk.iae.post.generator.promela.model.WrongModelStateException
 import su.nsk.iae.post.generator.promela.context.NamespaceContext.Namespace
 import java.util.List
 import java.util.ArrayList
-import java.util.AbstractMap
 import java.util.LinkedList
 import su.nsk.iae.post.generator.promela.context.NamespaceContext.FullIdParts
 
@@ -17,7 +16,8 @@ class FullIdsToNamesMapper {
 	def processNamespace(Namespace namespace) {
 		copyToSimplifyingNamespace(namespace, rootNamespace);
 		shortenChildrenNamespaceNames(rootNamespace);
-		fillNames(rootNamespace, rootNamespace.name);
+		val separator = isSingleSeparatorEnough(rootNamespace) ? "_" : "__";
+		fillNames(rootNamespace, rootNamespace.name, separator);
 		return;
 	}
 	
@@ -77,16 +77,42 @@ class FullIdsToNamesMapper {
 		namespace.children.forEach[shortenChildrenNamespaceNames];
 	}
 	
-	private def fillNames(SimplifyingNamespace namespace, String prevNsPart) {
-		val nsPart = (prevNsPart !== null ? prevNsPart + "__" : "") +
+	private def boolean isSingleSeparatorEnough(SimplifyingNamespace namespace) {
+		if (namespace.name != null && namespace.name.contains("_")) {
+			return false;
+		}
+		for (c : namespace.children) {
+			if (!isSingleSeparatorEnough(c)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	private def fillNames(SimplifyingNamespace namespace, String prevNsPart, String separator) {
+		val nsPart = (prevNsPart === null || prevNsPart.isEmpty() ? "" : prevNsPart + separator) +
 						(namespace.name !== null ? namespace.name : "");
 		for (fullIdParts : namespace.fullIds) {
-			val prefixPart = fullIdParts.prefix !== null ? fullIdParts.prefix + "___" : "";
-			val idPart = "__" + fullIdParts.id;
-			fullIdsToNames.put(fullIdParts.fullId, prefixPart + nsPart + idPart);
+			val prefix = translatePrefix(fullIdParts.prefix);
+			val prefixPart = prefix !== null ? prefix + separator + "_" : "";
+			val prefixAndNsPart = prefixPart + nsPart;
+			val id = fullIdParts.id;
+			val idPart = (prefixAndNsPart.isEmpty() ? "" : separator + "_") + id;
+			if (id.equals("Sanitizer")){
+				val idsdg = "Sanitizer";
+			}
+			fullIdsToNames.put(fullIdParts.fullId, prefixAndNsPart + idPart);
 		}
 		
-		namespace.children.forEach[c | fillNames(c, prevNsPart)];
+		namespace.children.forEach[c | fillNames(c, nsPart, separator)];
+	}
+	
+	private def String translatePrefix(String prefix) {
+		switch (prefix) {
+			case "curS": return "cS"
+			case "timeout": return "t"
+			default: return prefix
+		}
 	}
 	
 	

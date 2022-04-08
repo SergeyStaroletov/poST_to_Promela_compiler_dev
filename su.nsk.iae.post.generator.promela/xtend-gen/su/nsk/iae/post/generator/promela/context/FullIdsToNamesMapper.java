@@ -1,5 +1,6 @@
 package su.nsk.iae.post.generator.promela.context;
 
+import com.google.common.base.Objects;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -47,7 +48,15 @@ public class FullIdsToNamesMapper {
   public void processNamespace(final NamespaceContext.Namespace namespace) {
     this.copyToSimplifyingNamespace(namespace, this.rootNamespace);
     this.shortenChildrenNamespaceNames(this.rootNamespace);
-    this.fillNames(this.rootNamespace, this.rootNamespace.name);
+    String _xifexpression = null;
+    boolean _isSingleSeparatorEnough = this.isSingleSeparatorEnough(this.rootNamespace);
+    if (_isSingleSeparatorEnough) {
+      _xifexpression = "_";
+    } else {
+      _xifexpression = "__";
+    }
+    final String separator = _xifexpression;
+    this.fillNames(this.rootNamespace, this.rootNamespace.name, separator);
     return;
   }
   
@@ -131,12 +140,26 @@ public class FullIdsToNamesMapper {
     namespace.children.forEach(_function);
   }
   
-  private void fillNames(final FullIdsToNamesMapper.SimplifyingNamespace namespace, final String prevNsPart) {
+  private boolean isSingleSeparatorEnough(final FullIdsToNamesMapper.SimplifyingNamespace namespace) {
+    if (((!Objects.equal(namespace.name, null)) && namespace.name.contains("_"))) {
+      return false;
+    }
+    for (final FullIdsToNamesMapper.SimplifyingNamespace c : namespace.children) {
+      boolean _isSingleSeparatorEnough = this.isSingleSeparatorEnough(c);
+      boolean _not = (!_isSingleSeparatorEnough);
+      if (_not) {
+        return false;
+      }
+    }
+    return true;
+  }
+  
+  private void fillNames(final FullIdsToNamesMapper.SimplifyingNamespace namespace, final String prevNsPart, final String separator) {
     String _xifexpression = null;
-    if ((prevNsPart != null)) {
-      _xifexpression = (prevNsPart + "__");
-    } else {
+    if (((prevNsPart == null) || prevNsPart.isEmpty())) {
       _xifexpression = "";
+    } else {
+      _xifexpression = (prevNsPart + separator);
     }
     String _xifexpression_1 = null;
     if ((namespace.name != null)) {
@@ -147,24 +170,49 @@ public class FullIdsToNamesMapper {
     final String nsPart = (_xifexpression + _xifexpression_1);
     for (final NamespaceContext.FullIdParts fullIdParts : namespace.fullIds) {
       {
+        final String prefix = this.translatePrefix(fullIdParts.getPrefix());
         String _xifexpression_2 = null;
-        String _prefix = fullIdParts.getPrefix();
-        boolean _tripleNotEquals = (_prefix != null);
-        if (_tripleNotEquals) {
-          String _prefix_1 = fullIdParts.getPrefix();
-          _xifexpression_2 = (_prefix_1 + "___");
+        if ((prefix != null)) {
+          _xifexpression_2 = ((prefix + separator) + "_");
         } else {
           _xifexpression_2 = "";
         }
         final String prefixPart = _xifexpression_2;
-        String _id = fullIdParts.getId();
-        final String idPart = ("__" + _id);
-        this.fullIdsToNames.put(fullIdParts.getFullId(), ((prefixPart + nsPart) + idPart));
+        final String prefixAndNsPart = (prefixPart + nsPart);
+        final String id = fullIdParts.getId();
+        String _xifexpression_3 = null;
+        boolean _isEmpty = prefixAndNsPart.isEmpty();
+        if (_isEmpty) {
+          _xifexpression_3 = "";
+        } else {
+          _xifexpression_3 = (separator + "_");
+        }
+        final String idPart = (_xifexpression_3 + id);
+        boolean _equals = id.equals("Sanitizer");
+        if (_equals) {
+          final String idsdg = "Sanitizer";
+        }
+        this.fullIdsToNames.put(fullIdParts.getFullId(), (prefixAndNsPart + idPart));
       }
     }
     final Consumer<FullIdsToNamesMapper.SimplifyingNamespace> _function = (FullIdsToNamesMapper.SimplifyingNamespace c) -> {
-      this.fillNames(c, prevNsPart);
+      this.fillNames(c, nsPart, separator);
     };
     namespace.children.forEach(_function);
+  }
+  
+  private String translatePrefix(final String prefix) {
+    if (prefix != null) {
+      switch (prefix) {
+        case "curS":
+          return "cS";
+        case "timeout":
+          return "t";
+        default:
+          return prefix;
+      }
+    } else {
+      return prefix;
+    }
   }
 }
