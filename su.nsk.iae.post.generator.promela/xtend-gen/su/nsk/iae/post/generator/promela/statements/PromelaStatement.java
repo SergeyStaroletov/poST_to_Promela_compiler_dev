@@ -180,7 +180,7 @@ public abstract class PromelaStatement implements IPromelaElement, PostConstruct
   public static class Case extends PromelaStatement {
     private static int caseStatements = 0;
     
-    private String caseConditionValueVarName = ("tmp__caseCondVal" + Integer.valueOf(PromelaStatement.Case.caseStatements++));
+    private String caseConditionValueVarName = ("tmp___caseCondVal" + Integer.valueOf(PromelaStatement.Case.caseStatements++));
     
     private PromelaExpression cond;
     
@@ -212,8 +212,7 @@ public abstract class PromelaStatement implements IPromelaElement, PostConstruct
     public String toText() {
       StringConcatenation _builder = new StringConcatenation();
       _builder.append("int ");
-      String _name = NamespaceContext.getName(this.caseConditionValueVarName);
-      _builder.append(_name);
+      _builder.append(this.caseConditionValueVarName);
       _builder.append(" = ");
       String _text = this.cond.toText();
       _builder.append(_text);

@@ -103,7 +103,7 @@ abstract class PromelaStatement implements IPromelaElement, IPostConstuctible {
 	static class Case extends PromelaStatement {
 		static int caseStatements = 0;
 		
-		String caseConditionValueVarName = "tmp__caseCondVal" + caseStatements++;
+		String caseConditionValueVarName = "tmp___caseCondVal" + caseStatements++;
 		PromelaExpression cond;
 		List<Map.Entry<List<SignedInteger>, PromelaElementList<? extends PromelaStatement>>> caseElements = new ArrayList();
 		PromelaElementList<? extends PromelaStatement> elseCase;
@@ -119,7 +119,7 @@ abstract class PromelaStatement implements IPromelaElement, IPostConstuctible {
 		
 		override toText() {
 			'''
-				int «NamespaceContext.getName(caseConditionValueVarName)» = «cond.toText»;
+				int «caseConditionValueVarName» = «cond.toText»;
 				if
 «««				
 					«FOR e : caseElements»
