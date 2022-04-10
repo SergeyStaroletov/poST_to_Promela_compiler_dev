@@ -606,12 +606,6 @@ public abstract class PromelaStatement implements IPromelaElement, PostConstruct
         _builder.append(" -> {");
         _builder.newLineIfNotEmpty();
         _builder.append("\t");
-        _builder.append(timeoutVarName, "\t");
-        _builder.append(" = ");
-        _builder.append(timeoutVarName, "\t");
-        _builder.append(" + 1;");
-        _builder.newLineIfNotEmpty();
-        _builder.append("\t");
         String _text_1 = this.timeoutStatements.toText();
         _builder.append(_text_1, "\t");
         _builder.newLineIfNotEmpty();
