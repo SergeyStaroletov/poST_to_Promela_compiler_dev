@@ -3,11 +3,10 @@ package su.nsk.iae.post.generator.promela.context
 import su.nsk.iae.post.generator.promela.model.vars.PromelaVar
 import java.util.List
 import java.util.ArrayList
-import java.util.Map
-import java.util.HashMap
 import su.nsk.iae.post.generator.promela.model.PromelaProcess
 import su.nsk.iae.post.generator.promela.expressions.PromelaExpression
 import su.nsk.iae.post.generator.promela.model.VarSettingProgram
+import su.nsk.iae.post.generator.promela.statements.PromelaStatement
 
 class PromelaContext {
 	static var PromelaContext context;
@@ -20,6 +19,7 @@ class PromelaContext {
 	
 	static def clearContext() {
 		context = null;
+		PromelaStatement.Case.resetCounter();
 	}
 	
 	var List<PromelaVar.TimeInterval> timeVars = new ArrayList();

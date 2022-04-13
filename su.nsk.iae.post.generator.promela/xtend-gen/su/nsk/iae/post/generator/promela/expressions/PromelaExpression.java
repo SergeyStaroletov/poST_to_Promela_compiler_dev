@@ -225,7 +225,7 @@ public abstract class PromelaExpression implements IPromelaElement {
         _builder.append(pMType);
         _builder.append(" != ");
         _builder.append(sMType);
-        _builder.append(" && ");
+        _builder.append(" & ");
         _builder.append(pMType);
         _builder.append(" != ");
         _builder.append(eMType);

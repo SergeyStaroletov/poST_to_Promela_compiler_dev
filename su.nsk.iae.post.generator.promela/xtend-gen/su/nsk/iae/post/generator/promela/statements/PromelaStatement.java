@@ -276,6 +276,10 @@ public abstract class PromelaStatement implements IPromelaElement, PostConstruct
       _builder.newLine();
       return _builder.toString();
     }
+    
+    public static int resetCounter() {
+      return PromelaStatement.Case.caseStatements = 0;
+    }
   }
   
   public static class StartProcess extends PromelaStatement {

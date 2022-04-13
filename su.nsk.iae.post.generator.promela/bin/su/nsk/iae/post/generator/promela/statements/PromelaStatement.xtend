@@ -139,6 +139,10 @@ abstract class PromelaStatement implements IPromelaElement, IPostConstuctible {
 				fi;
 			'''
 		}
+		
+		static def resetCounter() {
+			caseStatements = 0;
+		}
 	}
 	
 	static class StartProcess extends PromelaStatement {

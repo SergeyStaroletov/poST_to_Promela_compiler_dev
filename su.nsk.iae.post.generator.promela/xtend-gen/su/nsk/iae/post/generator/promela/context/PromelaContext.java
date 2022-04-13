@@ -9,6 +9,7 @@ import su.nsk.iae.post.generator.promela.expressions.PromelaExpression;
 import su.nsk.iae.post.generator.promela.model.PromelaProcess;
 import su.nsk.iae.post.generator.promela.model.VarSettingProgram;
 import su.nsk.iae.post.generator.promela.model.vars.PromelaVar;
+import su.nsk.iae.post.generator.promela.statements.PromelaStatement;
 
 @SuppressWarnings("all")
 public class PromelaContext {
@@ -22,8 +23,13 @@ public class PromelaContext {
     return PromelaContext.context;
   }
   
-  public static PromelaContext clearContext() {
-    return PromelaContext.context = null;
+  public static int clearContext() {
+    int _xblockexpression = (int) 0;
+    {
+      PromelaContext.context = null;
+      _xblockexpression = PromelaStatement.Case.resetCounter();
+    }
+    return _xblockexpression;
   }
   
   private List<PromelaVar.TimeInterval> timeVars = new ArrayList<PromelaVar.TimeInterval>();

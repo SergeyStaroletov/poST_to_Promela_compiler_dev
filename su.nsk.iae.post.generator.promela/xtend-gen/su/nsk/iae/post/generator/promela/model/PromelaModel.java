@@ -329,8 +329,8 @@ public class PromelaModel implements IPromelaElement {
     return a;
   }
   
-  private PromelaContext clearContexts() {
-    PromelaContext _xblockexpression = null;
+  private int clearContexts() {
+    int _xblockexpression = (int) 0;
     {
       CurrentContext.clearContext();
       NamespaceContext.clearContext();

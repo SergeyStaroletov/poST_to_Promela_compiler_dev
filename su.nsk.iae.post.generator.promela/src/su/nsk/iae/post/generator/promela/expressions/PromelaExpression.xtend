@@ -168,7 +168,7 @@ abstract class PromelaExpression implements IPromelaElement {
 			val pMType = NamespaceContext.getName(processMtype);
 			val sMType = NamespaceContext.getName(stopStateMType);
 			val eMType = NamespaceContext.getName(errorStateMType);
-			return active ? '''(«pMType» != «sMType» && «pMType» != «eMType»)'''
+			return active ? '''(«pMType» != «sMType» & «pMType» != «eMType»)'''
 				: inactive ? '''(«pMType» == «sMType» || «pMType» == «eMType»)'''
 				: stop ? '''«pMType» == «sMType»'''
 				: '''«pMType» == «eMType»''';
