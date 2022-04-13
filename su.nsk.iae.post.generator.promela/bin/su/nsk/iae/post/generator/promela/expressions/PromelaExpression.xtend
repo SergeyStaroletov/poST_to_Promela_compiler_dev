@@ -6,6 +6,7 @@ import su.nsk.iae.post.poST.ProcessStatusExpression
 import su.nsk.iae.post.generator.promela.context.PromelaContext
 import su.nsk.iae.post.generator.promela.context.CurrentContext
 import su.nsk.iae.post.generator.promela.context.PostConstructContext
+import su.nsk.iae.post.generator.promela.model.vars.PromelaVar
 
 abstract class PromelaExpression implements IPromelaElement {
 	
@@ -130,7 +131,6 @@ abstract class PromelaExpression implements IPromelaElement {
 		override toText() {
 			'''«left.toText()» «opSymbol» «right.toText()»''';
 		}
-		
 	}
 	
 	static class ProcessStatus extends PromelaExpression implements PostConstructContext.IPostConstuctible {
@@ -174,4 +174,29 @@ abstract class PromelaExpression implements IPromelaElement {
 				: '''«pMType» == «eMType»''';
 		}
 	}
+	
+	static class ArrayVar extends PromelaExpression {
+		String name;
+		PromelaExpression indexExpr;
+		int firstArrayIndex;
+		
+		new (PromelaVar.Array arrayVar, PromelaExpression indexExpr) {
+			this.name = arrayVar.name;
+			this.indexExpr = indexExpr;
+			this.firstArrayIndex = arrayVar.firstIndex;
+		}
+		
+		override toText() {
+			'''«NamespaceContext.getName(name)»[«
+				IF firstArrayIndex != 0
+					»(«
+				ENDIF
+				»«indexExpr.toText()»«
+				IF firstArrayIndex != 0
+					») - «firstArrayIndex»«
+				ENDIF
+			»]''';
+		}
+	}
+	
 }

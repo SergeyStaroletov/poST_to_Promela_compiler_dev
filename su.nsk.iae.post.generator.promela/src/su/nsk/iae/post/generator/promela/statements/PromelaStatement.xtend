@@ -38,16 +38,31 @@ abstract class PromelaStatement implements IPromelaElement, IPostConstuctible {
 	
 	static class Assign extends PromelaStatement {
 		final String fullVarName;
+		final PromelaExpression.ArrayVar arrayElement;
 		final PromelaExpression value;
 		
 		new (AssignmentStatement s) {
-			this.fullVarName = NamespaceContext.getFullId(s.variable.name);
+			if (s.variable !== null) {
+				this.fullVarName = NamespaceContext.getFullId(s.variable.name);
+				this.arrayElement = null;
+			}
+			else {
+				this.fullVarName = NamespaceContext.getFullId(s.array.variable.name);
+				this.arrayElement = new PromelaExpression.ArrayVar(
+					PromelaContext.context.getArrayVar(fullVarName),
+					PromelaExpressionsHelper.getExpr(s.array.index)
+				);
+			}
 			this.value = PromelaExpressionsHelper.getExpr(s.value);
 		}
 		
 		override toText() {
 			'''
-				«NamespaceContext.getName(fullVarName)» = «value.toText»;
+				«IF arrayElement === null»
+					«NamespaceContext.getName(fullVarName)» = «value.toText»;
+				«ELSE»
+					«arrayElement.toText» = «value.toText»;
+				«ENDIF»
 			'''
 		}
 	}

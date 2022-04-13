@@ -91,6 +91,7 @@ class PromelaVarsHelper {
 			varDecl.varList.vars.forEach[v | 
 				val fullName = NamespaceContext.addId(v.name);
 				val arrayVariable = new PromelaVar.Array(fullName, typeName, start, end, initValueExpressions);
+				PromelaContext.context.addArrayVar(arrayVariable);
 				res.add(arrayVariable);
 			];
 			return res;

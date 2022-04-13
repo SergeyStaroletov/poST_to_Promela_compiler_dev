@@ -7,6 +7,8 @@ import su.nsk.iae.post.generator.promela.model.PromelaProcess
 import su.nsk.iae.post.generator.promela.expressions.PromelaExpression
 import su.nsk.iae.post.generator.promela.model.VarSettingProgram
 import su.nsk.iae.post.generator.promela.statements.PromelaStatement
+import java.util.Map
+import java.util.HashMap
 
 class PromelaContext {
 	static var PromelaContext context;
@@ -26,6 +28,7 @@ class PromelaContext {
 	var List<PromelaExpression.TimeConstant> timeVals = new ArrayList();
 	var List<PromelaProcess> allProcesses = new ArrayList();
 	var VarSettingProgram varSettingProgram;
+	var Map<String, PromelaVar.Array> arrayVars = new HashMap();
 	
 	def addTimeVar(String name) {
 		val res = new PromelaVar.TimeInterval(name);
@@ -43,6 +46,10 @@ class PromelaContext {
 	
 	def setVarSettingProgram(VarSettingProgram varSettingProgram) {
 		this.varSettingProgram = varSettingProgram;
+	}
+	
+	def addArrayVar(PromelaVar.Array arrayVar) {
+		arrayVars.put(arrayVar.name, arrayVar);
 	}
 	
 	def getMetadataAndInitText() {
@@ -94,5 +101,9 @@ class PromelaContext {
 	
 	def getAllProcesses() {
 		return allProcesses;
+	}
+	
+	def getArrayVar(String fullName) {
+		return arrayVars.get(fullName);
 	}
 }

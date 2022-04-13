@@ -1,7 +1,9 @@
 package su.nsk.iae.post.generator.promela.context;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
@@ -40,6 +42,8 @@ public class PromelaContext {
   
   private VarSettingProgram varSettingProgram;
   
+  private Map<String, PromelaVar.Array> arrayVars = new HashMap<String, PromelaVar.Array>();
+  
   public PromelaVar.TimeInterval addTimeVar(final String name) {
     final PromelaVar.TimeInterval res = new PromelaVar.TimeInterval(name);
     this.timeVars.add(res);
@@ -56,6 +60,10 @@ public class PromelaContext {
   
   public VarSettingProgram setVarSettingProgram(final VarSettingProgram varSettingProgram) {
     return this.varSettingProgram = varSettingProgram;
+  }
+  
+  public PromelaVar.Array addArrayVar(final PromelaVar.Array arrayVar) {
+    return this.arrayVars.put(arrayVar.getName(), arrayVar);
   }
   
   public CharSequence getMetadataAndInitText() {
@@ -161,5 +169,9 @@ public class PromelaContext {
   
   public List<PromelaProcess> getAllProcesses() {
     return this.allProcesses;
+  }
+  
+  public PromelaVar.Array getArrayVar(final String fullName) {
+    return this.arrayVars.get(fullName);
   }
 }

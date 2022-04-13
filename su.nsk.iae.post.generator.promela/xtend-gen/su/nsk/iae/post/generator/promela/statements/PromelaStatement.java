@@ -34,6 +34,7 @@ import su.nsk.iae.post.poST.SignedInteger;
 import su.nsk.iae.post.poST.StartProcessStatement;
 import su.nsk.iae.post.poST.StatementList;
 import su.nsk.iae.post.poST.StopProcessStatement;
+import su.nsk.iae.post.poST.SymbolicVariable;
 import su.nsk.iae.post.poST.TimeoutStatement;
 import su.nsk.iae.post.poST.Variable;
 
@@ -42,23 +43,48 @@ public abstract class PromelaStatement implements IPromelaElement, PostConstruct
   public static class Assign extends PromelaStatement {
     private final String fullVarName;
     
+    private final PromelaExpression.ArrayVar arrayElement;
+    
     private final PromelaExpression value;
     
     public Assign(final AssignmentStatement s) {
-      this.fullVarName = NamespaceContext.getFullId(s.getVariable().getName());
+      SymbolicVariable _variable = s.getVariable();
+      boolean _tripleNotEquals = (_variable != null);
+      if (_tripleNotEquals) {
+        this.fullVarName = NamespaceContext.getFullId(s.getVariable().getName());
+        this.arrayElement = null;
+      } else {
+        this.fullVarName = NamespaceContext.getFullId(s.getArray().getVariable().getName());
+        PromelaVar.Array _arrayVar = PromelaContext.getContext().getArrayVar(this.fullVarName);
+        PromelaExpression _expr = PromelaExpressionsHelper.getExpr(s.getArray().getIndex());
+        PromelaExpression.ArrayVar _arrayVar_1 = new PromelaExpression.ArrayVar(_arrayVar, _expr);
+        this.arrayElement = _arrayVar_1;
+      }
       this.value = PromelaExpressionsHelper.getExpr(s.getValue());
     }
     
     @Override
     public String toText() {
       StringConcatenation _builder = new StringConcatenation();
-      String _name = NamespaceContext.getName(this.fullVarName);
-      _builder.append(_name);
-      _builder.append(" = ");
-      String _text = this.value.toText();
-      _builder.append(_text);
-      _builder.append(";");
-      _builder.newLineIfNotEmpty();
+      {
+        if ((this.arrayElement == null)) {
+          String _name = NamespaceContext.getName(this.fullVarName);
+          _builder.append(_name);
+          _builder.append(" = ");
+          String _text = this.value.toText();
+          _builder.append(_text);
+          _builder.append(";");
+          _builder.newLineIfNotEmpty();
+        } else {
+          String _text_1 = this.arrayElement.toText();
+          _builder.append(_text_1);
+          _builder.append(" = ");
+          String _text_2 = this.value.toText();
+          _builder.append(_text_2);
+          _builder.append(";");
+          _builder.newLineIfNotEmpty();
+        }
+      }
       return _builder.toString();
     }
   }

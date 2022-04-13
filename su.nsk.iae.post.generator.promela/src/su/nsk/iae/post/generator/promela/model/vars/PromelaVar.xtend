@@ -222,5 +222,9 @@ abstract class PromelaVar implements IPromelaElement {
 				«ENDIF»
 			'''
 		}
+		
+		def getFirstIndex() {
+			return firstIndex;
+		}
 	}
 }

@@ -263,6 +263,10 @@ public abstract class PromelaVar implements IPromelaElement {
       }
       return _xblockexpression;
     }
+    
+    public int getFirstIndex() {
+      return this.firstIndex;
+    }
   }
   
   protected String name;

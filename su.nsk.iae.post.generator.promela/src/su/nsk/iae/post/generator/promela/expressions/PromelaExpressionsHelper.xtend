@@ -54,6 +54,12 @@ class PromelaExpressionsHelper {
 			else if (expr.procStatus !== null) {
 				return new PromelaExpression.ProcessStatus(expr.procStatus);
 			}
+			else if (expr.array !== null) {
+				return new PromelaExpression.ArrayVar(
+					PromelaContext.context.getArrayVar(NamespaceContext.getFullId(expr.array.variable.name)),
+					getExpr(expr.array.index)
+				);
+			}
 			else {
 				return new PromelaExpression.Primary(getExpr(expr.nestExpr));
 			}

@@ -5,6 +5,8 @@ import su.nsk.iae.post.generator.promela.context.NamespaceContext;
 import su.nsk.iae.post.generator.promela.context.PromelaContext;
 import su.nsk.iae.post.generator.promela.model.NotSupportedElementException;
 import su.nsk.iae.post.generator.promela.model.UnknownElementException;
+import su.nsk.iae.post.generator.promela.model.vars.PromelaVar;
+import su.nsk.iae.post.poST.ArrayVariable;
 import su.nsk.iae.post.poST.Constant;
 import su.nsk.iae.post.poST.Expression;
 import su.nsk.iae.post.poST.IntegerLiteral;
@@ -79,8 +81,16 @@ public class PromelaExpressionsHelper {
             ProcessStatusExpression _procStatus_1 = ((PrimaryExpression)expr).getProcStatus();
             return new PromelaExpression.ProcessStatus(_procStatus_1);
           } else {
-            PromelaExpression _expr = PromelaExpressionsHelper.getExpr(((PrimaryExpression)expr).getNestExpr());
-            return new PromelaExpression.Primary(_expr);
+            ArrayVariable _array = ((PrimaryExpression)expr).getArray();
+            boolean _tripleNotEquals_6 = (_array != null);
+            if (_tripleNotEquals_6) {
+              PromelaVar.Array _arrayVar = PromelaContext.getContext().getArrayVar(NamespaceContext.getFullId(((PrimaryExpression)expr).getArray().getVariable().getName()));
+              PromelaExpression _expr = PromelaExpressionsHelper.getExpr(((PrimaryExpression)expr).getArray().getIndex());
+              return new PromelaExpression.ArrayVar(_arrayVar, _expr);
+            } else {
+              PromelaExpression _expr_1 = PromelaExpressionsHelper.getExpr(((PrimaryExpression)expr).getNestExpr());
+              return new PromelaExpression.Primary(_expr_1);
+            }
           }
         }
       }
@@ -89,11 +99,11 @@ public class PromelaExpressionsHelper {
         PromelaExpression _xifexpression = null;
         boolean _equals_2 = "-".equals(((UnaryExpression)expr).getUnOp().getLiteral());
         if (_equals_2) {
-          PromelaExpression _expr_1 = PromelaExpressionsHelper.getExpr(((UnaryExpression)expr).getRight());
-          _xifexpression = new PromelaExpression.Invert(_expr_1);
-        } else {
           PromelaExpression _expr_2 = PromelaExpressionsHelper.getExpr(((UnaryExpression)expr).getRight());
-          _xifexpression = new PromelaExpression.Not(_expr_2);
+          _xifexpression = new PromelaExpression.Invert(_expr_2);
+        } else {
+          PromelaExpression _expr_3 = PromelaExpressionsHelper.getExpr(((UnaryExpression)expr).getRight());
+          _xifexpression = new PromelaExpression.Not(_expr_3);
         }
         return _xifexpression;
       } else {

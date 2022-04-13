@@ -112,6 +112,7 @@ public class PromelaVarsHelper {
       final Consumer<SymbolicVariable> _function_2 = (SymbolicVariable v) -> {
         final String fullName = NamespaceContext.addId(v.getName());
         final PromelaVar.Array arrayVariable = new PromelaVar.Array(fullName, typeName, start_1, end_1, initValueExpressions);
+        PromelaContext.getContext().addArrayVar(arrayVariable);
         res_1.add(arrayVariable);
       };
       varDecl.getVarList().getVars().forEach(_function_2);

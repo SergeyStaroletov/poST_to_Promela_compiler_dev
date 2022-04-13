@@ -12,6 +12,7 @@ import su.nsk.iae.post.generator.promela.context.PostConstructContext;
 import su.nsk.iae.post.generator.promela.context.PromelaContext;
 import su.nsk.iae.post.generator.promela.model.IPromelaElement;
 import su.nsk.iae.post.generator.promela.model.PromelaProcess;
+import su.nsk.iae.post.generator.promela.model.vars.PromelaVar;
 import su.nsk.iae.post.poST.ProcessStatusExpression;
 
 @SuppressWarnings("all")
@@ -265,6 +266,43 @@ public abstract class PromelaExpression implements IPromelaElement {
         _xifexpression = _xifexpression_1;
       }
       return _xifexpression;
+    }
+  }
+  
+  public static class ArrayVar extends PromelaExpression {
+    private String name;
+    
+    private PromelaExpression indexExpr;
+    
+    private int firstArrayIndex;
+    
+    public ArrayVar(final PromelaVar.Array arrayVar, final PromelaExpression indexExpr) {
+      this.name = arrayVar.getName();
+      this.indexExpr = indexExpr;
+      this.firstArrayIndex = arrayVar.getFirstIndex();
+    }
+    
+    @Override
+    public String toText() {
+      StringConcatenation _builder = new StringConcatenation();
+      String _name = NamespaceContext.getName(this.name);
+      _builder.append(_name);
+      _builder.append("[");
+      {
+        if ((this.firstArrayIndex != 0)) {
+          _builder.append("(");
+        }
+      }
+      String _text = this.indexExpr.toText();
+      _builder.append(_text);
+      {
+        if ((this.firstArrayIndex != 0)) {
+          _builder.append(") - ");
+          _builder.append(this.firstArrayIndex);
+        }
+      }
+      _builder.append("]");
+      return _builder.toString();
     }
   }
 }

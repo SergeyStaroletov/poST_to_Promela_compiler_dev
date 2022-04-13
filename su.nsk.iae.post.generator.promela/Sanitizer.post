@@ -17,7 +17,7 @@ PROGRAM Gremlin
     VAR
     	activeUser : BOOL;
         arr1, arr3 : ARRAY [ 5 .. 9 ] OF INT := [ 1, 2, 3 ];
-        arr2 : ARRAY [ 3 .. 7 ] OF INT;
+        arr2 : ARRAY [ 0 .. 7 ] OF BOOL;
     END_VAR
 
 	VAR_INPUT
@@ -31,6 +31,8 @@ PROGRAM Gremlin
 	PROCESS User
 		STATE Init
 			activeUser := activeUserInit;
+			arr1[7] := 9 + arr3[6];
+			arr2[5] := TRUE;
 			IF activeUser THEN
 				hands := activeUserHands;
 			ELSE
