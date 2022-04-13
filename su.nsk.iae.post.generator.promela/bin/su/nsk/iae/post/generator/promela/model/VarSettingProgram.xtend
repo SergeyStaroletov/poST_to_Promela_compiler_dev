@@ -38,6 +38,27 @@ class VarSettingProgram implements IPromelaElement {
 				'''
 			];
 		}
+		else if (v instanceof PromelaVar.Byte) {
+			gremlinTextSuppliers.add[
+				val name = NamespaceContext.getName(fullId);
+				'''
+					select («name» : 0..255);
+				'''
+			];
+		}
+		else if (v instanceof PromelaVar.Short) {
+			if (v.getWasSByte()) {
+				gremlinTextSuppliers.add[
+					val name = NamespaceContext.getName(fullId);
+					'''
+						select («name» : -128..127);
+					'''
+				];
+			}
+			else {
+				throw new NotSupportedElementException();
+			}
+		}
 		else {
 			throw new NotSupportedElementException();
 		}

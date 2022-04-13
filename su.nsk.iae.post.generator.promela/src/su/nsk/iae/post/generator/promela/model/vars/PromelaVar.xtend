@@ -82,8 +82,19 @@ abstract class PromelaVar implements IPromelaElement {
 	}
 	
 	static class Short extends PromelaVar {
+		boolean wasSByte = false;
+		
 		new(String name) {
 			super(name, "short");
+		}
+		
+		new(String name, boolean wasSByte) {
+			super(name, "short");
+			this.wasSByte = wasSByte;
+		}
+		
+		def getWasSByte() {
+			return wasSByte;
 		}
 	}
 	

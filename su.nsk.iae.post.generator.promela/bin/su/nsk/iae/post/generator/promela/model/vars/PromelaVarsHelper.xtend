@@ -58,7 +58,7 @@ class PromelaVarsHelper {
 		val context = PromelaContext.getContext();
 		switch (type) {				
 			//signed integer
-			case "SINT": return new PromelaVar.Short(name)
+			case "SINT": return new PromelaVar.Short(name, true)
 			case "INT": return new PromelaVar.Short(name)
 			case "DINT": return new PromelaVar.Int(name)
 			case "LINT": throw new NotSupportedElementException()

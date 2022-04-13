@@ -10,6 +10,8 @@ PROGRAM Gremlin
 	VAR_INPUT
         activeUserInit : BOOL;
         activeUserHands : BOOL;
+        testUserUByte : USINT;
+        testUserSByte : SINT;
     END_VAR
     
     VAR

@@ -15,8 +15,19 @@ public abstract class PromelaVar implements IPromelaElement {
   }
   
   public static class Short extends PromelaVar {
+    private boolean wasSByte = false;
+    
     public Short(final String name) {
       super(name, "short");
+    }
+    
+    public Short(final String name, final boolean wasSByte) {
+      super(name, "short");
+      this.wasSByte = wasSByte;
+    }
+    
+    public boolean getWasSByte() {
+      return this.wasSByte;
     }
   }
   

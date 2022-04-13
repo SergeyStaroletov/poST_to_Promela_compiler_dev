@@ -72,7 +72,7 @@ public class PromelaVarsHelper {
       if (type != null) {
         switch (type) {
           case "SINT":
-            return new PromelaVar.Short(name);
+            return new PromelaVar.Short(name, true);
           case "INT":
             return new PromelaVar.Short(name);
           case "DINT":

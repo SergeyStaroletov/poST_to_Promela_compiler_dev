@@ -69,7 +69,46 @@ public class VarSettingProgram implements IPromelaElement {
         };
         this.gremlinTextSuppliers.add(_function);
       } else {
-        throw new NotSupportedElementException();
+        if ((v instanceof PromelaVar.Byte)) {
+          final Supplier<String> _function_1 = () -> {
+            String _xblockexpression_1 = null;
+            {
+              final String name = NamespaceContext.getName(fullId);
+              StringConcatenation _builder = new StringConcatenation();
+              _builder.append("select (");
+              _builder.append(name);
+              _builder.append(" : 0..255);");
+              _builder.newLineIfNotEmpty();
+              _xblockexpression_1 = _builder.toString();
+            }
+            return _xblockexpression_1;
+          };
+          this.gremlinTextSuppliers.add(_function_1);
+        } else {
+          if ((v instanceof PromelaVar.Short)) {
+            boolean _wasSByte = ((PromelaVar.Short)v).getWasSByte();
+            if (_wasSByte) {
+              final Supplier<String> _function_2 = () -> {
+                String _xblockexpression_1 = null;
+                {
+                  final String name = NamespaceContext.getName(fullId);
+                  StringConcatenation _builder = new StringConcatenation();
+                  _builder.append("select (");
+                  _builder.append(name);
+                  _builder.append(" : -128..127);");
+                  _builder.newLineIfNotEmpty();
+                  _xblockexpression_1 = _builder.toString();
+                }
+                return _xblockexpression_1;
+              };
+              this.gremlinTextSuppliers.add(_function_2);
+            } else {
+              throw new NotSupportedElementException();
+            }
+          } else {
+            throw new NotSupportedElementException();
+          }
+        }
       }
       String _xifexpression = null;
       if ((this.gremlinProcessFullId == null)) {
