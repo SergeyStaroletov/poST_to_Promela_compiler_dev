@@ -51,6 +51,9 @@ class PromelaExpressionsHelper {
 					throw new UnknownElementException();
 				}
 			}
+			else if (expr.procStatus !== null) {
+				return new PromelaExpression.ProcessStatus(expr.procStatus);
+			}
 			else {
 				return new PromelaExpression.Primary(getExpr(expr.nestExpr));
 			}

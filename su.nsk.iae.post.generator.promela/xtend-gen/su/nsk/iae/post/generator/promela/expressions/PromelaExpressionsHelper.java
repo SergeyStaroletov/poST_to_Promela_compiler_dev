@@ -10,6 +10,7 @@ import su.nsk.iae.post.poST.Expression;
 import su.nsk.iae.post.poST.IntegerLiteral;
 import su.nsk.iae.post.poST.NumericLiteral;
 import su.nsk.iae.post.poST.PrimaryExpression;
+import su.nsk.iae.post.poST.ProcessStatusExpression;
 import su.nsk.iae.post.poST.SymbolicVariable;
 import su.nsk.iae.post.poST.TimeLiteral;
 import su.nsk.iae.post.poST.UnaryExpression;
@@ -72,8 +73,15 @@ public class PromelaExpressionsHelper {
             }
           }
         } else {
-          PromelaExpression _expr = PromelaExpressionsHelper.getExpr(((PrimaryExpression)expr).getNestExpr());
-          return new PromelaExpression.Primary(_expr);
+          ProcessStatusExpression _procStatus = ((PrimaryExpression)expr).getProcStatus();
+          boolean _tripleNotEquals_5 = (_procStatus != null);
+          if (_tripleNotEquals_5) {
+            ProcessStatusExpression _procStatus_1 = ((PrimaryExpression)expr).getProcStatus();
+            return new PromelaExpression.ProcessStatus(_procStatus_1);
+          } else {
+            PromelaExpression _expr = PromelaExpressionsHelper.getExpr(((PrimaryExpression)expr).getNestExpr());
+            return new PromelaExpression.Primary(_expr);
+          }
         }
       }
     } else {

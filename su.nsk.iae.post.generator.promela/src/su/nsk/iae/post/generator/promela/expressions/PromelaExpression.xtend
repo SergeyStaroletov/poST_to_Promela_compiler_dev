@@ -2,6 +2,10 @@ package su.nsk.iae.post.generator.promela.expressions
 
 import su.nsk.iae.post.generator.promela.model.IPromelaElement
 import su.nsk.iae.post.generator.promela.context.NamespaceContext
+import su.nsk.iae.post.poST.ProcessStatusExpression
+import su.nsk.iae.post.generator.promela.context.PromelaContext
+import su.nsk.iae.post.generator.promela.context.CurrentContext
+import su.nsk.iae.post.generator.promela.context.PostConstructContext
 
 abstract class PromelaExpression implements IPromelaElement {
 	
@@ -127,5 +131,47 @@ abstract class PromelaExpression implements IPromelaElement {
 			'''«left.toText()» «opSymbol» «right.toText()»''';
 		}
 		
+	}
+	
+	static class ProcessStatus extends PromelaExpression implements PostConstructContext.IPostConstuctible {
+		String programName;
+		String processName;
+		
+		boolean active;
+		boolean inactive;
+		boolean stop;
+		String processMtype;
+		String stopStateMType;
+		String errorStateMType;
+		
+		new (ProcessStatusExpression processStatusExpression) {
+			this.active = processStatusExpression.active;
+			this.inactive = processStatusExpression.inactive;
+			this.stop = processStatusExpression.stop;
+			this.programName = CurrentContext.curProgram.shortName;
+			this.processName = processStatusExpression.process.name;
+			PostConstructContext.register(this);
+		}
+		
+		override void postConstruct(){
+			val process = PromelaContext.context.allProcesses
+				.findFirst[
+					p | p.programName.equals(programName)
+					&& p.shortName.equals(processName)
+				];
+			this.processMtype = process.nameMType;
+			this.stopStateMType = process.stopStateMType;
+			this.errorStateMType = process.errorStateMtype;
+		}
+		
+		override toText() {
+			val pMType = NamespaceContext.getName(processMtype);
+			val sMType = NamespaceContext.getName(stopStateMType);
+			val eMType = NamespaceContext.getName(errorStateMType);
+			return active ? '''(«pMType» != «sMType» && «pMType» != «eMType»)'''
+				: inactive ? '''(«pMType» == «sMType» || «pMType» == «eMType»)'''
+				: stop ? '''«pMType» == «sMType»'''
+				: '''«pMType» == «eMType»''';
+		}
 	}
 }
