@@ -4,6 +4,7 @@ import su.nsk.iae.post.generator.promela.model.IPromelaElement
 import su.nsk.iae.post.generator.promela.model.WrongModelStateException
 import su.nsk.iae.post.generator.promela.expressions.PromelaExpression
 import su.nsk.iae.post.generator.promela.context.NamespaceContext
+import java.util.List
 
 abstract class PromelaVar implements IPromelaElement {
 	protected String name;
@@ -196,6 +197,30 @@ abstract class PromelaVar implements IPromelaElement {
 			else {
 				return v.toText();
 			}
+		}
+	}
+	
+	static class Array extends PromelaVar {
+		int firstIndex;
+		int length;
+		List<PromelaExpression> values;
+		
+		new (String name, String typeName, int firstIndex, int lastIndex, List<PromelaExpression> values) {
+			super(name, typeName);
+			this.firstIndex = firstIndex;
+			this.length = lastIndex - firstIndex + 1;
+			this.values = values;
+		}
+		
+		override toText() {
+			val name = NamespaceContext.getName(this.name);
+			'''
+				«IF values !== null»
+					«typeName» «name»[«length»] = {«FOR v : values SEPARATOR ", "»«v.toText()»«ENDFOR»};
+				«ELSE»
+					«typeName» «name»[«length»];
+				«ENDIF»
+			'''
 		}
 	}
 }

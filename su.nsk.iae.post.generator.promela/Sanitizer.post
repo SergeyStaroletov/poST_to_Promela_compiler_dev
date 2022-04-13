@@ -16,6 +16,8 @@ PROGRAM Gremlin
     
     VAR
     	activeUser : BOOL;
+        arr1, arr3 : ARRAY [ 5 .. 9 ] OF INT := [ 1, 2, 3 ];
+        arr2 : ARRAY [ 3 .. 7 ] OF INT;
     END_VAR
 
 	VAR_INPUT

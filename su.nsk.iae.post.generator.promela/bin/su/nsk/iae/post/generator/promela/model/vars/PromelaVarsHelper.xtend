@@ -11,6 +11,9 @@ import su.nsk.iae.post.generator.promela.context.NamespaceContext
 import su.nsk.iae.post.generator.promela.expressions.PromelaExpressionsHelper
 import su.nsk.iae.post.poST.Constant
 import su.nsk.iae.post.poST.PrimaryExpression
+import su.nsk.iae.post.generator.promela.expressions.PromelaExpression
+import su.nsk.iae.post.poST.IntegerLiteral
+import su.nsk.iae.post.generator.promela.context.WarningsContext
 
 class PromelaVarsHelper {	
 	static def PromelaElementList<PromelaVar> getVars(List<VarInitDeclaration> varDecls, boolean const) {
@@ -30,10 +33,10 @@ class PromelaVarsHelper {
 		val simpleSpec = varDecl.spec;
 		if (simpleSpec !== null) {
 			val type = simpleSpec.type.toUpperCase();
+			val varValue = simpleSpec.value;
 			val List<PromelaVar> res = new ArrayList();
 			varDecl.varList.vars.forEach[v | {
 				val simpleVar = getPromelaSimpleVar(type, NamespaceContext.addId(v.name));
-				val varValue = simpleSpec.value;
 				if (varValue !== null) {
 					simpleVar.setValue(PromelaExpressionsHelper.getExpr(varValue));
 					if ("TIME".equals(type) && varValue instanceof PrimaryExpression) {
@@ -48,8 +51,49 @@ class PromelaVarsHelper {
 		}
 		val arrSpec = varDecl.arrSpec;
 		if (arrSpec !== null) {
-			throw new NotSupportedElementException();
-			//todo
+			if (arrSpec.init.interval === null) {
+				throw new NotSupportedElementException();
+			}
+			var int intervalStart = -1;
+			var int intervalEnd = -1;
+			val intervalStartExpr = arrSpec.init.interval.start;
+			val intervalEndExpr = arrSpec.init.interval.end;
+			if (intervalStartExpr instanceof PrimaryExpression) {
+				if (intervalEndExpr instanceof PrimaryExpression) {
+					if (intervalStartExpr.const !== null
+						&& intervalEndExpr.const !== null
+						&& intervalStartExpr.const.num !== null
+						&& intervalEndExpr.const.num !== null
+					) {
+						val start = intervalStartExpr.const.num;
+						val end = intervalEndExpr.const.num;
+						if (start instanceof IntegerLiteral) {
+							if (end instanceof IntegerLiteral) {
+								intervalStart = Integer.valueOf(start.value.value);
+								intervalEnd = Integer.valueOf(end.value.value);
+							}
+						}
+					}
+				}
+			}
+			if (intervalStart == -1 || intervalEnd == -1) {
+				throw new NotSupportedElementException();
+			}
+			val typeName = postToPromelaTypeNameForArray(arrSpec.init.type);
+			
+			val initValueExpressions = arrSpec.values === null ? null : arrSpec.values.elements.map[e |
+				return PromelaExpressionsHelper.getExpr(e);
+			];
+			
+			val start = intervalStart;
+			val end = intervalEnd;
+			val List<PromelaVar> res = new ArrayList();
+			varDecl.varList.vars.forEach[v | 
+				val fullName = NamespaceContext.addId(v.name);
+				val arrayVariable = new PromelaVar.Array(fullName, typeName, start, end, initValueExpressions);
+				res.add(arrayVariable);
+			];
+			return res;
 		}
 		throw new NotSupportedElementException();
 	}
@@ -90,4 +134,16 @@ class PromelaVarsHelper {
 			default: throw new UnknownElementException()
 		}
 	}
+	
+	private static def String postToPromelaTypeNameForArray(String type) {
+		if ("SINT".equals(type)) {
+			WarningsContext.addWarning("Type ARRAY OF SINT can only be translated to byte[] which are 8-bit instead of 16-bit");
+			return "byte";
+		}
+		if ("TIME".equals(type)) {
+			throw new NotSupportedElementException();
+		}
+		return getPromelaSimpleVar(type, null).typeName;
+	}
+	
 }

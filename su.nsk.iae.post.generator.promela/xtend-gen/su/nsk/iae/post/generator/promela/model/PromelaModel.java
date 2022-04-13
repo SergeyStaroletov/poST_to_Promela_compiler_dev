@@ -17,6 +17,7 @@ import su.nsk.iae.post.generator.promela.context.CurrentContext;
 import su.nsk.iae.post.generator.promela.context.NamespaceContext;
 import su.nsk.iae.post.generator.promela.context.PostConstructContext;
 import su.nsk.iae.post.generator.promela.context.PromelaContext;
+import su.nsk.iae.post.generator.promela.context.WarningsContext;
 import su.nsk.iae.post.generator.promela.exceptions.ConflictingOutputsOrInOutsException;
 import su.nsk.iae.post.generator.promela.expressions.PromelaExpression;
 import su.nsk.iae.post.generator.promela.model.vars.PromelaVar;
@@ -335,6 +336,7 @@ public class PromelaModel implements IPromelaElement {
       CurrentContext.clearContext();
       NamespaceContext.clearContext();
       PostConstructContext.clearContext();
+      WarningsContext.clearContext();
       _xblockexpression = PromelaContext.clearContext();
     }
     return _xblockexpression;

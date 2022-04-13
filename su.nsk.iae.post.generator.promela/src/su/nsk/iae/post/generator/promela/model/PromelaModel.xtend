@@ -13,6 +13,7 @@ import java.util.HashMap
 import su.nsk.iae.post.generator.promela.exceptions.ConflictingOutputsOrInOutsException
 import su.nsk.iae.post.poST.Configuration
 import su.nsk.iae.post.generator.promela.context.CurrentContext
+import su.nsk.iae.post.generator.promela.context.WarningsContext
 
 class PromelaModel implements IPromelaElement {
 	static val promelaVerificationTaskName = "PromelaVerificationTask";
@@ -226,6 +227,7 @@ class PromelaModel implements IPromelaElement {
 		CurrentContext.clearContext();
 		NamespaceContext.clearContext();
 		PostConstructContext.clearContext();
+		WarningsContext.clearContext();
 		PromelaContext.clearContext();
 	}
 	

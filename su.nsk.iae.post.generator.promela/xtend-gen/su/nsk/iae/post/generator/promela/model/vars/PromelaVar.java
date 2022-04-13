@@ -1,5 +1,6 @@
 package su.nsk.iae.post.generator.promela.model.vars;
 
+import java.util.List;
 import org.eclipse.xtend2.lib.StringConcatenation;
 import su.nsk.iae.post.generator.promela.context.NamespaceContext;
 import su.nsk.iae.post.generator.promela.expressions.PromelaExpression;
@@ -203,6 +204,64 @@ public abstract class PromelaVar implements IPromelaElement {
       } else {
         return this.v.toText();
       }
+    }
+  }
+  
+  public static class Array extends PromelaVar {
+    private int firstIndex;
+    
+    private int length;
+    
+    private List<PromelaExpression> values;
+    
+    public Array(final String name, final String typeName, final int firstIndex, final int lastIndex, final List<PromelaExpression> values) {
+      super(name, typeName);
+      this.firstIndex = firstIndex;
+      this.length = ((lastIndex - firstIndex) + 1);
+      this.values = values;
+    }
+    
+    @Override
+    public String toText() {
+      String _xblockexpression = null;
+      {
+        final String name = NamespaceContext.getName(this.name);
+        StringConcatenation _builder = new StringConcatenation();
+        {
+          if ((this.values != null)) {
+            _builder.append(this.typeName);
+            _builder.append(" ");
+            _builder.append(name);
+            _builder.append("[");
+            _builder.append(this.length);
+            _builder.append("] = {");
+            {
+              boolean _hasElements = false;
+              for(final PromelaExpression v : this.values) {
+                if (!_hasElements) {
+                  _hasElements = true;
+                } else {
+                  _builder.appendImmediate(", ", "");
+                }
+                String _text = v.toText();
+                _builder.append(_text);
+              }
+            }
+            _builder.append("};");
+            _builder.newLineIfNotEmpty();
+          } else {
+            _builder.append(this.typeName);
+            _builder.append(" ");
+            _builder.append(name);
+            _builder.append("[");
+            _builder.append(this.length);
+            _builder.append("];");
+            _builder.newLineIfNotEmpty();
+          }
+        }
+        _xblockexpression = _builder.toString();
+      }
+      return _xblockexpression;
     }
   }
   
