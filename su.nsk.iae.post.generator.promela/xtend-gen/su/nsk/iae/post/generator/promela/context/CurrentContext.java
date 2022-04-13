@@ -26,13 +26,12 @@ public class CurrentContext {
   
   public static void stopProgram() {
     CurrentContext.curProgram = null;
-    CurrentContext.curProcess = null;
-    CurrentContext.curState = null;
+    CurrentContext.stopProcess();
   }
   
   public static void stopProcess() {
     CurrentContext.curProcess = null;
-    CurrentContext.curState = null;
+    CurrentContext.stopState();
   }
   
   public static void stopState() {
@@ -51,13 +50,7 @@ public class CurrentContext {
     return CurrentContext.curState;
   }
   
-  public static PromelaState clearContext() {
-    PromelaState _xblockexpression = null;
-    {
-      CurrentContext.curProgram = null;
-      CurrentContext.curProcess = null;
-      _xblockexpression = CurrentContext.curState = null;
-    }
-    return _xblockexpression;
+  public static void clearContext() {
+    CurrentContext.stopProgram();
   }
 }

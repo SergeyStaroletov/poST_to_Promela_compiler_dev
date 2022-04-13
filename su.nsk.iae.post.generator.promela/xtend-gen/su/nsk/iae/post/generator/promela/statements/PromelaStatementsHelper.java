@@ -10,12 +10,15 @@ import su.nsk.iae.post.poST.StatementList;
 import su.nsk.iae.post.poST.impl.AssignmentStatementImpl;
 import su.nsk.iae.post.poST.impl.CaseStatementImpl;
 import su.nsk.iae.post.poST.impl.ErrorProcessStatementImpl;
+import su.nsk.iae.post.poST.impl.ForStatementImpl;
 import su.nsk.iae.post.poST.impl.IfStatementImpl;
+import su.nsk.iae.post.poST.impl.RepeatStatementImpl;
 import su.nsk.iae.post.poST.impl.ResetTimerStatementImpl;
 import su.nsk.iae.post.poST.impl.SetStateStatementImpl;
 import su.nsk.iae.post.poST.impl.StartProcessStatementImpl;
 import su.nsk.iae.post.poST.impl.StopProcessStatementImpl;
 import su.nsk.iae.post.poST.impl.TimeoutStatementImpl;
+import su.nsk.iae.post.poST.impl.WhileStatementImpl;
 
 @SuppressWarnings("all")
 public class PromelaStatementsHelper {
@@ -79,6 +82,24 @@ public class PromelaStatementsHelper {
       if (Objects.equal(_class, TimeoutStatementImpl.class)) {
         _matched=true;
         return new PromelaStatement.Timeout(((TimeoutStatementImpl) s));
+      }
+    }
+    if (!_matched) {
+      if (Objects.equal(_class, WhileStatementImpl.class)) {
+        _matched=true;
+        return new PromelaStatement.While(((WhileStatementImpl) s));
+      }
+    }
+    if (!_matched) {
+      if (Objects.equal(_class, RepeatStatementImpl.class)) {
+        _matched=true;
+        return new PromelaStatement.Repeat(((RepeatStatementImpl) s));
+      }
+    }
+    if (!_matched) {
+      if (Objects.equal(_class, ForStatementImpl.class)) {
+        _matched=true;
+        return new PromelaStatement.For(((ForStatementImpl) s));
       }
     }
     throw new UnknownElementException();

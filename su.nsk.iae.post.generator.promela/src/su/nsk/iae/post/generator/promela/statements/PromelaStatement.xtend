@@ -26,6 +26,9 @@ import su.nsk.iae.post.generator.promela.context.PostConstructContext
 import su.nsk.iae.post.generator.promela.context.PostConstructContext.IPostConstuctible
 import su.nsk.iae.post.poST.TimeoutStatement
 import su.nsk.iae.post.generator.promela.model.vars.PromelaVar
+import su.nsk.iae.post.poST.WhileStatement
+import su.nsk.iae.post.poST.RepeatStatement
+import su.nsk.iae.post.poST.ForStatement
 
 abstract class PromelaStatement implements IPromelaElement, IPostConstuctible {
 	
@@ -347,6 +350,82 @@ abstract class PromelaStatement implements IPromelaElement, IPostConstuctible {
 				if :: «timeoutVarName» == «timeoutValue.toText» -> {
 					«timeoutStatements.toText»
 				} :: else -> «timeoutVarName» = «timeoutVarName» + 1; fi;
+			'''
+		}
+	}
+	
+	static class While extends PromelaStatement {
+		PromelaExpression condition;
+		PromelaElementList<? extends PromelaStatement> statements;
+		
+		new (WhileStatement w) {
+			this.condition = PromelaExpressionsHelper.getExpr(w.cond);
+			this.statements = new PromelaElementList()
+				.addElements(PromelaStatementsHelper.getStatementList(w.statement));
+		}
+		
+		override toText() {
+			'''
+				do
+					:: «condition.toText» -> {
+						«statements.toText»
+					}
+					:: else -> break;
+				od;
+			'''
+		}
+	}
+	
+	static class Repeat extends PromelaStatement {
+		PromelaExpression condition;
+		PromelaElementList<? extends PromelaStatement> statements;
+		
+		new (RepeatStatement r) {
+			this.condition = PromelaExpressionsHelper.getExpr(r.cond);
+			this.statements = new PromelaElementList()
+				.addElements(PromelaStatementsHelper.getStatementList(r.statement));
+		}
+		
+		override toText() {
+			'''
+				«statements.toText»
+				do
+					:: «condition.toText» -> {
+						«statements.toText»
+					}
+					:: else -> break;
+				od;
+			'''
+		}
+	}
+	
+	static class For extends PromelaStatement {
+		String varFullId;
+		PromelaExpression start;
+		PromelaExpression end;
+		PromelaExpression step;
+		PromelaElementList<? extends PromelaStatement> statements;
+		
+		new (ForStatement f) {
+			this.varFullId = NamespaceContext.getFullId(f.variable.name);
+			this.statements = new PromelaElementList()
+				.addElements(PromelaStatementsHelper.getStatementList(f.statement));
+			this.start = PromelaExpressionsHelper.getExpr(f.forList.start);
+			this.end = PromelaExpressionsHelper.getExpr(f.forList.end);
+			this.step = f.forList.step !== null ? PromelaExpressionsHelper.getExpr(f.forList.step) : null;
+		}
+		
+		override toText() {
+			val varName = NamespaceContext.getName(varFullId);
+			'''
+				«varName» = «start.toText»;
+				do
+					:: «varName» <= «end.toText» -> {
+						«statements.toText»
+						«varName» = «varName» + «IF step !== null»(«step.toText»)«ELSE»1«ENDIF»;
+					}
+					:: else -> break;
+				od;
 			'''
 		}
 	}

@@ -3,6 +3,7 @@ package su.nsk.iae.post.generator.promela.context
 import su.nsk.iae.post.generator.promela.model.PromelaProgram
 import su.nsk.iae.post.generator.promela.model.PromelaProcess
 import su.nsk.iae.post.generator.promela.model.PromelaState
+import su.nsk.iae.post.generator.promela.statements.PromelaStatement
 
 class CurrentContext {
 	static var PromelaProgram curProgram;
@@ -21,12 +22,11 @@ class CurrentContext {
 	
 	static def void stopProgram() {
 		curProgram = null;
-		curProcess = null;
-		curState = null;
+		stopProcess();
 	}
 	static def void stopProcess() {
 		curProcess = null;
-		curState = null;
+		stopState();
 	}
 	static def void stopState() {
 		curState = null;
@@ -43,9 +43,7 @@ class CurrentContext {
 	}
 	
 	static def clearContext() {
-		curProgram = null;
-		curProcess = null;
-		curState = null;
+		stopProgram();
 	}
 	
 }

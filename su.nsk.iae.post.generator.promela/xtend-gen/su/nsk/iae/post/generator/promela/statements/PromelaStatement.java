@@ -28,7 +28,9 @@ import su.nsk.iae.post.poST.CaseStatement;
 import su.nsk.iae.post.poST.Constant;
 import su.nsk.iae.post.poST.ErrorProcessStatement;
 import su.nsk.iae.post.poST.Expression;
+import su.nsk.iae.post.poST.ForStatement;
 import su.nsk.iae.post.poST.IfStatement;
+import su.nsk.iae.post.poST.RepeatStatement;
 import su.nsk.iae.post.poST.SetStateStatement;
 import su.nsk.iae.post.poST.SignedInteger;
 import su.nsk.iae.post.poST.StartProcessStatement;
@@ -37,6 +39,7 @@ import su.nsk.iae.post.poST.StopProcessStatement;
 import su.nsk.iae.post.poST.SymbolicVariable;
 import su.nsk.iae.post.poST.TimeoutStatement;
 import su.nsk.iae.post.poST.Variable;
+import su.nsk.iae.post.poST.WhileStatement;
 
 @SuppressWarnings("all")
 public abstract class PromelaStatement implements IPromelaElement, PostConstructContext.IPostConstuctible {
@@ -645,6 +648,167 @@ public abstract class PromelaStatement implements IPromelaElement, PostConstruct
         _builder.append(timeoutVarName);
         _builder.append(" + 1; fi;");
         _builder.newLineIfNotEmpty();
+        _xblockexpression = _builder.toString();
+      }
+      return _xblockexpression;
+    }
+  }
+  
+  public static class While extends PromelaStatement {
+    private PromelaExpression condition;
+    
+    private PromelaElementList<? extends PromelaStatement> statements;
+    
+    public While(final WhileStatement w) {
+      this.condition = PromelaExpressionsHelper.getExpr(w.getCond());
+      this.statements = new PromelaElementList<PromelaStatement>().addElements(PromelaStatementsHelper.getStatementList(w.getStatement()));
+    }
+    
+    @Override
+    public String toText() {
+      StringConcatenation _builder = new StringConcatenation();
+      _builder.append("do");
+      _builder.newLine();
+      _builder.append("\t");
+      _builder.append(":: ");
+      String _text = this.condition.toText();
+      _builder.append(_text, "\t");
+      _builder.append(" -> {");
+      _builder.newLineIfNotEmpty();
+      _builder.append("\t\t");
+      String _text_1 = this.statements.toText();
+      _builder.append(_text_1, "\t\t");
+      _builder.newLineIfNotEmpty();
+      _builder.append("\t");
+      _builder.append("}");
+      _builder.newLine();
+      _builder.append("\t");
+      _builder.append(":: else -> break;");
+      _builder.newLine();
+      _builder.append("od;");
+      _builder.newLine();
+      return _builder.toString();
+    }
+  }
+  
+  public static class Repeat extends PromelaStatement {
+    private PromelaExpression condition;
+    
+    private PromelaElementList<? extends PromelaStatement> statements;
+    
+    public Repeat(final RepeatStatement r) {
+      this.condition = PromelaExpressionsHelper.getExpr(r.getCond());
+      this.statements = new PromelaElementList<PromelaStatement>().addElements(PromelaStatementsHelper.getStatementList(r.getStatement()));
+    }
+    
+    @Override
+    public String toText() {
+      StringConcatenation _builder = new StringConcatenation();
+      String _text = this.statements.toText();
+      _builder.append(_text);
+      _builder.newLineIfNotEmpty();
+      _builder.append("do");
+      _builder.newLine();
+      _builder.append("\t");
+      _builder.append(":: ");
+      String _text_1 = this.condition.toText();
+      _builder.append(_text_1, "\t");
+      _builder.append(" -> {");
+      _builder.newLineIfNotEmpty();
+      _builder.append("\t\t");
+      String _text_2 = this.statements.toText();
+      _builder.append(_text_2, "\t\t");
+      _builder.newLineIfNotEmpty();
+      _builder.append("\t");
+      _builder.append("}");
+      _builder.newLine();
+      _builder.append("\t");
+      _builder.append(":: else -> break;");
+      _builder.newLine();
+      _builder.append("od;");
+      _builder.newLine();
+      return _builder.toString();
+    }
+  }
+  
+  public static class For extends PromelaStatement {
+    private String varFullId;
+    
+    private PromelaExpression start;
+    
+    private PromelaExpression end;
+    
+    private PromelaExpression step;
+    
+    private PromelaElementList<? extends PromelaStatement> statements;
+    
+    public For(final ForStatement f) {
+      this.varFullId = NamespaceContext.getFullId(f.getVariable().getName());
+      this.statements = new PromelaElementList<PromelaStatement>().addElements(PromelaStatementsHelper.getStatementList(f.getStatement()));
+      this.start = PromelaExpressionsHelper.getExpr(f.getForList().getStart());
+      this.end = PromelaExpressionsHelper.getExpr(f.getForList().getEnd());
+      PromelaExpression _xifexpression = null;
+      Expression _step = f.getForList().getStep();
+      boolean _tripleNotEquals = (_step != null);
+      if (_tripleNotEquals) {
+        _xifexpression = PromelaExpressionsHelper.getExpr(f.getForList().getStep());
+      } else {
+        _xifexpression = null;
+      }
+      this.step = _xifexpression;
+    }
+    
+    @Override
+    public String toText() {
+      String _xblockexpression = null;
+      {
+        final String varName = NamespaceContext.getName(this.varFullId);
+        StringConcatenation _builder = new StringConcatenation();
+        _builder.append(varName);
+        _builder.append(" = ");
+        String _text = this.start.toText();
+        _builder.append(_text);
+        _builder.append(";");
+        _builder.newLineIfNotEmpty();
+        _builder.append("do");
+        _builder.newLine();
+        _builder.append("\t");
+        _builder.append(":: ");
+        _builder.append(varName, "\t");
+        _builder.append(" <= ");
+        String _text_1 = this.end.toText();
+        _builder.append(_text_1, "\t");
+        _builder.append(" -> {");
+        _builder.newLineIfNotEmpty();
+        _builder.append("\t\t");
+        String _text_2 = this.statements.toText();
+        _builder.append(_text_2, "\t\t");
+        _builder.newLineIfNotEmpty();
+        _builder.append("\t\t");
+        _builder.append(varName, "\t\t");
+        _builder.append(" = ");
+        _builder.append(varName, "\t\t");
+        _builder.append(" + ");
+        {
+          if ((this.step != null)) {
+            _builder.append("(");
+            String _text_3 = this.step.toText();
+            _builder.append(_text_3, "\t\t");
+            _builder.append(")");
+          } else {
+            _builder.append("1");
+          }
+        }
+        _builder.append(";");
+        _builder.newLineIfNotEmpty();
+        _builder.append("\t");
+        _builder.append("}");
+        _builder.newLine();
+        _builder.append("\t");
+        _builder.append(":: else -> break;");
+        _builder.newLine();
+        _builder.append("od;");
+        _builder.newLine();
         _xblockexpression = _builder.toString();
       }
       return _xblockexpression;

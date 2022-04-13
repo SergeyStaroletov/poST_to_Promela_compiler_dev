@@ -13,6 +13,9 @@ import su.nsk.iae.post.poST.impl.ErrorProcessStatementImpl
 import su.nsk.iae.post.poST.impl.SetStateStatementImpl
 import su.nsk.iae.post.poST.impl.ResetTimerStatementImpl
 import su.nsk.iae.post.poST.impl.TimeoutStatementImpl
+import su.nsk.iae.post.poST.impl.WhileStatementImpl
+import su.nsk.iae.post.poST.impl.RepeatStatementImpl
+import su.nsk.iae.post.poST.impl.ForStatementImpl
 
 class PromelaStatementsHelper {
 	static def getStatementList(StatementList statements) {
@@ -30,7 +33,9 @@ class PromelaStatementsHelper {
 			case SetStateStatementImpl: return new PromelaStatement.SetState(s as SetStateStatementImpl)
 			case ResetTimerStatementImpl: return new PromelaStatement.ResetTimer()
 			case TimeoutStatementImpl: return new PromelaStatement.Timeout(s as TimeoutStatementImpl)
-			//todo
+			case WhileStatementImpl: return new PromelaStatement.While(s as WhileStatementImpl)
+			case RepeatStatementImpl: return new PromelaStatement.Repeat(s as RepeatStatementImpl)
+			case ForStatementImpl: return new PromelaStatement.For(s as ForStatementImpl)
 			default: throw new UnknownElementException()
 		}
 	}

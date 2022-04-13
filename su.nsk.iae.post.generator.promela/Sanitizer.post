@@ -16,6 +16,7 @@ PROGRAM Gremlin
     
     VAR
     	activeUser : BOOL;
+    	i : BYTE;
         arr1, arr3 : ARRAY [ 5 .. 9 ] OF INT := [ 1, 2, 3 ];
         arr2 : ARRAY [ 0 .. 7 ] OF BOOL;
     END_VAR
@@ -31,8 +32,19 @@ PROGRAM Gremlin
 	PROCESS User
 		STATE Init
 			activeUser := activeUserInit;
-			arr1[7] := 9 + arr3[6 + 1];
-			arr2[5 - 3] := TRUE;
+			
+			WHILE arr1[5] > 0 DO
+				arr1[5] := arr1[5] - 1;
+			END_WHILE
+			
+			REPEAT
+				arr1[6] := arr1[6] - 1;
+			UNTIL arr1[6] > 0 END_REPEAT
+			
+			FOR i := 4 + 1 TO 7 + 2 BY arr1[9] + 3 DO
+				arr1[8] := arr1[8] + 1;
+			END_FOR
+			
 			IF activeUser THEN
 				hands := activeUserHands;
 			ELSE
