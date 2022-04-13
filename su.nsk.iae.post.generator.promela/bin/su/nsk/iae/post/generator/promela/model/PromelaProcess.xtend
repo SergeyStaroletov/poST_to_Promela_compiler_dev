@@ -97,7 +97,7 @@ class PromelaProcess implements IPromelaElement {
 		return timeoutVar;
 	}
 	
-	def getStatesMTypeText() {
+	def getStatesMTypeText(boolean initiallyRunning) {
 		'''
 			mtype:«NamespaceContext.getName(stateTypeMType)» = {
 				«FOR s : states»
@@ -106,7 +106,8 @@ class PromelaProcess implements IPromelaElement {
 				«NamespaceContext.getName(stateStopMType)»,
 				«NamespaceContext.getName(stateErrorMType)»
 			}
-			mtype:«NamespaceContext.getName(stateTypeMType)» «NamespaceContext.getName(stateVarMType)» = «NamespaceContext.getName(stateStopMType)»;
+			mtype:«NamespaceContext.getName(stateTypeMType)» «NamespaceContext.getName(stateVarMType)» = «
+			NamespaceContext.getName(initiallyRunning ? states.get(0).stateMType : stateStopMType)»;
 		'''
 	}
 	

@@ -3,6 +3,8 @@ package su.nsk.iae.post.generator.promela.context;
 import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.xtend2.lib.StringConcatenation;
+import org.eclipse.xtext.xbase.lib.Functions.Function1;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import su.nsk.iae.post.generator.promela.expressions.PromelaExpression;
 import su.nsk.iae.post.generator.promela.model.PromelaProcess;
 import su.nsk.iae.post.generator.promela.model.VarSettingProgram;
@@ -101,7 +103,12 @@ public class PromelaContext {
       _builder.newLine();
       {
         for(final PromelaProcess process_1 : this.allProcesses) {
-          CharSequence _statesMTypeText = process_1.getStatesMTypeText();
+          final Function1<PromelaProcess, Boolean> _function = (PromelaProcess p) -> {
+            return Boolean.valueOf(p.getProgramName().equals(process_1.getProgramName()));
+          };
+          CharSequence _statesMTypeText = process_1.getStatesMTypeText(
+            process_1.getFullName().equals(
+              IterableExtensions.<PromelaProcess>findFirst(this.allProcesses, _function).getFullName()));
           _builder.append(_statesMTypeText);
           _builder.newLineIfNotEmpty();
           {

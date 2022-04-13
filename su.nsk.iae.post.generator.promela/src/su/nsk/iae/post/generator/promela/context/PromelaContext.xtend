@@ -63,7 +63,11 @@ class PromelaContext {
 			chan «NamespaceContext.getName("__currentProcess")» = [1] of { mtype:P__ };
 			
 			«FOR process : allProcesses»
-				«process.statesMTypeText»
+				«process.getStatesMTypeText(//true if first process of program
+					process.fullName.equals(
+						allProcesses.findFirst[p | p.programName.equals(process.programName)].fullName
+					)
+				)»
 				«IF process.timeoutVar !== null»
 					«process.timeoutVar.toText»
 				«ENDIF»

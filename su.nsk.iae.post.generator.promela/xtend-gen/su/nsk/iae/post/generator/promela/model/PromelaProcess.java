@@ -150,7 +150,7 @@ public class PromelaProcess implements IPromelaElement {
     return this.timeoutVar;
   }
   
-  public CharSequence getStatesMTypeText() {
+  public CharSequence getStatesMTypeText(final boolean initiallyRunning) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("mtype:");
     String _name = NamespaceContext.getName(this.stateTypeMType);
@@ -184,7 +184,13 @@ public class PromelaProcess implements IPromelaElement {
     String _name_5 = NamespaceContext.getName(this.stateVarMType);
     _builder.append(_name_5);
     _builder.append(" = ");
-    String _name_6 = NamespaceContext.getName(this.stateStopMType);
+    String _xifexpression = null;
+    if (initiallyRunning) {
+      _xifexpression = this.states.get(0).getStateMType();
+    } else {
+      _xifexpression = this.stateStopMType;
+    }
+    String _name_6 = NamespaceContext.getName(_xifexpression);
     _builder.append(_name_6);
     _builder.append(";");
     _builder.newLineIfNotEmpty();
