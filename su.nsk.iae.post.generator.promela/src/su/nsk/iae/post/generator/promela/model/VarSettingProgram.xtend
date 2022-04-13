@@ -32,8 +32,8 @@ class VarSettingProgram implements IPromelaElement {
 				val name = NamespaceContext.getName(fullId);
 				'''
 					if
-						:: true -> «name» = true;
-						:: true -> «name» = false;
+						:: «name» = true;
+						:: «name» = false;
 					fi;
 				'''
 			];

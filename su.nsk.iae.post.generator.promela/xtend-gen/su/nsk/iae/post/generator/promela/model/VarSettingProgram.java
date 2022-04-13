@@ -52,12 +52,12 @@ public class VarSettingProgram implements IPromelaElement {
             _builder.append("if");
             _builder.newLine();
             _builder.append("\t");
-            _builder.append(":: true -> ");
+            _builder.append(":: ");
             _builder.append(name, "\t");
             _builder.append(" = true;");
             _builder.newLineIfNotEmpty();
             _builder.append("\t");
-            _builder.append(":: true -> ");
+            _builder.append(":: ");
             _builder.append(name, "\t");
             _builder.append(" = false;");
             _builder.newLineIfNotEmpty();
