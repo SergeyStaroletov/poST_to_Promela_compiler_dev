@@ -274,12 +274,15 @@ public abstract class PromelaExpression implements IPromelaElement {
     
     private PromelaExpression indexExpr;
     
+    private boolean indexIsVarOrConst;
+    
     private int firstArrayIndex;
     
     public ArrayVar(final PromelaVar.Array arrayVar, final PromelaExpression indexExpr) {
       this.name = arrayVar.getName();
       this.indexExpr = indexExpr;
       this.firstArrayIndex = arrayVar.getFirstIndex();
+      this.indexIsVarOrConst = ((indexExpr instanceof PromelaExpression.Var) || (indexExpr instanceof PromelaExpression.Constant));
     }
     
     @Override
@@ -289,7 +292,7 @@ public abstract class PromelaExpression implements IPromelaElement {
       _builder.append(_name);
       _builder.append("[");
       {
-        if ((this.firstArrayIndex != 0)) {
+        if (((this.firstArrayIndex != 0) && (!this.indexIsVarOrConst))) {
           _builder.append("(");
         }
       }
@@ -297,7 +300,12 @@ public abstract class PromelaExpression implements IPromelaElement {
       _builder.append(_text);
       {
         if ((this.firstArrayIndex != 0)) {
-          _builder.append(") - ");
+          {
+            if ((!this.indexIsVarOrConst)) {
+              _builder.append(")");
+            }
+          }
+          _builder.append(" - ");
           _builder.append(this.firstArrayIndex);
         }
       }

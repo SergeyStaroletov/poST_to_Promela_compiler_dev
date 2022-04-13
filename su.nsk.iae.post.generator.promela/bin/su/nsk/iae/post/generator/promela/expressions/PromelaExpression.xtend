@@ -178,22 +178,27 @@ abstract class PromelaExpression implements IPromelaElement {
 	static class ArrayVar extends PromelaExpression {
 		String name;
 		PromelaExpression indexExpr;
+		boolean indexIsVarOrConst;
 		int firstArrayIndex;
 		
 		new (PromelaVar.Array arrayVar, PromelaExpression indexExpr) {
 			this.name = arrayVar.name;
 			this.indexExpr = indexExpr;
 			this.firstArrayIndex = arrayVar.firstIndex;
+			this.indexIsVarOrConst = indexExpr instanceof Var || indexExpr instanceof Constant;
 		}
 		
 		override toText() {
 			'''«NamespaceContext.getName(name)»[«
-				IF firstArrayIndex != 0
+				IF firstArrayIndex != 0 && !indexIsVarOrConst
 					»(«
 				ENDIF
 				»«indexExpr.toText()»«
-				IF firstArrayIndex != 0
-					») - «firstArrayIndex»«
+				IF firstArrayIndex != 0»«
+					IF !indexIsVarOrConst
+						»)«
+					ENDIF
+					» - «firstArrayIndex»«
 				ENDIF
 			»]''';
 		}

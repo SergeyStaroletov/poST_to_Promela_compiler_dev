@@ -31,8 +31,8 @@ PROGRAM Gremlin
 	PROCESS User
 		STATE Init
 			activeUser := activeUserInit;
-			arr1[7] := 9 + arr3[6];
-			arr2[5] := TRUE;
+			arr1[7] := 9 + arr3[6 + 1];
+			arr2[5 - 3] := TRUE;
 			IF activeUser THEN
 				hands := activeUserHands;
 			ELSE
