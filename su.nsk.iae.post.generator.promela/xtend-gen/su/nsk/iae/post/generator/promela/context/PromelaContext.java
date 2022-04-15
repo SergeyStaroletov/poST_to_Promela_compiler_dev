@@ -7,11 +7,11 @@ import java.util.Map;
 import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
-import su.nsk.iae.post.generator.promela.expressions.PromelaExpression;
 import su.nsk.iae.post.generator.promela.model.PromelaProcess;
 import su.nsk.iae.post.generator.promela.model.VarSettingProgram;
+import su.nsk.iae.post.generator.promela.model.expressions.PromelaExpression;
+import su.nsk.iae.post.generator.promela.model.statements.PromelaStatement;
 import su.nsk.iae.post.generator.promela.model.vars.PromelaVar;
-import su.nsk.iae.post.generator.promela.statements.PromelaStatement;
 
 @SuppressWarnings("all")
 public class PromelaContext {

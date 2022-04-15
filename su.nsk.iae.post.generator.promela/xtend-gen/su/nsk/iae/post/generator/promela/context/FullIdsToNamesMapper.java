@@ -11,7 +11,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import su.nsk.iae.post.generator.promela.context.NamespaceContext;
-import su.nsk.iae.post.generator.promela.model.WrongModelStateException;
+import su.nsk.iae.post.generator.promela.exceptions.WrongModelStateException;
 
 @SuppressWarnings("all")
 public class FullIdsToNamesMapper {

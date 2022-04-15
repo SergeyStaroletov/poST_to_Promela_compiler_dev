@@ -1,8 +1,8 @@
 package su.nsk.iae.post.generator.promela.model.vars
 
 import su.nsk.iae.post.generator.promela.model.IPromelaElement
-import su.nsk.iae.post.generator.promela.model.WrongModelStateException
-import su.nsk.iae.post.generator.promela.expressions.PromelaExpression
+import su.nsk.iae.post.generator.promela.exceptions.WrongModelStateException
+import su.nsk.iae.post.generator.promela.model.expressions.PromelaExpression
 import su.nsk.iae.post.generator.promela.context.NamespaceContext
 import java.util.List
 

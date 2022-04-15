@@ -3,9 +3,9 @@ package su.nsk.iae.post.generator.promela.model
 import su.nsk.iae.post.poST.Model
 import su.nsk.iae.post.generator.promela.context.PromelaContext
 import su.nsk.iae.post.generator.promela.context.PostConstructContext
-import su.nsk.iae.post.generator.promela.expressions.PromelaExpression
+import su.nsk.iae.post.generator.promela.model.expressions.PromelaExpression
 import su.nsk.iae.post.generator.promela.model.vars.PromelaVar
-import su.nsk.iae.post.generator.promela.expressions.PromelaExpression.TimeConstant
+import su.nsk.iae.post.generator.promela.model.expressions.PromelaExpression.TimeConstant
 import su.nsk.iae.post.generator.promela.context.NamespaceContext
 import java.util.List
 import java.util.ArrayList
@@ -14,6 +14,7 @@ import su.nsk.iae.post.generator.promela.exceptions.ConflictingOutputsOrInOutsEx
 import su.nsk.iae.post.poST.Configuration
 import su.nsk.iae.post.generator.promela.context.CurrentContext
 import su.nsk.iae.post.generator.promela.context.WarningsContext
+import su.nsk.iae.post.generator.promela.exceptions.NotSupportedElementException
 
 class PromelaModel implements IPromelaElement {
 	static val promelaVerificationTaskName = "PromelaVerificationTask";

@@ -8,7 +8,7 @@ import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.ListExtensions;
-import su.nsk.iae.post.generator.promela.model.WrongModelStateException;
+import su.nsk.iae.post.generator.promela.exceptions.WrongModelStateException;
 
 @SuppressWarnings("all")
 public class NamespaceContext {

@@ -9,6 +9,8 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import org.eclipse.xtend2.lib.StringConcatenation;
 import su.nsk.iae.post.generator.promela.context.NamespaceContext;
+import su.nsk.iae.post.generator.promela.exceptions.NotSupportedElementException;
+import su.nsk.iae.post.generator.promela.exceptions.WrongModelStateException;
 import su.nsk.iae.post.generator.promela.model.vars.PromelaVar;
 
 @SuppressWarnings("all")

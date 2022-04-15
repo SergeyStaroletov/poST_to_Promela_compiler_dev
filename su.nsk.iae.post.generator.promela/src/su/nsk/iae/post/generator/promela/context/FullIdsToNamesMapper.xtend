@@ -2,7 +2,7 @@ package su.nsk.iae.post.generator.promela.context
 
 import java.util.Map
 import java.util.HashMap
-import su.nsk.iae.post.generator.promela.model.WrongModelStateException
+import su.nsk.iae.post.generator.promela.exceptions.WrongModelStateException
 import su.nsk.iae.post.generator.promela.context.NamespaceContext.Namespace
 import java.util.List
 import java.util.ArrayList

@@ -3,7 +3,6 @@ package su.nsk.iae.post.generator.promela.context
 import su.nsk.iae.post.generator.promela.model.PromelaProgram
 import su.nsk.iae.post.generator.promela.model.PromelaProcess
 import su.nsk.iae.post.generator.promela.model.PromelaState
-import su.nsk.iae.post.generator.promela.statements.PromelaStatement
 
 class CurrentContext {
 	static var PromelaProgram curProgram;

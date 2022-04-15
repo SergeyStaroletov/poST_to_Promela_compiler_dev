@@ -3,8 +3,8 @@ package su.nsk.iae.post.generator.promela.model;
 import org.eclipse.xtend2.lib.StringConcatenation;
 import su.nsk.iae.post.generator.promela.context.CurrentContext;
 import su.nsk.iae.post.generator.promela.context.NamespaceContext;
-import su.nsk.iae.post.generator.promela.statements.PromelaStatement;
-import su.nsk.iae.post.generator.promela.statements.PromelaStatementsHelper;
+import su.nsk.iae.post.generator.promela.model.statements.PromelaStatement;
+import su.nsk.iae.post.generator.promela.model.statements.PromelaStatementsHelper;
 import su.nsk.iae.post.poST.State;
 import su.nsk.iae.post.poST.TimeoutStatement;
 

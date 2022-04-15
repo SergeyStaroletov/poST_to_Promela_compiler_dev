@@ -4,9 +4,9 @@ import su.nsk.iae.post.generator.promela.model.vars.PromelaVar
 import java.util.List
 import java.util.ArrayList
 import su.nsk.iae.post.generator.promela.model.PromelaProcess
-import su.nsk.iae.post.generator.promela.expressions.PromelaExpression
+import su.nsk.iae.post.generator.promela.model.expressions.PromelaExpression
 import su.nsk.iae.post.generator.promela.model.VarSettingProgram
-import su.nsk.iae.post.generator.promela.statements.PromelaStatement
+import su.nsk.iae.post.generator.promela.model.statements.PromelaStatement
 import java.util.Map
 import java.util.HashMap
 

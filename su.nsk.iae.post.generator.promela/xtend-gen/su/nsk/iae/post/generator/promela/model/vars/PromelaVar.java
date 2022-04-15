@@ -3,9 +3,9 @@ package su.nsk.iae.post.generator.promela.model.vars;
 import java.util.List;
 import org.eclipse.xtend2.lib.StringConcatenation;
 import su.nsk.iae.post.generator.promela.context.NamespaceContext;
-import su.nsk.iae.post.generator.promela.expressions.PromelaExpression;
+import su.nsk.iae.post.generator.promela.exceptions.WrongModelStateException;
 import su.nsk.iae.post.generator.promela.model.IPromelaElement;
-import su.nsk.iae.post.generator.promela.model.WrongModelStateException;
+import su.nsk.iae.post.generator.promela.model.expressions.PromelaExpression;
 
 @SuppressWarnings("all")
 public abstract class PromelaVar implements IPromelaElement {

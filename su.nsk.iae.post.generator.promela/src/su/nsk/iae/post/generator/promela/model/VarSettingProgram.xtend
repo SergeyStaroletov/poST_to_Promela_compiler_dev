@@ -6,6 +6,8 @@ import su.nsk.iae.post.generator.promela.model.vars.PromelaVar
 import java.util.function.Supplier
 import java.util.List
 import java.util.HashMap
+import su.nsk.iae.post.generator.promela.exceptions.NotSupportedElementException
+import su.nsk.iae.post.generator.promela.exceptions.WrongModelStateException
 
 class VarSettingProgram implements IPromelaElement {
 	static val processPrefix = "specialProcess";
