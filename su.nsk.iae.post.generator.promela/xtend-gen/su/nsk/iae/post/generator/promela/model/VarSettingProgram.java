@@ -267,6 +267,17 @@ public class VarSettingProgram implements IPromelaElement {
                 String _name_7 = NamespaceContext.getName(outToIns.getKey());
                 _builder.append(_name_7, "\t\t\t");
                 _builder.append(";");
+                {
+                  boolean _isNamesWithNumbersMode = NamespaceContext.isNamesWithNumbersMode();
+                  if (_isNamesWithNumbersMode) {
+                    _builder.append(" //");
+                    String _nameWithNamespaces = NamespaceContext.getNameWithNamespaces(in);
+                    _builder.append(_nameWithNamespaces, "\t\t\t");
+                    _builder.append(" <- ");
+                    String _nameWithNamespaces_1 = NamespaceContext.getNameWithNamespaces(outToIns.getKey());
+                    _builder.append(_nameWithNamespaces_1, "\t\t\t");
+                  }
+                }
                 _builder.newLineIfNotEmpty();
               }
             }

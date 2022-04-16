@@ -107,11 +107,13 @@ public class NamespaceContext {
     }
   }
   
+  private static boolean NAMES_WITH_NUMBERS_MODE = true;
+  
   private static NamespaceContext.Namespace rootNamespace = new NamespaceContext.Namespace(null, null);
   
   private static NamespaceContext.Namespace current = NamespaceContext.rootNamespace;
   
-  private static FullIdsToNamesMapper namesMapper = new FullIdsToNamesMapper();
+  private static FullIdsToNamesMapper namesMapper = new FullIdsToNamesMapper(NamespaceContext.NAMES_WITH_NUMBERS_MODE);
   
   public static void startNamespace(final String name) {
     if ((NamespaceContext.current == null)) {
@@ -202,13 +204,22 @@ public class NamespaceContext {
     return NamespaceContext.namesMapper.getName(fullId);
   }
   
+  public static String getNameWithNamespaces(final String fullId) {
+    return NamespaceContext.namesMapper.getNameWithNamespaces(fullId);
+  }
+  
+  public static boolean isNamesWithNumbersMode() {
+    return NamespaceContext.namesMapper.isNumberMode();
+  }
+  
   public static FullIdsToNamesMapper clearContext() {
     FullIdsToNamesMapper _xblockexpression = null;
     {
       NamespaceContext.Namespace _namespace = new NamespaceContext.Namespace(null, null);
       NamespaceContext.rootNamespace = _namespace;
       NamespaceContext.current = NamespaceContext.rootNamespace;
-      FullIdsToNamesMapper _fullIdsToNamesMapper = new FullIdsToNamesMapper();
+      boolean _isNumberMode = NamespaceContext.namesMapper.isNumberMode();
+      FullIdsToNamesMapper _fullIdsToNamesMapper = new FullIdsToNamesMapper(_isNumberMode);
       _xblockexpression = NamespaceContext.namesMapper = _fullIdsToNamesMapper;
     }
     return _xblockexpression;

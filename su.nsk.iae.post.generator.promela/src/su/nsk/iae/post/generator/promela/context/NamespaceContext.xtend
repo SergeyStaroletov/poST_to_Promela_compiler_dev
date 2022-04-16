@@ -7,9 +7,11 @@ import java.util.List
 import java.util.ArrayList
 
 class NamespaceContext {
+	static var NAMES_WITH_NUMBERS_MODE = true;
+	
 	static var Namespace rootNamespace = new Namespace(null, null);
 	static var Namespace current = rootNamespace;
-	static FullIdsToNamesMapper namesMapper = new FullIdsToNamesMapper();
+	static FullIdsToNamesMapper namesMapper = new FullIdsToNamesMapper(NAMES_WITH_NUMBERS_MODE);
 	
 	static def void startNamespace(String name) {
 		if (current === null) {
@@ -77,10 +79,18 @@ class NamespaceContext {
 		return namesMapper.getName(fullId);
 	}
 	
+	static def getNameWithNamespaces(String fullId) {
+		return namesMapper.getNameWithNamespaces(fullId);
+	}
+	
+	static def isNamesWithNumbersMode() {
+		return namesMapper.isNumberMode();
+	}
+	
 	static def clearContext() {
 		rootNamespace = new Namespace(null, null);
 		current = rootNamespace;
-		namesMapper = new FullIdsToNamesMapper();
+		namesMapper = new FullIdsToNamesMapper(namesMapper.isNumberMode);
 	}
 	
 	

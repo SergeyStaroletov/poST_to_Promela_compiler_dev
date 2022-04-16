@@ -8,20 +8,42 @@ import java.util.List
 import java.util.ArrayList
 import java.util.LinkedList
 import su.nsk.iae.post.generator.promela.context.NamespaceContext.FullIdParts
+import java.util.Map.Entry
+import java.util.AbstractMap.SimpleEntry
 
 class FullIdsToNamesMapper {
+	boolean numberMode;
+	def isNumberMode() {
+		return numberMode;
+	}
+	new (boolean numberMode) {
+		this.numberMode = numberMode;
+	}
+	
+	Map<String, FullIdParts> fullIdToParts = new HashMap();
 	Map<String, String> fullIdsToNames = new HashMap();
+	Map<String, String> fullIdsToNamesWithNumbers = new HashMap();
 	SimplifyingNamespace rootNamespace = new SimplifyingNamespace(null);
 	
 	def processNamespace(Namespace namespace) {
 		copyToSimplifyingNamespace(namespace, rootNamespace);
 		shortenChildrenNamespaceNames(rootNamespace);
+		fillFullIdParts(rootNamespace);
 		val separator = isSingleSeparatorEnough(rootNamespace) ? "_" : "__";
 		fillNames(rootNamespace, rootNamespace.name, separator);
+		fillNamesWithNumbers();
 		return;
 	}
 	
 	def getName(String fullId) {
+		var res = (numberMode ? fullIdsToNamesWithNumbers : fullIdsToNames).get(fullId);
+		if (res === null) {
+			throw new WrongModelStateException();
+		}
+		return res;
+	}
+	
+	def getNameWithNamespaces(String fullId) {
 		var res = fullIdsToNames.get(fullId);
 		if (res === null) {
 			throw new WrongModelStateException();
@@ -91,6 +113,12 @@ class FullIdsToNamesMapper {
 		return true;
 	}
 	
+	private def fillFullIdParts(SimplifyingNamespace namespace) {
+		namespace.fullIds.forEach[fullIdParts | fullIdToParts.put(fullIdParts.fullId, fullIdParts)];
+		
+		namespace.children.forEach[c | fillFullIdParts(c)];
+	}
+	
 	private def fillNames(SimplifyingNamespace namespace, String prevNsPart, String separator) {
 		val nsPart = (prevNsPart === null || prevNsPart.isEmpty() ? "" : prevNsPart + separator) +
 						(namespace.name !== null ? namespace.name : "");
@@ -106,6 +134,36 @@ class FullIdsToNamesMapper {
 		}
 		
 		namespace.children.forEach[c | fillNames(c, nsPart, separator)];
+	}
+	
+	private def fillNamesWithNumbers() {
+		val prefixesShownInNumberMode = new ArrayList();
+		prefixesShownInNumberMode.addAll("curS", "s", "timeout", "process", "sP", "p");
+		val newNamesToFullIdIdAndPrefix = new HashMap<String, List<FullIdIdAndPrefix>>();
+		for (entry : fullIdToParts.entrySet) {
+			val fullId = entry.key;
+			val id = entry.value.id;
+			val originalPrefix = entry.value.prefix;
+			val prefix = prefixesShownInNumberMode.contains(originalPrefix) ?
+							translatePrefix(originalPrefix) : null;
+			
+			val newName = prefix === null ? id : id + "___" + prefix;
+			newNamesToFullIdIdAndPrefix
+				.computeIfAbsent(newName, [new ArrayList()])
+				.add(new FullIdIdAndPrefix(fullId, id, prefix));
+		}
+		for (fullIdIdAndPrefixes : newNamesToFullIdIdAndPrefix.values) {
+			val severalVarsWithThisNewName = fullIdIdAndPrefixes.size > 1;
+			var counter = 0;
+			for (fullIdIdAndPrefix : fullIdIdAndPrefixes) {
+				val fullId = fullIdIdAndPrefix.fullId;
+				val id = fullIdIdAndPrefix.id;
+				val prefix = fullIdIdAndPrefix.prefix;
+				val postfixPart = '''«prefix»«severalVarsWithThisNewName ? counter++ : ""»''';
+				val newName = id + (!postfixPart.isBlank() ? "__" + postfixPart : "");
+				fullIdsToNamesWithNumbers.put(fullId, newName);
+			}
+		}
 	}
 	
 	private def String translatePrefix(String prefix) {
@@ -141,4 +199,17 @@ class FullIdsToNamesMapper {
 			fullIds.add(fullId);
 		}
 	}
+	
+	private static class FullIdIdAndPrefix {
+		public String fullId;
+		public String id;
+		public String prefix;
+		
+		new (String fullId, String id, String prefix) {
+			this.fullId = fullId;
+			this.id = id;
+			this.prefix = prefix;
+		}
+	}
+	
 }

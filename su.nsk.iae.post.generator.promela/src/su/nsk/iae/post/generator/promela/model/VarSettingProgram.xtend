@@ -123,7 +123,11 @@ class VarSettingProgram implements IPromelaElement {
 						atomic {
 							«FOR outToIns : outputToInputVars.entrySet»
 								«FOR in : outToIns.value»
-									«NamespaceContext.getName(in)» = «NamespaceContext.getName(outToIns.key)»;
+									«NamespaceContext.getName(in)» = «NamespaceContext.getName(outToIns.key)»;«
+									»«IF NamespaceContext.isNamesWithNumbersMode
+										» //«NamespaceContext.getNameWithNamespaces(in)» <- «
+										NamespaceContext.getNameWithNamespaces(outToIns.key)»«
+									ENDIF»
 								«ENDFOR»
 							«ENDFOR»
 							__currentProcess ! «NamespaceContext.getName(firstProcessMType)»;
