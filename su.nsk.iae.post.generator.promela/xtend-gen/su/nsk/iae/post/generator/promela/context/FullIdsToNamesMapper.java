@@ -269,7 +269,7 @@ public class FullIdsToNamesMapper {
   
   private void fillNamesWithNumbers() {
     final ArrayList<String> prefixesShownInNumberMode = new ArrayList<String>();
-    CollectionExtensions.<String>addAll(prefixesShownInNumberMode, "curS", "s", "S", "timeout", "sP", "p");
+    CollectionExtensions.<String>addAll(prefixesShownInNumberMode, "curS", "s", "S", "timeout", "specialProcess", "sP", "p");
     final HashMap<String, List<FullIdsToNamesMapper.FullIdIdAndPrefix>> newNamesToFullIdIdAndPrefix = new HashMap<String, List<FullIdsToNamesMapper.FullIdIdAndPrefix>>();
     Set<Map.Entry<String, NamespaceContext.FullIdParts>> _entrySet = this.fullIdToParts.entrySet();
     for (final Map.Entry<String, NamespaceContext.FullIdParts> entry : _entrySet) {
