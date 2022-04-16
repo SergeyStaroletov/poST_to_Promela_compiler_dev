@@ -138,7 +138,7 @@ class FullIdsToNamesMapper {
 	
 	private def fillNamesWithNumbers() {
 		val prefixesShownInNumberMode = new ArrayList();
-		prefixesShownInNumberMode.addAll("curS", "s", "timeout", "process", "sP", "p");
+		prefixesShownInNumberMode.addAll("curS", "s", "S", "timeout", "sP", "p");
 		val newNamesToFullIdIdAndPrefix = new HashMap<String, List<FullIdIdAndPrefix>>();
 		for (entry : fullIdToParts.entrySet) {
 			val fullId = entry.key;
