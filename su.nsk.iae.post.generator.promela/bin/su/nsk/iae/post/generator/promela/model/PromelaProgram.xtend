@@ -1,13 +1,10 @@
 package su.nsk.iae.post.generator.promela.model
 
-import su.nsk.iae.post.generator.promela.model.vars.*
-import su.nsk.iae.post.generator.promela.model.IPromelaElement
-import su.nsk.iae.post.poST.Program
-import java.util.stream.Collectors
-import java.util.List
-import java.util.ArrayList
-import su.nsk.iae.post.generator.promela.context.NamespaceContext
 import su.nsk.iae.post.generator.promela.context.CurrentContext
+import su.nsk.iae.post.generator.promela.context.NamespaceContext
+import su.nsk.iae.post.generator.promela.model.vars.PromelaVar
+import su.nsk.iae.post.generator.promela.model.vars.PromelaVarsHelper
+import su.nsk.iae.post.poST.Program
 
 class PromelaProgram implements IPromelaElement {
 	final String shortName;
@@ -32,7 +29,6 @@ class PromelaProgram implements IPromelaElement {
 		program.progVars.forEach([d | PromelaVarsHelper.getVars(d.vars, d.const)
 			.forEach([v | (v.isConstant() ? constants : vars).add(v)])
 		]);
-		//todo other var types
 		
 		program.processes.forEach[p | processes.add(new PromelaProcess(p))];
 		
