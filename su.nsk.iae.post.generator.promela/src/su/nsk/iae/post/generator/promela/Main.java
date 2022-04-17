@@ -17,17 +17,13 @@ public class Main {
 	public static void main(String[] args) throws IOException {
         Model m = prepareAndParseModelFromResource(".\\Sanitizer.post");
         
-        var res = buildModel(m).toText();
+        var res = new PromelaModel(m).toText();
 
         System.out.println(res);
         
         printToFile("D:\\Promela programms\\sanitizer-gen.pml", res);
 
         System.out.println("Saved to file sanitizer-gen.pml.");
-    }
-
-    private static PromelaModel buildModel(Model m) {
-        return new PromelaModel(m);
     }
 
     private static Model prepareAndParseModelFromResource(String fileName) throws IOException {
