@@ -25,7 +25,7 @@ class NamespaceContext {
 	static def void endNamespace() {
 		current = current.parent;
 		if (current === null) {
-			throw new WrongModelStateException();
+			throw new WrongModelStateException("Attempted to end root namespace");
 		}
 	}
 	
@@ -62,7 +62,7 @@ class NamespaceContext {
 			cur = cur.parent;
 		}
 		if (fullId === null) {
-			throw new WrongModelStateException();
+			throw new WrongModelStateException('''No fullId for id "«id»" and attribute "«attribute»"''');
 		}
 		return fullId;
 	}

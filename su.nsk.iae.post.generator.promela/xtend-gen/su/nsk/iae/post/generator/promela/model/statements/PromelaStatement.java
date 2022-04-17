@@ -339,7 +339,7 @@ public abstract class PromelaStatement implements IPromelaElement, PostConstruct
       };
       final PromelaProcess process = IterableExtensions.<PromelaProcess>findFirst(PromelaContext.getContext().getAllProcesses(), _function);
       if ((process == null)) {
-        throw new WrongModelStateException();
+        throw new WrongModelStateException("Could not get statement process");
       }
       this.processStateMTypeVar = process.getStateVarMType();
       final PromelaState state = process.getStates().get(0);
@@ -364,7 +364,7 @@ public abstract class PromelaStatement implements IPromelaElement, PostConstruct
       };
       final String firstDefinedProcessShortName = IterableExtensions.<String>findFirst(IterableExtensions.<PromelaProcess, String>map(IterableExtensions.<PromelaProcess>filter(PromelaContext.getContext().getAllProcesses(), _function_1), _function_2), _function_3);
       if ((firstDefinedProcessShortName == null)) {
-        throw new WrongModelStateException();
+        throw new WrongModelStateException("Could not get first defined process short name");
       }
       this.startsInNextCycle = firstDefinedProcessShortName.equals(this.processShortName);
     }

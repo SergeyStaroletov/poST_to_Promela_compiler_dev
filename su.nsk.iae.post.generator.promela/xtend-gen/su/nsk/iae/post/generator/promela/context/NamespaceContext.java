@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
@@ -127,7 +128,7 @@ public class NamespaceContext {
   public static void endNamespace() {
     NamespaceContext.current = NamespaceContext.current.parent;
     if ((NamespaceContext.current == null)) {
-      throw new WrongModelStateException();
+      throw new WrongModelStateException("Attempted to end root namespace");
     }
   }
   
@@ -187,7 +188,13 @@ public class NamespaceContext {
       }
     }
     if ((fullId == null)) {
-      throw new WrongModelStateException();
+      StringConcatenation _builder = new StringConcatenation();
+      _builder.append("No fullId for id \"");
+      _builder.append(id);
+      _builder.append("\" and attribute \"");
+      _builder.append(attribute);
+      _builder.append("\"");
+      throw new WrongModelStateException(_builder.toString());
     }
     return fullId;
   }

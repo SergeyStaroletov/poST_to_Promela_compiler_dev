@@ -50,7 +50,7 @@ class PromelaVarsHelper {
 		val arrSpec = varDecl.arrSpec;
 		if (arrSpec !== null) {
 			if (arrSpec.init.interval === null) {
-				throw new NotSupportedElementException();
+				throw new NotSupportedElementException("Array with no interval specified");
 			}
 			var int intervalStart = -1;
 			var int intervalEnd = -1;
@@ -75,7 +75,7 @@ class PromelaVarsHelper {
 				}
 			}
 			if (intervalStart == -1 || intervalEnd == -1) {
-				throw new NotSupportedElementException();
+				throw new NotSupportedElementException("Array with interval specified by expressions more complex than numbers");
 			}
 			val typeName = postToPromelaTypeNameForArray(arrSpec.init.type);
 			
@@ -94,7 +94,7 @@ class PromelaVarsHelper {
 			];
 			return res;
 		}
-		throw new NotSupportedElementException();
+		throw new NotSupportedElementException("VarInitDeclaration which is not simple or array variable (" + varDecl + ")");
 	}
 	
 	private static def getPromelaSimpleVar(String type, String name) {
@@ -104,33 +104,33 @@ class PromelaVarsHelper {
 			case "SINT": return new PromelaVar.Short(name, true)
 			case "INT": return new PromelaVar.Short(name)
 			case "DINT": return new PromelaVar.Int(name)
-			case "LINT": throw new NotSupportedElementException()
+			case "LINT": throw new NotSupportedElementException("poST variable of type LINT")
 			
 			//unsigned integer
 			case "USINT": return new PromelaVar.Byte(name)
 			case "UINT": return new PromelaVar.Unsigned(name, 16)
-			case "UDINT": throw new NotSupportedElementException()
-			case "ULINT": throw new NotSupportedElementException()
+			case "UDINT": throw new NotSupportedElementException("poST variable of type UDINT")
+			case "ULINT": throw new NotSupportedElementException("poST variable of type ULINT")
 			
 			//real
-			case "REAL": throw new NotSupportedElementException()
-			case "LREAL": throw new NotSupportedElementException()
+			case "REAL": throw new NotSupportedElementException("poST variable of type REAL")
+			case "LREAL": throw new NotSupportedElementException("poST variable of type LREAL")
 			
 			//bit string
 			case "BOOL": return new PromelaVar.Bool(name)
 			case "BYTE": return new PromelaVar.Byte(name)
 			case "WORD": return new PromelaVar.Short(name)
 			case "DWORD": return new PromelaVar.Int(name)
-			case "LWORD": throw new NotSupportedElementException()
+			case "LWORD": throw new NotSupportedElementException("poST variable of type LWORD")
 			
 			//time
 			case "TIME": context.addTimeVar(name)
 			
 			//string
-			case "STRING": throw new NotSupportedElementException()
-			case "WSTRING": throw new NotSupportedElementException()
+			case "STRING": throw new NotSupportedElementException("poST variable of type STRING")
+			case "WSTRING": throw new NotSupportedElementException("poST variable of type WSTRING")
 			
-			default: throw new UnknownElementException()
+			default: throw new UnknownElementException("poST variable of type " + type)
 		}
 	}
 	
@@ -140,7 +140,7 @@ class PromelaVarsHelper {
 			return "byte";
 		}
 		if ("TIME".equals(type)) {
-			throw new NotSupportedElementException();
+			throw new NotSupportedElementException("Array of TIME variables");
 		}
 		return getPromelaSimpleVar(type, null).typeName;
 	}

@@ -107,7 +107,7 @@ public class PromelaModel implements IPromelaElement {
               String _interval_1 = task.getInit().getInterval().getTime().getInterval();
               return new PromelaExpression.TimeConstant(_interval_1).getValue();
             } else {
-              throw new NotSupportedElementException();
+              throw new NotSupportedElementException("Task with name \"promelaVerificationTaskName\" with no interval specified");
             }
           }
         }
@@ -172,10 +172,12 @@ public class PromelaModel implements IPromelaElement {
             if ((timeVarValue instanceof PromelaExpression.TimeConstant)) {
               return Long.valueOf(((PromelaExpression.TimeConstant)timeVarValue).getValue());
             } else {
-              throw new NotSupportedElementException();
+              String _string = timeVarValue.getClass().toString();
+              throw new NotSupportedElementException(_string);
             }
           } else {
-            throw new NotSupportedElementException();
+            String _string_1 = expr.getClass().toString();
+            throw new NotSupportedElementException(_string_1);
           }
         }
       };
@@ -192,7 +194,10 @@ public class PromelaModel implements IPromelaElement {
           }
         }
         if ((bits >= 32)) {
-          throw new NotSupportedElementException();
+          String _name = p.getTimeoutVar().getName();
+          String _plus = ("Timeout variable (" + _name);
+          String _plus_1 = (_plus + ") with size >= 32 bits");
+          throw new NotSupportedElementException(_plus_1);
         }
         p.getTimeoutVar().setBits(bits);
       }

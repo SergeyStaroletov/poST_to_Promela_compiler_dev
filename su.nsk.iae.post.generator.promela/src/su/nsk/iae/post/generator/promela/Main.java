@@ -1,6 +1,5 @@
 package su.nsk.iae.post.generator.promela;
 
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -12,7 +11,6 @@ import com.google.inject.Injector;
 
 import su.nsk.iae.post.PoSTStandaloneSetup;
 import su.nsk.iae.post.generator.promela.model.PromelaModel;
-import su.nsk.iae.post.generator.promela.model.PromelaProgram;
 import su.nsk.iae.post.poST.Model;
 
 public class Main {

@@ -183,7 +183,7 @@ abstract class PromelaStatement implements IPromelaElement, IPostConstuctible {
 			val process = PromelaContext.getContext().allProcesses
 				.findFirst[p | p.programName.equals(curProgramName) && p.shortName.equals(processShortName)];
 			if (process === null) {
-				throw new WrongModelStateException();
+				throw new WrongModelStateException("Could not get statement process");
 			}
 			this.processStateMTypeVar = process.stateVarMType;
 			val state = process.states.get(0);
@@ -194,7 +194,7 @@ abstract class PromelaStatement implements IPromelaElement, IPostConstuctible {
 				.map[p | p.shortName]
 				.findFirst[name | name.equals(curProcessName) || name.equals(processShortName)];
 			if (firstDefinedProcessShortName === null) {
-				throw new WrongModelStateException();
+				throw new WrongModelStateException("Could not get first defined process short name");
 			}
 			this.startsInNextCycle = firstDefinedProcessShortName.equals(processShortName);
 		}

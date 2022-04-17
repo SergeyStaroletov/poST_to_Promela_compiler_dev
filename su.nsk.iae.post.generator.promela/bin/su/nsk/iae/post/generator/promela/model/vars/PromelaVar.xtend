@@ -159,7 +159,7 @@ abstract class PromelaVar implements IPromelaElement {
 		
 		override String toText() {
 			if (!constant && !bitsSet && !ignored) {
-				throw new WrongModelStateException();
+				throw new WrongModelStateException("Wrong time interval variable state");
 			}
 			'''
 				«IF valueAfterInterval !== null && originalValue !== null && !valueAfterInterval.equals(originalValue)»
@@ -192,7 +192,7 @@ abstract class PromelaVar implements IPromelaElement {
 				''';
 			}
 			if (v === null) {
-				throw new WrongModelStateException();
+				throw new WrongModelStateException("VarProxy is not set");
 			}
 			else {
 				return v.toText();

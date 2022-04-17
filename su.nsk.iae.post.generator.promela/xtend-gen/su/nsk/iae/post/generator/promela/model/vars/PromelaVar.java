@@ -140,7 +140,7 @@ public abstract class PromelaVar implements IPromelaElement {
       String _xblockexpression = null;
       {
         if ((((!this.constant) && (!this.bitsSet)) && (!this.ignored))) {
-          throw new WrongModelStateException();
+          throw new WrongModelStateException("Wrong time interval variable state");
         }
         StringConcatenation _builder = new StringConcatenation();
         {
@@ -200,7 +200,7 @@ public abstract class PromelaVar implements IPromelaElement {
         return _builder.toString();
       }
       if ((this.v == null)) {
-        throw new WrongModelStateException();
+        throw new WrongModelStateException("VarProxy is not set");
       } else {
         return this.v.toText();
       }

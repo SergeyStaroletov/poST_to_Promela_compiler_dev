@@ -102,7 +102,7 @@ public class FullIdsToNamesMapper {
     }
     String res = _xifexpression.get(fullId);
     if ((res == null)) {
-      throw new WrongModelStateException();
+      throw new WrongModelStateException((("No name for fullId \"" + fullId) + "\""));
     }
     return res;
   }
@@ -110,7 +110,7 @@ public class FullIdsToNamesMapper {
   public String getNameWithNamespaces(final String fullId) {
     String res = this.fullIdsToNames.get(fullId);
     if ((res == null)) {
-      throw new WrongModelStateException();
+      throw new WrongModelStateException((("No nameWithNamespaces for fullId \"" + fullId) + "\""));
     }
     return res;
   }

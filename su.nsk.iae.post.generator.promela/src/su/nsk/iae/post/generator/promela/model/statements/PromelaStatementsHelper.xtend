@@ -36,7 +36,7 @@ class PromelaStatementsHelper {
 			case WhileStatementImpl: return new PromelaStatement.While(s as WhileStatementImpl)
 			case RepeatStatementImpl: return new PromelaStatement.Repeat(s as RepeatStatementImpl)
 			case ForStatementImpl: return new PromelaStatement.For(s as ForStatementImpl)
-			default: throw new UnknownElementException()
+			default: throw new UnknownElementException("Statement of type " + s.class.toString + " (" + s + ")")
 		}
 	}
 }

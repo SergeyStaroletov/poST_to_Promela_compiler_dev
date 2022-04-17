@@ -46,7 +46,9 @@ public class PromelaExpressionsHelper {
               String _value = ((IntegerLiteral)num).getValue().getValue();
               return new PromelaExpression.Constant(_value);
             } else {
-              throw new NotSupportedElementException();
+              String _string = num.getClass().toString();
+              String _plus = ("Number constant of type " + _string);
+              throw new NotSupportedElementException(_plus);
             }
           } else {
             TimeLiteral _time = ((PrimaryExpression)expr).getConst().getTime();
@@ -68,9 +70,15 @@ public class PromelaExpressionsHelper {
                 if (_equals_1) {
                   return new PromelaExpression.Constant("false");
                 }
-                throw new NotSupportedElementException();
+                String _oth_1 = ((PrimaryExpression)expr).getConst().getOth();
+                String _plus_1 = ("\"" + _oth_1);
+                String _plus_2 = (_plus_1 + "\"");
+                throw new NotSupportedElementException(_plus_2);
               } else {
-                throw new UnknownElementException();
+                Constant _const_1 = ((PrimaryExpression)expr).getConst();
+                String _plus_3 = ("Constant (" + _const_1);
+                String _plus_4 = (_plus_3 + ")");
+                throw new UnknownElementException(_plus_4);
               }
             }
           }
@@ -155,11 +163,17 @@ public class PromelaExpressionsHelper {
         if (!_matched) {
           if (Objects.equal(_class, PowerExpressionImpl.class)) {
             _matched=true;
-            throw new NotSupportedElementException();
+            String _string_1 = expr.getClass().toString();
+            throw new NotSupportedElementException(_string_1);
           }
         }
         if (!_matched) {
-          throw new UnknownElementException();
+          String _string_2 = expr.getClass().toString();
+          String _plus_5 = ("Expression of type " + _string_2);
+          String _plus_6 = (_plus_5 + " (");
+          String _plus_7 = (_plus_6 + expr);
+          String _plus_8 = (_plus_7 + ")");
+          throw new UnknownElementException(_plus_8);
         }
         return new PromelaExpression.Binary(left, opLiteral, right);
       }
@@ -178,10 +192,16 @@ public class PromelaExpressionsHelper {
           _switchResult = "!=";
           break;
         default:
-          throw new UnknownElementException();
+          String _literal_1 = ((CompExpressionImpl) expr).getCompOp().getLiteral();
+          String _plus = ("\"" + _literal_1);
+          String _plus_1 = (_plus + "\" in CompExpressionImpl");
+          throw new UnknownElementException(_plus_1);
       }
     } else {
-      throw new UnknownElementException();
+      String _literal_1 = ((CompExpressionImpl) expr).getCompOp().getLiteral();
+      String _plus = ("\"" + _literal_1);
+      String _plus_1 = (_plus + "\" in CompExpressionImpl");
+      throw new UnknownElementException(_plus_1);
     }
     return _switchResult;
   }

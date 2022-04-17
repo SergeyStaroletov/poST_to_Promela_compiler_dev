@@ -69,7 +69,7 @@ class PromelaModel implements IPromelaElement {
 							return new PromelaExpression.TimeConstant(task.init.interval.time.interval).value;
 						}
 						else {
-							throw new NotSupportedElementException();
+							throw new NotSupportedElementException("Task with name \"promelaVerificationTaskName\" with no interval specified");
 						}
 					}
 				}
@@ -123,11 +123,11 @@ class PromelaModel implements IPromelaElement {
 							return timeVarValue.value;
 						}
 						else {
-							throw new NotSupportedElementException();
+							throw new NotSupportedElementException(timeVarValue.class.toString);
 						}
 					}
 					else {
-						throw new NotSupportedElementException();
+						throw new NotSupportedElementException(expr.class.toString);
 					}
 				}]
 				.reduce[t1, t2 | Math.max(t1, t2)];
@@ -138,7 +138,7 @@ class PromelaModel implements IPromelaElement {
 					bits++;
 				}
 				if (bits >= 32) {
-					throw new NotSupportedElementException();
+					throw new NotSupportedElementException("Timeout variable (" + p.timeoutVar.name + ") with size >= 32 bits");
 				}
 				p.timeoutVar.setBits(bits);
 			}

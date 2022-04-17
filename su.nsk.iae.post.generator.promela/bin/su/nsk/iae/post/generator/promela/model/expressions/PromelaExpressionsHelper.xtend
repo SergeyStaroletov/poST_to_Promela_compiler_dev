@@ -30,7 +30,7 @@ class PromelaExpressionsHelper {
 						return new PromelaExpression.Constant(num.value.value);
 					}
 					else {
-						throw new NotSupportedElementException();
+						throw new NotSupportedElementException("Number constant of type " + num.class.toString);
 					}
 				}
 				else if (expr.const.time !== null) {
@@ -45,10 +45,10 @@ class PromelaExpressionsHelper {
 					if ("FALSE".equals(expr.const.oth)) {
 						return new PromelaExpression.Constant("false");
 					}
-					throw new NotSupportedElementException();
+					throw new NotSupportedElementException('"' + expr.const.oth + '"');
 				}
 				else {
-					throw new UnknownElementException();
+					throw new UnknownElementException("Constant (" + expr.const + ")");
 				}
 			}
 			else if (expr.procStatus !== null) {
@@ -81,8 +81,8 @@ class PromelaExpressionsHelper {
 				case EquExpressionImpl: opLiteral = (expr as EquExpressionImpl).equOp.literal
 				case AddExpressionImpl: opLiteral = (expr as AddExpressionImpl).addOp.literal
 				case MulExpressionImpl: opLiteral = getMulLiteral(expr)
-				case PowerExpressionImpl: throw new NotSupportedElementException()
-				default: throw new UnknownElementException()
+				case PowerExpressionImpl: throw new NotSupportedElementException(expr.class.toString)
+				default: throw new UnknownElementException("Expression of type " + expr.class.toString + " (" + expr + ")")
 			}
 			return new PromelaExpression.Binary(left, opLiteral, right);
 		}
@@ -92,7 +92,7 @@ class PromelaExpressionsHelper {
 		switch ((expr as CompExpressionImpl).compOp.literal) {
 			case "=": "=="
 			case "<>": "!="
-			default: throw new UnknownElementException()
+			default: throw new UnknownElementException('"' + (expr as CompExpressionImpl).compOp.literal + "\" in CompExpressionImpl")
 		}
 	}
 	

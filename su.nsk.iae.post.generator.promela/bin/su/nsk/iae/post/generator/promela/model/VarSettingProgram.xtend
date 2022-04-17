@@ -58,11 +58,11 @@ class VarSettingProgram implements IPromelaElement {
 				];
 			}
 			else {
-				throw new NotSupportedElementException();
+				throw new NotSupportedElementException(v.class.toString + " as gremlin variable");
 			}
 		}
 		else {
-			throw new NotSupportedElementException();
+			throw new NotSupportedElementException(v.class.toString + " as gremlin variable");
 		}
 		if (gremlinProcessFullId === null) {
 			gremlinProcessFullId = NamespaceContext.addId(gremlinProcessId, processPrefix);
@@ -87,7 +87,7 @@ class VarSettingProgram implements IPromelaElement {
 			res.add(varsSetterMTypeFullId);
 		}
 		if (res.isEmpty()) {
-			throw new WrongModelStateException();
+			throw new WrongModelStateException("Querying var setting process mtypes with no need in them");
 		}
 		return res;
 	}

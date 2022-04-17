@@ -102,6 +102,11 @@ public class PromelaStatementsHelper {
         return new PromelaStatement.For(((ForStatementImpl) s));
       }
     }
-    throw new UnknownElementException();
+    String _string = s.getClass().toString();
+    String _plus = ("Statement of type " + _string);
+    String _plus_1 = (_plus + " (");
+    String _plus_2 = (_plus_1 + s);
+    String _plus_3 = (_plus_2 + ")");
+    throw new UnknownElementException(_plus_3);
   }
 }

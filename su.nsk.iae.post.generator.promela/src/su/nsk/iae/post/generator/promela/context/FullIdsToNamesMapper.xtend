@@ -38,7 +38,7 @@ class FullIdsToNamesMapper {
 	def getName(String fullId) {
 		var res = (numberMode ? fullIdsToNamesWithNumbers : fullIdsToNames).get(fullId);
 		if (res === null) {
-			throw new WrongModelStateException();
+			throw new WrongModelStateException("No name for fullId \"" + fullId + '"');
 		}
 		return res;
 	}
@@ -46,7 +46,7 @@ class FullIdsToNamesMapper {
 	def getNameWithNamespaces(String fullId) {
 		var res = fullIdsToNames.get(fullId);
 		if (res === null) {
-			throw new WrongModelStateException();
+			throw new WrongModelStateException("No nameWithNamespaces for fullId \"" + fullId + '"');
 		}
 		return res;
 	}

@@ -70,7 +70,7 @@ public class PromelaVarsHelper {
       ArrayInterval _interval = arrSpec.getInit().getInterval();
       boolean _tripleEquals = (_interval == null);
       if (_tripleEquals) {
-        throw new NotSupportedElementException();
+        throw new NotSupportedElementException("Array with no interval specified");
       }
       int intervalStart = (-1);
       int intervalEnd = (-1);
@@ -91,7 +91,7 @@ public class PromelaVarsHelper {
         }
       }
       if (((intervalStart == (-1)) || (intervalEnd == (-1)))) {
-        throw new NotSupportedElementException();
+        throw new NotSupportedElementException("Array with interval specified by expressions more complex than numbers");
       }
       final String typeName = PromelaVarsHelper.postToPromelaTypeNameForArray(arrSpec.getInit().getType());
       List<PromelaExpression> _xifexpression = null;
@@ -118,7 +118,7 @@ public class PromelaVarsHelper {
       varDecl.getVarList().getVars().forEach(_function_2);
       return res_1;
     }
-    throw new NotSupportedElementException();
+    throw new NotSupportedElementException((("VarInitDeclaration which is not simple or array variable (" + varDecl) + ")"));
   }
   
   private static PromelaVar getPromelaSimpleVar(final String type, final String name) {
@@ -135,19 +135,19 @@ public class PromelaVarsHelper {
           case "DINT":
             return new PromelaVar.Int(name);
           case "LINT":
-            throw new NotSupportedElementException();
+            throw new NotSupportedElementException("poST variable of type LINT");
           case "USINT":
             return new PromelaVar.Byte(name);
           case "UINT":
             return new PromelaVar.Unsigned(name, 16);
           case "UDINT":
-            throw new NotSupportedElementException();
+            throw new NotSupportedElementException("poST variable of type UDINT");
           case "ULINT":
-            throw new NotSupportedElementException();
+            throw new NotSupportedElementException("poST variable of type ULINT");
           case "REAL":
-            throw new NotSupportedElementException();
+            throw new NotSupportedElementException("poST variable of type REAL");
           case "LREAL":
-            throw new NotSupportedElementException();
+            throw new NotSupportedElementException("poST variable of type LREAL");
           case "BOOL":
             return new PromelaVar.Bool(name);
           case "BYTE":
@@ -157,19 +157,19 @@ public class PromelaVarsHelper {
           case "DWORD":
             return new PromelaVar.Int(name);
           case "LWORD":
-            throw new NotSupportedElementException();
+            throw new NotSupportedElementException("poST variable of type LWORD");
           case "TIME":
             _switchResult = context.addTimeVar(name);
             break;
           case "STRING":
-            throw new NotSupportedElementException();
+            throw new NotSupportedElementException("poST variable of type STRING");
           case "WSTRING":
-            throw new NotSupportedElementException();
+            throw new NotSupportedElementException("poST variable of type WSTRING");
           default:
-            throw new UnknownElementException();
+            throw new UnknownElementException(("poST variable of type " + type));
         }
       } else {
-        throw new UnknownElementException();
+        throw new UnknownElementException(("poST variable of type " + type));
       }
       _xblockexpression = _switchResult;
     }
@@ -184,7 +184,7 @@ public class PromelaVarsHelper {
     }
     boolean _equals_1 = "TIME".equals(type);
     if (_equals_1) {
-      throw new NotSupportedElementException();
+      throw new NotSupportedElementException("Array of TIME variables");
     }
     return PromelaVarsHelper.getPromelaSimpleVar(type, null).typeName;
   }

@@ -105,10 +105,14 @@ public class VarSettingProgram implements IPromelaElement {
               };
               this.gremlinTextSuppliers.add(_function_2);
             } else {
-              throw new NotSupportedElementException();
+              String _string = ((PromelaVar.Short)v).getClass().toString();
+              String _plus = (_string + " as gremlin variable");
+              throw new NotSupportedElementException(_plus);
             }
           } else {
-            throw new NotSupportedElementException();
+            String _string_1 = v.getClass().toString();
+            String _plus_1 = (_string_1 + " as gremlin variable");
+            throw new NotSupportedElementException(_plus_1);
           }
         }
       }
@@ -161,7 +165,7 @@ public class VarSettingProgram implements IPromelaElement {
     }
     boolean _isEmpty_2 = res.isEmpty();
     if (_isEmpty_2) {
-      throw new WrongModelStateException();
+      throw new WrongModelStateException("Querying var setting process mtypes with no need in them");
     }
     return res;
   }
