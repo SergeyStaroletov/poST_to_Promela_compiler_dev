@@ -173,33 +173,6 @@ abstract class PromelaVar implements IPromelaElement {
 		}
 	}
 	
-	static class VarProxy extends PromelaVar {
-		PromelaVar v = null;
-		
-		new(String name, String type) {
-			super(name, type);
-		}
-		
-		def setVar(PromelaVar v) {
-			this.v = v;
-		}
-		
-		override toText() {
-			if (ignored) {
-				return
-				'''
-					//ignored: «NamespaceContext.getName(v === null ? this.name : v.name)»
-				''';
-			}
-			if (v === null) {
-				throw new WrongModelStateException("VarProxy is not set");
-			}
-			else {
-				return v.toText();
-			}
-		}
-	}
-	
 	static class Array extends PromelaVar {
 		int firstIndex;
 		int length;

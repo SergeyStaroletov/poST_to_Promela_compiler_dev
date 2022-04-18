@@ -172,41 +172,6 @@ public abstract class PromelaVar implements IPromelaElement {
     }
   }
   
-  public static class VarProxy extends PromelaVar {
-    private PromelaVar v = null;
-    
-    public VarProxy(final String name, final String type) {
-      super(name, type);
-    }
-    
-    public PromelaVar setVar(final PromelaVar v) {
-      return this.v = v;
-    }
-    
-    @Override
-    public String toText() {
-      if (this.ignored) {
-        StringConcatenation _builder = new StringConcatenation();
-        _builder.append("//ignored: ");
-        String _xifexpression = null;
-        if ((this.v == null)) {
-          _xifexpression = this.name;
-        } else {
-          _xifexpression = this.v.name;
-        }
-        String _name = NamespaceContext.getName(_xifexpression);
-        _builder.append(_name);
-        _builder.newLineIfNotEmpty();
-        return _builder.toString();
-      }
-      if ((this.v == null)) {
-        throw new WrongModelStateException("VarProxy is not set");
-      } else {
-        return this.v.toText();
-      }
-    }
-  }
-  
   public static class Array extends PromelaVar {
     private int firstIndex;
     
