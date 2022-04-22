@@ -21,12 +21,12 @@ class PromelaModel implements IPromelaElement {
 	
 	final PromelaElementList<PromelaProgram> programs = new PromelaElementList("\r\n\r\n\r\n");
 	
-	new(Model m) {
+	new(Model m, boolean reduceTimeValues) {
 		m.programs.forEach[p | programs.add(new PromelaProgram(p))];
 		NamespaceContext.addId("__currentProcess");
 		
 		val interval = getIntervalOfPromelaVerificationTask(m.conf);
-		setTimeValues(interval);
+		setTimeValues(interval, reduceTimeValues);
 		setTimeoutVars();
 		val varSettingProgram = defineGremlinVarsAndOutputToInputConnections();
 		PromelaContext.getContext().setVarSettingProgram(varSettingProgram);
@@ -78,7 +78,7 @@ class PromelaModel implements IPromelaElement {
 		return 1l;
 	}
 	
-	private def long setTimeValues(long interval) {
+	private def long setTimeValues(long interval, boolean reduceTimeValues) {
 		val timeVals = PromelaContext.getContext().getTimeVals();
 		if (timeVals.isEmpty()) {
 			val timeVars = PromelaContext.getContext().getTimeVars();
@@ -92,12 +92,18 @@ class PromelaModel implements IPromelaElement {
 			for (tv : timeVals) {
 				tv.setValue(tv.value / interval);
 			}
-			var divider = timeVals.get(0).value;
-			for (tv : timeVals) {
-				divider = gcd(divider, tv.value);
+			var long divider;
+			if (reduceTimeValues) {
+				divider = timeVals.get(0).value;
+				for (tv : timeVals) {
+					divider = gcd(divider, tv.value);
+				}
+				for (tv : timeVals) {
+					tv.setValue(tv.value / divider);
+				}
 			}
-			for (tv : timeVals) {
-				tv.setValue(tv.value / divider);
+			else {
+				divider = 1;
 			}
 			return divider;
 		}

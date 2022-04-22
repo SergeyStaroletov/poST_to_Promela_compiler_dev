@@ -20,20 +20,36 @@ public class Main {
 	private static String defaultOutputPath = "D:\\Promela programms\\sanitizer-gen.pml";
 	
 	public static void main(String[] args) throws IOException {
-		String inputFile = getKeyValue(args, "-i").orElse(defaultInputPath);
-		String outputFile = getKeyValue(args, "-o").orElse(defaultOutputPath);
+		String inputFile = getKeyValue(args, "-i", "--input").orElse(defaultInputPath);
+		String outputFile = getKeyValue(args, "-o", "--output").orElse(defaultOutputPath);
+		boolean reduceTimeValues = isKeyPresent(args, "-rt", "--reduceTime");
 		
         Model m = prepareAndParseModelFromResource(inputFile);
-        var res = new PromelaModel(m).toText();
+        var res = new PromelaModel(m, reduceTimeValues).toText();
 
         System.out.println(res);
         printToFile(outputFile, res);
         System.out.println("Saved to \"" + outputFile + "\".");
     }
 	
-	private static Optional<String> getKeyValue(String[] args, String key) {
-		int pathIndex = List.of(args).indexOf(key) + 1;
-		return Optional.ofNullable(pathIndex > 0 && args.length > pathIndex ? args[pathIndex] : null);
+	private static Optional<String> getKeyValue(String[] args, String... keys) {
+		int keyIndex = -1;
+		for (String key : keys) {
+			keyIndex = List.of(args).indexOf(key);
+			if (keyIndex != -1) {
+				break;
+			}
+		}
+		return Optional.ofNullable(keyIndex != -1 && args.length > keyIndex + 1 ? args[keyIndex + 1] : null);
+	}
+	
+	private static boolean isKeyPresent(String[] args, String... keys) {
+		for (String key : keys) {
+			if (List.of(args).indexOf(key) != -1) {
+				return true;
+			}
+		}
+		return false;
 	}
 
     private static Model prepareAndParseModelFromResource(String fileName) throws IOException {

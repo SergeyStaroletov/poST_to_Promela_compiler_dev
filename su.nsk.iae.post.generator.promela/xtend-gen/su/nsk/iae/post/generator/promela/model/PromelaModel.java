@@ -36,7 +36,7 @@ public class PromelaModel implements IPromelaElement {
   
   private final PromelaElementList<PromelaProgram> programs = new PromelaElementList<PromelaProgram>("\r\n\r\n\r\n");
   
-  public PromelaModel(final Model m) {
+  public PromelaModel(final Model m, final boolean reduceTimeValues) {
     final Consumer<Program> _function = (Program p) -> {
       PromelaProgram _promelaProgram = new PromelaProgram(p);
       this.programs.add(_promelaProgram);
@@ -44,7 +44,7 @@ public class PromelaModel implements IPromelaElement {
     m.getPrograms().forEach(_function);
     NamespaceContext.addId("__currentProcess");
     final long interval = this.getIntervalOfPromelaVerificationTask(m.getConf());
-    this.setTimeValues(interval);
+    this.setTimeValues(interval, reduceTimeValues);
     this.setTimeoutVars();
     final VarSettingProgram varSettingProgram = this.defineGremlinVarsAndOutputToInputConnections();
     PromelaContext.getContext().setVarSettingProgram(varSettingProgram);
@@ -116,7 +116,7 @@ public class PromelaModel implements IPromelaElement {
     return 1l;
   }
   
-  private long setTimeValues(final long interval) {
+  private long setTimeValues(final long interval, final boolean reduceTimeValues) {
     final List<PromelaExpression.TimeConstant> timeVals = PromelaContext.getContext().getTimeVals();
     boolean _isEmpty = timeVals.isEmpty();
     if (_isEmpty) {
@@ -136,14 +136,19 @@ public class PromelaModel implements IPromelaElement {
         long _divide = (_value / interval);
         tv.setValue(_divide);
       }
-      long divider = timeVals.get(0).getValue();
-      for (final PromelaExpression.TimeConstant tv_1 : timeVals) {
-        divider = this.gcd(divider, tv_1.getValue());
-      }
-      for (final PromelaExpression.TimeConstant tv_2 : timeVals) {
-        long _value_1 = tv_2.getValue();
-        long _divide_1 = (_value_1 / divider);
-        tv_2.setValue(_divide_1);
+      long divider = 0;
+      if (reduceTimeValues) {
+        divider = timeVals.get(0).getValue();
+        for (final PromelaExpression.TimeConstant tv_1 : timeVals) {
+          divider = this.gcd(divider, tv_1.getValue());
+        }
+        for (final PromelaExpression.TimeConstant tv_2 : timeVals) {
+          long _value_1 = tv_2.getValue();
+          long _divide_1 = (_value_1 / divider);
+          tv_2.setValue(_divide_1);
+        }
+      } else {
+        divider = 1;
       }
       return divider;
     }
