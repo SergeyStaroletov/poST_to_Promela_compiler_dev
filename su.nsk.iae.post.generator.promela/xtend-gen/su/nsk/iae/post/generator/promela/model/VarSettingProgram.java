@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import org.eclipse.xtend2.lib.StringConcatenation;
+import org.eclipse.xtext.xbase.lib.Conversions;
 import su.nsk.iae.post.generator.promela.context.NamespaceContext;
 import su.nsk.iae.post.generator.promela.exceptions.NotSupportedElementException;
 import su.nsk.iae.post.generator.promela.model.vars.PromelaVar;
@@ -163,6 +164,7 @@ public class VarSettingProgram implements IPromelaElement {
   
   public ArrayList<String> getProcessMTypes() {
     final ArrayList<String> res = new ArrayList<String>();
+    res.add(this.helperMTypeFullId);
     boolean _isEmpty = this.gremlinTextSuppliers.isEmpty();
     boolean _not = (!_isEmpty);
     if (_not) {
@@ -173,7 +175,6 @@ public class VarSettingProgram implements IPromelaElement {
     if (_not_1) {
       res.add(this.varsSetterMTypeFullId);
     }
-    res.add(this.helperMTypeFullId);
     return res;
   }
   
@@ -181,15 +182,10 @@ public class VarSettingProgram implements IPromelaElement {
   public String toText() {
     String _xblockexpression = null;
     {
-      String _xifexpression = null;
-      boolean _isEmpty = this.outputToInputVars.isEmpty();
-      boolean _not = (!_isEmpty);
-      if (_not) {
-        _xifexpression = this.varsSetterMTypeFullId;
-      } else {
-        _xifexpression = this.helperMTypeFullId;
-      }
-      final String afterGremlinMType = _xifexpression;
+      final ArrayList<String> mtypes = this.getProcessMTypes();
+      final String afterHelperMType = this.getMTypeAfter(this.helperMTypeFullId, mtypes);
+      final String afterGremlinMType = this.getMTypeAfter(this.gremlinMTypeFullId, mtypes);
+      final String afterVarsSetterMType = this.getMTypeAfter(this.varsSetterMTypeFullId, mtypes);
       StringConcatenation _builder = new StringConcatenation();
       _builder.append("//-----------------------------------------------------------------------------");
       _builder.newLine();
@@ -205,19 +201,54 @@ public class VarSettingProgram implements IPromelaElement {
       _builder.append("bool cycle__u;");
       _builder.newLine();
       _builder.newLine();
+      _builder.append("active proctype ");
+      String _name = NamespaceContext.getName(this.helperProcessFullId);
+      _builder.append(_name);
+      _builder.append("() {");
+      _builder.newLineIfNotEmpty();
+      _builder.append("\t");
+      _builder.append("do :: __currentProcess ? ");
+      String _name_1 = NamespaceContext.getName(this.helperMTypeFullId);
+      _builder.append(_name_1, "\t");
+      _builder.append(" ->");
+      _builder.newLineIfNotEmpty();
+      _builder.append("\t\t");
+      _builder.append("cycle__u = true;");
+      _builder.newLine();
+      _builder.append("\t\t");
+      _builder.append("atomic {");
+      _builder.newLine();
+      _builder.append("\t\t\t");
+      _builder.append("cycle__u = false;");
+      _builder.newLine();
+      _builder.append("\t\t\t");
+      _builder.append("__currentProcess ! ");
+      String _name_2 = NamespaceContext.getName(afterHelperMType);
+      _builder.append(_name_2, "\t\t\t");
+      _builder.append(";");
+      _builder.newLineIfNotEmpty();
+      _builder.append("\t\t");
+      _builder.append("}");
+      _builder.newLine();
+      _builder.append("\t");
+      _builder.append("od;");
+      _builder.newLine();
+      _builder.append("}");
+      _builder.newLine();
+      _builder.newLine();
       {
-        boolean _isEmpty_1 = this.gremlinTextSuppliers.isEmpty();
-        boolean _not_1 = (!_isEmpty_1);
-        if (_not_1) {
+        boolean _isEmpty = this.gremlinTextSuppliers.isEmpty();
+        boolean _not = (!_isEmpty);
+        if (_not) {
           _builder.append("active proctype ");
-          String _name = NamespaceContext.getName(this.gremlinProcessFullId);
-          _builder.append(_name);
+          String _name_3 = NamespaceContext.getName(this.gremlinProcessFullId);
+          _builder.append(_name_3);
           _builder.append("() {");
           _builder.newLineIfNotEmpty();
           _builder.append("\t");
           _builder.append("do :: __currentProcess ? ");
-          String _name_1 = NamespaceContext.getName(this.gremlinMTypeFullId);
-          _builder.append(_name_1, "\t");
+          String _name_4 = NamespaceContext.getName(this.gremlinMTypeFullId);
+          _builder.append(_name_4, "\t");
           _builder.append(" ->");
           _builder.newLineIfNotEmpty();
           _builder.append("\t\t");
@@ -233,8 +264,8 @@ public class VarSettingProgram implements IPromelaElement {
           }
           _builder.append("\t\t\t");
           _builder.append("__currentProcess ! ");
-          String _name_2 = NamespaceContext.getName(afterGremlinMType);
-          _builder.append(_name_2, "\t\t\t");
+          String _name_5 = NamespaceContext.getName(afterGremlinMType);
+          _builder.append(_name_5, "\t\t\t");
           _builder.append(";");
           _builder.newLineIfNotEmpty();
           _builder.append("\t\t");
@@ -249,18 +280,18 @@ public class VarSettingProgram implements IPromelaElement {
       }
       _builder.newLine();
       {
-        boolean _isEmpty_2 = this.outputToInputVars.isEmpty();
-        boolean _not_2 = (!_isEmpty_2);
-        if (_not_2) {
+        boolean _isEmpty_1 = this.outputToInputVars.isEmpty();
+        boolean _not_1 = (!_isEmpty_1);
+        if (_not_1) {
           _builder.append("active proctype ");
-          String _name_3 = NamespaceContext.getName(this.varsSetterProcessFullId);
-          _builder.append(_name_3);
+          String _name_6 = NamespaceContext.getName(this.varsSetterProcessFullId);
+          _builder.append(_name_6);
           _builder.append("() {");
           _builder.newLineIfNotEmpty();
           _builder.append("\t");
           _builder.append("do :: __currentProcess ? ");
-          String _name_4 = NamespaceContext.getName(this.varsSetterMTypeFullId);
-          _builder.append(_name_4, "\t");
+          String _name_7 = NamespaceContext.getName(this.varsSetterMTypeFullId);
+          _builder.append(_name_7, "\t");
           _builder.append(" ->");
           _builder.newLineIfNotEmpty();
           _builder.append("\t\t");
@@ -273,11 +304,11 @@ public class VarSettingProgram implements IPromelaElement {
                 List<String> _value = outToIns.getValue();
                 for(final String in : _value) {
                   _builder.append("\t\t\t");
-                  String _name_5 = NamespaceContext.getName(in);
-                  _builder.append(_name_5, "\t\t\t");
+                  String _name_8 = NamespaceContext.getName(in);
+                  _builder.append(_name_8, "\t\t\t");
                   _builder.append(" = ");
-                  String _name_6 = NamespaceContext.getName(outToIns.getKey());
-                  _builder.append(_name_6, "\t\t\t");
+                  String _name_9 = NamespaceContext.getName(outToIns.getKey());
+                  _builder.append(_name_9, "\t\t\t");
                   _builder.append(";");
                   {
                     boolean _isNamesWithNumbersMode = NamespaceContext.isNamesWithNumbersMode();
@@ -297,8 +328,8 @@ public class VarSettingProgram implements IPromelaElement {
           }
           _builder.append("\t\t\t");
           _builder.append("__currentProcess ! ");
-          String _name_7 = NamespaceContext.getName(this.helperMTypeFullId);
-          _builder.append(_name_7, "\t\t\t");
+          String _name_10 = NamespaceContext.getName(afterVarsSetterMType);
+          _builder.append(_name_10, "\t\t\t");
           _builder.append(";");
           _builder.newLineIfNotEmpty();
           _builder.append("\t\t");
@@ -311,43 +342,19 @@ public class VarSettingProgram implements IPromelaElement {
           _builder.newLine();
         }
       }
-      _builder.newLine();
-      _builder.append("active proctype ");
-      String _name_8 = NamespaceContext.getName(this.helperProcessFullId);
-      _builder.append(_name_8);
-      _builder.append("() {");
-      _builder.newLineIfNotEmpty();
-      _builder.append("\t");
-      _builder.append("do :: __currentProcess ? ");
-      String _name_9 = NamespaceContext.getName(this.helperMTypeFullId);
-      _builder.append(_name_9, "\t");
-      _builder.append(" ->");
-      _builder.newLineIfNotEmpty();
-      _builder.append("\t\t");
-      _builder.append("cycle__u = true;");
-      _builder.newLine();
-      _builder.append("\t\t");
-      _builder.append("atomic {");
-      _builder.newLine();
-      _builder.append("\t\t\t");
-      _builder.append("cycle__u = false;");
-      _builder.newLine();
-      _builder.append("\t\t\t");
-      _builder.append("__currentProcess ! ");
-      String _name_10 = NamespaceContext.getName(this.firstProcessMType);
-      _builder.append(_name_10, "\t\t\t");
-      _builder.append(";");
-      _builder.newLineIfNotEmpty();
-      _builder.append("\t\t");
-      _builder.append("}");
-      _builder.newLine();
-      _builder.append("\t");
-      _builder.append("od;");
-      _builder.newLine();
-      _builder.append("}");
-      _builder.newLine();
       _xblockexpression = _builder.toString();
     }
     return _xblockexpression;
+  }
+  
+  private String getMTypeAfter(final String mtypeFullId, final List<String> mtypeFullIds) {
+    final int index = mtypeFullIds.indexOf(mtypeFullId);
+    String _xifexpression = null;
+    if (((index != (-1)) && ((index + 1) < ((Object[])Conversions.unwrapArray(mtypeFullIds, Object.class)).length))) {
+      _xifexpression = mtypeFullIds.get((index + 1));
+    } else {
+      _xifexpression = this.firstProcessMType;
+    }
+    return _xifexpression;
   }
 }
