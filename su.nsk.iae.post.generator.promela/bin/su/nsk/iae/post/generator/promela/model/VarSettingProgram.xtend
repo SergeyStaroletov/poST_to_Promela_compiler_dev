@@ -12,16 +12,24 @@ import su.nsk.iae.post.generator.promela.exceptions.WrongModelStateException
 class VarSettingProgram implements IPromelaElement {
 	static val processPrefix = "specialProcess";
 	static val mTypePrefix = "sP";
+	static val helperProcessId = "Helper";
 	static val gremlinProcessId = "Gremlin";
 	static val varsSetterProcessId = "VarsSetter";
 	
 	var String firstProcessMType;
 	val gremlinTextSuppliers = new ArrayList<Supplier<String>>();
 	val outputToInputVars = new HashMap<String, List<String>>();//ouputFullId -> List<inputFullId>
+	var String helperProcessFullId;
+	var String helperMTypeFullId;
 	var String gremlinProcessFullId;
 	var String gremlinMTypeFullId;
 	var String varsSetterProcessFullId;
 	var String varsSetterMTypeFullId;
+	
+	new () {
+		helperProcessFullId = NamespaceContext.addId(helperProcessId, processPrefix);
+		helperMTypeFullId = NamespaceContext.addId(helperProcessId, mTypePrefix);
+	}
 	
 	def setFirstProcess(String firstProcessMType) {
 		this.firstProcessMType = firstProcessMType;
@@ -86,19 +94,20 @@ class VarSettingProgram implements IPromelaElement {
 		if (!outputToInputVars.isEmpty()) {
 			res.add(varsSetterMTypeFullId);
 		}
-		if (res.isEmpty()) {
-			throw new WrongModelStateException("Querying var setting process mtypes with no need in them");
-		}
+		res.add(helperMTypeFullId);
 		return res;
 	}
 	
 	override toText() {
+		val afterGremlinMType = !outputToInputVars.isEmpty() ? varsSetterMTypeFullId : helperMTypeFullId;
 		'''
 			//-----------------------------------------------------------------------------
 			//-----------------------------------------------------------------------------
-			//input, output, inout vars setting program
+			//special processes
 			//-----------------------------------------------------------------------------
 			//-----------------------------------------------------------------------------
+			
+			bool cycle__u;
 			
 			«IF !gremlinTextSuppliers.isEmpty()»
 				active proctype «NamespaceContext.getName(gremlinProcessFullId)»() {
@@ -107,11 +116,7 @@ class VarSettingProgram implements IPromelaElement {
 							«FOR gremlinTextSupplier : gremlinTextSuppliers»
 								«gremlinTextSupplier.get()»
 							«ENDFOR»
-							«IF !outputToInputVars.isEmpty()»
-								__currentProcess ! «NamespaceContext.getName(varsSetterMTypeFullId)»;
-							«ELSE»
-								__currentProcess ! «NamespaceContext.getName(firstProcessMType)»;
-							«ENDIF»
+							__currentProcess ! «NamespaceContext.getName(afterGremlinMType)»;
 						}
 					od;
 				}
@@ -130,11 +135,21 @@ class VarSettingProgram implements IPromelaElement {
 									ENDIF»
 								«ENDFOR»
 							«ENDFOR»
-							__currentProcess ! «NamespaceContext.getName(firstProcessMType)»;
+							__currentProcess ! «NamespaceContext.getName(helperMTypeFullId)»;
 						}
 					od;
 				}
 			«ENDIF»
+			
+			active proctype «NamespaceContext.getName(helperProcessFullId)»() {
+				do :: __currentProcess ? «NamespaceContext.getName(helperMTypeFullId)» ->
+					cycle__u = true;
+					atomic {
+						cycle__u = false;
+						__currentProcess ! «NamespaceContext.getName(firstProcessMType)»;
+					}
+				od;
+			}
 		''';
 	}
 	

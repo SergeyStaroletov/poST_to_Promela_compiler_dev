@@ -10,7 +10,6 @@ import java.util.function.Supplier;
 import org.eclipse.xtend2.lib.StringConcatenation;
 import su.nsk.iae.post.generator.promela.context.NamespaceContext;
 import su.nsk.iae.post.generator.promela.exceptions.NotSupportedElementException;
-import su.nsk.iae.post.generator.promela.exceptions.WrongModelStateException;
 import su.nsk.iae.post.generator.promela.model.vars.PromelaVar;
 
 @SuppressWarnings("all")
@@ -18,6 +17,8 @@ public class VarSettingProgram implements IPromelaElement {
   private static final String processPrefix = "specialProcess";
   
   private static final String mTypePrefix = "sP";
+  
+  private static final String helperProcessId = "Helper";
   
   private static final String gremlinProcessId = "Gremlin";
   
@@ -29,6 +30,10 @@ public class VarSettingProgram implements IPromelaElement {
   
   private final HashMap<String, List<String>> outputToInputVars = new HashMap<String, List<String>>();
   
+  private String helperProcessFullId;
+  
+  private String helperMTypeFullId;
+  
   private String gremlinProcessFullId;
   
   private String gremlinMTypeFullId;
@@ -36,6 +41,11 @@ public class VarSettingProgram implements IPromelaElement {
   private String varsSetterProcessFullId;
   
   private String varsSetterMTypeFullId;
+  
+  public VarSettingProgram() {
+    this.helperProcessFullId = NamespaceContext.addId(VarSettingProgram.helperProcessId, VarSettingProgram.processPrefix);
+    this.helperMTypeFullId = NamespaceContext.addId(VarSettingProgram.helperProcessId, VarSettingProgram.mTypePrefix);
+  }
   
   public String setFirstProcess(final String firstProcessMType) {
     return this.firstProcessMType = firstProcessMType;
@@ -163,146 +173,181 @@ public class VarSettingProgram implements IPromelaElement {
     if (_not_1) {
       res.add(this.varsSetterMTypeFullId);
     }
-    boolean _isEmpty_2 = res.isEmpty();
-    if (_isEmpty_2) {
-      throw new WrongModelStateException("Querying var setting process mtypes with no need in them");
-    }
+    res.add(this.helperMTypeFullId);
     return res;
   }
   
   @Override
   public String toText() {
-    StringConcatenation _builder = new StringConcatenation();
-    _builder.append("//-----------------------------------------------------------------------------");
-    _builder.newLine();
-    _builder.append("//-----------------------------------------------------------------------------");
-    _builder.newLine();
-    _builder.append("//input, output, inout vars setting program");
-    _builder.newLine();
-    _builder.append("//-----------------------------------------------------------------------------");
-    _builder.newLine();
-    _builder.append("//-----------------------------------------------------------------------------");
-    _builder.newLine();
-    _builder.newLine();
+    String _xblockexpression = null;
     {
-      boolean _isEmpty = this.gremlinTextSuppliers.isEmpty();
+      String _xifexpression = null;
+      boolean _isEmpty = this.outputToInputVars.isEmpty();
       boolean _not = (!_isEmpty);
       if (_not) {
-        _builder.append("active proctype ");
-        String _name = NamespaceContext.getName(this.gremlinProcessFullId);
-        _builder.append(_name);
-        _builder.append("() {");
-        _builder.newLineIfNotEmpty();
-        _builder.append("\t");
-        _builder.append("do :: __currentProcess ? ");
-        String _name_1 = NamespaceContext.getName(this.gremlinMTypeFullId);
-        _builder.append(_name_1, "\t");
-        _builder.append(" ->");
-        _builder.newLineIfNotEmpty();
-        _builder.append("\t\t");
-        _builder.append("atomic {");
-        _builder.newLine();
-        {
-          for(final Supplier<String> gremlinTextSupplier : this.gremlinTextSuppliers) {
-            _builder.append("\t\t\t");
-            String _get = gremlinTextSupplier.get();
-            _builder.append(_get, "\t\t\t");
-            _builder.newLineIfNotEmpty();
-          }
-        }
-        {
-          boolean _isEmpty_1 = this.outputToInputVars.isEmpty();
-          boolean _not_1 = (!_isEmpty_1);
-          if (_not_1) {
-            _builder.append("\t\t\t");
-            _builder.append("__currentProcess ! ");
-            String _name_2 = NamespaceContext.getName(this.varsSetterMTypeFullId);
-            _builder.append(_name_2, "\t\t\t");
-            _builder.append(";");
-            _builder.newLineIfNotEmpty();
-          } else {
-            _builder.append("\t\t\t");
-            _builder.append("__currentProcess ! ");
-            String _name_3 = NamespaceContext.getName(this.firstProcessMType);
-            _builder.append(_name_3, "\t\t\t");
-            _builder.append(";");
-            _builder.newLineIfNotEmpty();
-          }
-        }
-        _builder.append("\t\t");
-        _builder.append("}");
-        _builder.newLine();
-        _builder.append("\t");
-        _builder.append("od;");
-        _builder.newLine();
-        _builder.append("}");
-        _builder.newLine();
+        _xifexpression = this.varsSetterMTypeFullId;
+      } else {
+        _xifexpression = this.helperMTypeFullId;
       }
-    }
-    _builder.newLine();
-    {
-      boolean _isEmpty_2 = this.outputToInputVars.isEmpty();
-      boolean _not_2 = (!_isEmpty_2);
-      if (_not_2) {
-        _builder.append("active proctype ");
-        String _name_4 = NamespaceContext.getName(this.varsSetterProcessFullId);
-        _builder.append(_name_4);
-        _builder.append("() {");
-        _builder.newLineIfNotEmpty();
-        _builder.append("\t");
-        _builder.append("do :: __currentProcess ? ");
-        String _name_5 = NamespaceContext.getName(this.varsSetterMTypeFullId);
-        _builder.append(_name_5, "\t");
-        _builder.append(" ->");
-        _builder.newLineIfNotEmpty();
-        _builder.append("\t\t");
-        _builder.append("atomic {");
-        _builder.newLine();
-        {
-          Set<Map.Entry<String, List<String>>> _entrySet = this.outputToInputVars.entrySet();
-          for(final Map.Entry<String, List<String>> outToIns : _entrySet) {
-            {
-              List<String> _value = outToIns.getValue();
-              for(final String in : _value) {
-                _builder.append("\t\t\t");
-                String _name_6 = NamespaceContext.getName(in);
-                _builder.append(_name_6, "\t\t\t");
-                _builder.append(" = ");
-                String _name_7 = NamespaceContext.getName(outToIns.getKey());
-                _builder.append(_name_7, "\t\t\t");
-                _builder.append(";");
-                {
-                  boolean _isNamesWithNumbersMode = NamespaceContext.isNamesWithNumbersMode();
-                  if (_isNamesWithNumbersMode) {
-                    _builder.append(" //");
-                    String _nameWithNamespaces = NamespaceContext.getNameWithNamespaces(in);
-                    _builder.append(_nameWithNamespaces, "\t\t\t");
-                    _builder.append(" <- ");
-                    String _nameWithNamespaces_1 = NamespaceContext.getNameWithNamespaces(outToIns.getKey());
-                    _builder.append(_nameWithNamespaces_1, "\t\t\t");
+      final String afterGremlinMType = _xifexpression;
+      StringConcatenation _builder = new StringConcatenation();
+      _builder.append("//-----------------------------------------------------------------------------");
+      _builder.newLine();
+      _builder.append("//-----------------------------------------------------------------------------");
+      _builder.newLine();
+      _builder.append("//special processes");
+      _builder.newLine();
+      _builder.append("//-----------------------------------------------------------------------------");
+      _builder.newLine();
+      _builder.append("//-----------------------------------------------------------------------------");
+      _builder.newLine();
+      _builder.newLine();
+      _builder.append("bool cycle__u;");
+      _builder.newLine();
+      _builder.newLine();
+      {
+        boolean _isEmpty_1 = this.gremlinTextSuppliers.isEmpty();
+        boolean _not_1 = (!_isEmpty_1);
+        if (_not_1) {
+          _builder.append("active proctype ");
+          String _name = NamespaceContext.getName(this.gremlinProcessFullId);
+          _builder.append(_name);
+          _builder.append("() {");
+          _builder.newLineIfNotEmpty();
+          _builder.append("\t");
+          _builder.append("do :: __currentProcess ? ");
+          String _name_1 = NamespaceContext.getName(this.gremlinMTypeFullId);
+          _builder.append(_name_1, "\t");
+          _builder.append(" ->");
+          _builder.newLineIfNotEmpty();
+          _builder.append("\t\t");
+          _builder.append("atomic {");
+          _builder.newLine();
+          {
+            for(final Supplier<String> gremlinTextSupplier : this.gremlinTextSuppliers) {
+              _builder.append("\t\t\t");
+              String _get = gremlinTextSupplier.get();
+              _builder.append(_get, "\t\t\t");
+              _builder.newLineIfNotEmpty();
+            }
+          }
+          _builder.append("\t\t\t");
+          _builder.append("__currentProcess ! ");
+          String _name_2 = NamespaceContext.getName(afterGremlinMType);
+          _builder.append(_name_2, "\t\t\t");
+          _builder.append(";");
+          _builder.newLineIfNotEmpty();
+          _builder.append("\t\t");
+          _builder.append("}");
+          _builder.newLine();
+          _builder.append("\t");
+          _builder.append("od;");
+          _builder.newLine();
+          _builder.append("}");
+          _builder.newLine();
+        }
+      }
+      _builder.newLine();
+      {
+        boolean _isEmpty_2 = this.outputToInputVars.isEmpty();
+        boolean _not_2 = (!_isEmpty_2);
+        if (_not_2) {
+          _builder.append("active proctype ");
+          String _name_3 = NamespaceContext.getName(this.varsSetterProcessFullId);
+          _builder.append(_name_3);
+          _builder.append("() {");
+          _builder.newLineIfNotEmpty();
+          _builder.append("\t");
+          _builder.append("do :: __currentProcess ? ");
+          String _name_4 = NamespaceContext.getName(this.varsSetterMTypeFullId);
+          _builder.append(_name_4, "\t");
+          _builder.append(" ->");
+          _builder.newLineIfNotEmpty();
+          _builder.append("\t\t");
+          _builder.append("atomic {");
+          _builder.newLine();
+          {
+            Set<Map.Entry<String, List<String>>> _entrySet = this.outputToInputVars.entrySet();
+            for(final Map.Entry<String, List<String>> outToIns : _entrySet) {
+              {
+                List<String> _value = outToIns.getValue();
+                for(final String in : _value) {
+                  _builder.append("\t\t\t");
+                  String _name_5 = NamespaceContext.getName(in);
+                  _builder.append(_name_5, "\t\t\t");
+                  _builder.append(" = ");
+                  String _name_6 = NamespaceContext.getName(outToIns.getKey());
+                  _builder.append(_name_6, "\t\t\t");
+                  _builder.append(";");
+                  {
+                    boolean _isNamesWithNumbersMode = NamespaceContext.isNamesWithNumbersMode();
+                    if (_isNamesWithNumbersMode) {
+                      _builder.append(" //");
+                      String _nameWithNamespaces = NamespaceContext.getNameWithNamespaces(in);
+                      _builder.append(_nameWithNamespaces, "\t\t\t");
+                      _builder.append(" <- ");
+                      String _nameWithNamespaces_1 = NamespaceContext.getNameWithNamespaces(outToIns.getKey());
+                      _builder.append(_nameWithNamespaces_1, "\t\t\t");
+                    }
                   }
+                  _builder.newLineIfNotEmpty();
                 }
-                _builder.newLineIfNotEmpty();
               }
             }
           }
+          _builder.append("\t\t\t");
+          _builder.append("__currentProcess ! ");
+          String _name_7 = NamespaceContext.getName(this.helperMTypeFullId);
+          _builder.append(_name_7, "\t\t\t");
+          _builder.append(";");
+          _builder.newLineIfNotEmpty();
+          _builder.append("\t\t");
+          _builder.append("}");
+          _builder.newLine();
+          _builder.append("\t");
+          _builder.append("od;");
+          _builder.newLine();
+          _builder.append("}");
+          _builder.newLine();
         }
-        _builder.append("\t\t\t");
-        _builder.append("__currentProcess ! ");
-        String _name_8 = NamespaceContext.getName(this.firstProcessMType);
-        _builder.append(_name_8, "\t\t\t");
-        _builder.append(";");
-        _builder.newLineIfNotEmpty();
-        _builder.append("\t\t");
-        _builder.append("}");
-        _builder.newLine();
-        _builder.append("\t");
-        _builder.append("od;");
-        _builder.newLine();
-        _builder.append("}");
-        _builder.newLine();
       }
+      _builder.newLine();
+      _builder.append("active proctype ");
+      String _name_8 = NamespaceContext.getName(this.helperProcessFullId);
+      _builder.append(_name_8);
+      _builder.append("() {");
+      _builder.newLineIfNotEmpty();
+      _builder.append("\t");
+      _builder.append("do :: __currentProcess ? ");
+      String _name_9 = NamespaceContext.getName(this.helperMTypeFullId);
+      _builder.append(_name_9, "\t");
+      _builder.append(" ->");
+      _builder.newLineIfNotEmpty();
+      _builder.append("\t\t");
+      _builder.append("cycle__u = true;");
+      _builder.newLine();
+      _builder.append("\t\t");
+      _builder.append("atomic {");
+      _builder.newLine();
+      _builder.append("\t\t\t");
+      _builder.append("cycle__u = false;");
+      _builder.newLine();
+      _builder.append("\t\t\t");
+      _builder.append("__currentProcess ! ");
+      String _name_10 = NamespaceContext.getName(this.firstProcessMType);
+      _builder.append(_name_10, "\t\t\t");
+      _builder.append(";");
+      _builder.newLineIfNotEmpty();
+      _builder.append("\t\t");
+      _builder.append("}");
+      _builder.newLine();
+      _builder.append("\t");
+      _builder.append("od;");
+      _builder.newLine();
+      _builder.append("}");
+      _builder.newLine();
+      _xblockexpression = _builder.toString();
     }
-    return _builder.toString();
+    return _xblockexpression;
   }
 }
