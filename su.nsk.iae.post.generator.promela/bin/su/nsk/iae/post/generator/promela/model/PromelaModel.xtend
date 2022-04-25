@@ -20,8 +20,10 @@ class PromelaModel implements IPromelaElement {
 	static val promelaVerificationTaskName = "PromelaVerificationTask";
 	
 	final PromelaElementList<PromelaProgram> programs = new PromelaElementList("\r\n\r\n\r\n");
+	final boolean addLtlMacrosesToEnd;
 	
-	new(Model m, boolean reduceTimeValues) {
+	new(Model m, boolean reduceTimeValues, boolean addLtlMacrosesToEnd) {
+		this.addLtlMacrosesToEnd = addLtlMacrosesToEnd;
 		m.programs.forEach[p | programs.add(new PromelaProgram(p))];
 		NamespaceContext.addId("__currentProcess");
 		
@@ -54,6 +56,11 @@ class PromelaModel implements IPromelaElement {
 				
 				
 				«context.varSettingProgram.toText()»
+			«ENDIF»
+			«IF addLtlMacrosesToEnd»
+				
+				
+				«ltlHelpingMacroses()»
 			«ENDIF»
 		''';
 		clearContexts();
@@ -236,6 +243,52 @@ class PromelaModel implements IPromelaElement {
 		PostConstructContext.clearContext();
 		WarningsContext.clearContext();
 		PromelaContext.clearContext();
+	}
+	
+	private def ltlHelpingMacroses() {
+		'''
+			//-----------------------------------------------------------------------------
+			//-----------------------------------------------------------------------------
+			//ltl
+			//-----------------------------------------------------------------------------
+			//-----------------------------------------------------------------------------
+			
+			#define apply1__ltl(f, arg) f(arg)
+			#define apply2__ltl(f, arg) f(apply1__ltl(f, arg))
+			#define apply3__ltl(f, arg) f(apply2__ltl(f, arg))
+			#define apply4__ltl(f, arg) f(apply3__ltl(f, arg))
+			#define apply5__ltl(f, arg) f(apply4__ltl(f, arg))
+			#define apply6__ltl(f, arg) f(apply5__ltl(f, arg))
+			#define apply7__ltl(f, arg) f(apply6__ltl(f, arg))
+			#define apply8__ltl(f, arg) f(apply7__ltl(f, arg))
+			#define apply9__ltl(f, arg) f(apply8__ltl(f, arg))
+			#define apply10__ltl(f, arg) f(apply9__ltl(f, arg))
+			#define apply__ltl(n, f, arg) apply##n##__ltl(f, arg)
+			
+			#define afterCycle__ltl(expr) «
+				»(cycle__u U (!cycle__u W (cycle__u && (expr))))
+			#define afterNCyclesWith__ltl(n, cond, expr) «
+							»(apply__ltl(n, (cond) -> afterCycle__ltl, expr))
+			#define afterNCyclesOrSoonerWith__ltl(n, cond, expr) «
+							»afterNCyclesWith__ltl(n, (cond) && !(expr), expr)
+			
+			//-----------------------------------------------------------------------------
+			//ltl between cycles
+			//-----------------------------------------------------------------------------
+			
+			#define cltl(expr) (cycle__u -> (expr))
+			#define G__cltl(expr) [](cycle__u -> (expr))
+			#define F__cltl(expr) <>(cycle__u && (expr))
+			#define U__cltl(expr1, expr2) (cycle__u -> (expr1)) U (cycle__u && (expr2))
+			#define W__cltl(expr1, expr2) (cycle__u -> (expr1)) W (cycle__u && (expr2))
+			#define V__cltl(expr1, expr2) (cycle__u && (expr1)) V (cycle__u -> (expr2))
+			
+			#define next__cltl(expr) (cycle__u -> afterCycle__ltl(expr))
+			#define afterNWith__cltl(n, cond, expr) «
+							»(cycle__u -> afterNCyclesWith__ltl(n, cond, expr))
+			#define afterNOrSoonerWith__cltl(n, cond, expr) «
+							»(cycle__u -> afterNCyclesOrSoonerWith__ltl(n, cond, expr))
+		'''
 	}
 	
 }

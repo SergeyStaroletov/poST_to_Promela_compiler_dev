@@ -23,9 +23,10 @@ public class Main {
 		String inputFile = getKeyValue(args, "-i", "--input").orElse(defaultInputPath);
 		String outputFile = getKeyValue(args, "-o", "--output").orElse(defaultOutputPath);
 		boolean reduceTimeValues = isKeyPresent(args, "-rt", "--reduceTime");
+		boolean addLtlMacrosesToEnd = isKeyPresent(args, "-lm", "--ltlMacro");
 		
         Model m = prepareAndParseModelFromResource(inputFile);
-        var res = new PromelaModel(m, reduceTimeValues).toText();
+        var res = new PromelaModel(m, reduceTimeValues, addLtlMacrosesToEnd).toText();
 
         System.out.println(res);
         printToFile(outputFile, res);

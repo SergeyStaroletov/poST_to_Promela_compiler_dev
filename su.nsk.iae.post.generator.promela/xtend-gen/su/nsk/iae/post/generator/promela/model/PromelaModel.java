@@ -36,7 +36,10 @@ public class PromelaModel implements IPromelaElement {
   
   private final PromelaElementList<PromelaProgram> programs = new PromelaElementList<PromelaProgram>("\r\n\r\n\r\n");
   
-  public PromelaModel(final Model m, final boolean reduceTimeValues) {
+  private final boolean addLtlMacrosesToEnd;
+  
+  public PromelaModel(final Model m, final boolean reduceTimeValues, final boolean addLtlMacrosesToEnd) {
+    this.addLtlMacrosesToEnd = addLtlMacrosesToEnd;
     final Consumer<Program> _function = (Program p) -> {
       PromelaProgram _promelaProgram = new PromelaProgram(p);
       this.programs.add(_promelaProgram);
@@ -85,6 +88,15 @@ public class PromelaModel implements IPromelaElement {
         _builder.newLine();
         String _text_1 = context.getVarSettingProgram().toText();
         _builder.append(_text_1);
+        _builder.newLineIfNotEmpty();
+      }
+    }
+    {
+      if (this.addLtlMacrosesToEnd) {
+        _builder.newLine();
+        _builder.newLine();
+        CharSequence _ltlHelpingMacroses = this.ltlHelpingMacroses();
+        _builder.append(_ltlHelpingMacroses);
         _builder.newLineIfNotEmpty();
       }
     }
@@ -351,5 +363,82 @@ public class PromelaModel implements IPromelaElement {
       _xblockexpression = PromelaContext.clearContext();
     }
     return _xblockexpression;
+  }
+  
+  private CharSequence ltlHelpingMacroses() {
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("//-----------------------------------------------------------------------------");
+    _builder.newLine();
+    _builder.append("//-----------------------------------------------------------------------------");
+    _builder.newLine();
+    _builder.append("//ltl");
+    _builder.newLine();
+    _builder.append("//-----------------------------------------------------------------------------");
+    _builder.newLine();
+    _builder.append("//-----------------------------------------------------------------------------");
+    _builder.newLine();
+    _builder.newLine();
+    _builder.append("#define apply1__ltl(f, arg) f(arg)");
+    _builder.newLine();
+    _builder.append("#define apply2__ltl(f, arg) f(apply1__ltl(f, arg))");
+    _builder.newLine();
+    _builder.append("#define apply3__ltl(f, arg) f(apply2__ltl(f, arg))");
+    _builder.newLine();
+    _builder.append("#define apply4__ltl(f, arg) f(apply3__ltl(f, arg))");
+    _builder.newLine();
+    _builder.append("#define apply5__ltl(f, arg) f(apply4__ltl(f, arg))");
+    _builder.newLine();
+    _builder.append("#define apply6__ltl(f, arg) f(apply5__ltl(f, arg))");
+    _builder.newLine();
+    _builder.append("#define apply7__ltl(f, arg) f(apply6__ltl(f, arg))");
+    _builder.newLine();
+    _builder.append("#define apply8__ltl(f, arg) f(apply7__ltl(f, arg))");
+    _builder.newLine();
+    _builder.append("#define apply9__ltl(f, arg) f(apply8__ltl(f, arg))");
+    _builder.newLine();
+    _builder.append("#define apply10__ltl(f, arg) f(apply9__ltl(f, arg))");
+    _builder.newLine();
+    _builder.append("#define apply__ltl(n, f, arg) apply##n##__ltl(f, arg)");
+    _builder.newLine();
+    _builder.newLine();
+    _builder.append("#define afterCycle__ltl(expr) ");
+    _builder.append("(cycle__u U (!cycle__u W (cycle__u && (expr))))");
+    _builder.newLine();
+    _builder.append("#define afterNCyclesWith__ltl(n, cond, expr) ");
+    _builder.append("(apply__ltl(n, (cond) -> afterCycle__ltl, expr))");
+    _builder.newLine();
+    _builder.append("#define afterNCyclesOrSoonerWith__ltl(n, cond, expr) ");
+    _builder.append("afterNCyclesWith__ltl(n, (cond) && !(expr), expr)");
+    _builder.newLine();
+    _builder.newLine();
+    _builder.append("//-----------------------------------------------------------------------------");
+    _builder.newLine();
+    _builder.append("//ltl between cycles");
+    _builder.newLine();
+    _builder.append("//-----------------------------------------------------------------------------");
+    _builder.newLine();
+    _builder.newLine();
+    _builder.append("#define cltl(expr) (cycle__u -> (expr))");
+    _builder.newLine();
+    _builder.append("#define G__cltl(expr) [](cycle__u -> (expr))");
+    _builder.newLine();
+    _builder.append("#define F__cltl(expr) <>(cycle__u && (expr))");
+    _builder.newLine();
+    _builder.append("#define U__cltl(expr1, expr2) (cycle__u -> (expr1)) U (cycle__u && (expr2))");
+    _builder.newLine();
+    _builder.append("#define W__cltl(expr1, expr2) (cycle__u -> (expr1)) W (cycle__u && (expr2))");
+    _builder.newLine();
+    _builder.append("#define V__cltl(expr1, expr2) (cycle__u && (expr1)) V (cycle__u -> (expr2))");
+    _builder.newLine();
+    _builder.newLine();
+    _builder.append("#define next__cltl(expr) (cycle__u -> afterCycle__ltl(expr))");
+    _builder.newLine();
+    _builder.append("#define afterNWith__cltl(n, cond, expr) ");
+    _builder.append("(cycle__u -> afterNCyclesWith__ltl(n, cond, expr))");
+    _builder.newLine();
+    _builder.append("#define afterNOrSoonerWith__cltl(n, cond, expr) ");
+    _builder.append("(cycle__u -> afterNCyclesOrSoonerWith__ltl(n, cond, expr))");
+    _builder.newLine();
+    return _builder;
   }
 }

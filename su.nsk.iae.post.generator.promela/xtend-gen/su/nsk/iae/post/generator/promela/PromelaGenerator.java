@@ -11,7 +11,7 @@ import su.nsk.iae.post.poST.Model;
 public class PromelaGenerator implements IPoSTGenerator {
   @Override
   public void setModel(final Model model) {
-    System.out.println(new PromelaModel(model, false).toText());
+    System.out.println(new PromelaModel(model, false, false).toText());
   }
   
   @Override
