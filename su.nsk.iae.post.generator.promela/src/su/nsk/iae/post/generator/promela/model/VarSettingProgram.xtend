@@ -88,39 +88,27 @@ class VarSettingProgram implements IPromelaElement {
 	
 	def getProcessMTypes() {
 		val res = new ArrayList<String>();
-		res.add(helperMTypeFullId);
 		if (!gremlinTextSuppliers.isEmpty()) {
 			res.add(gremlinMTypeFullId);
 		}
 		if (!outputToInputVars.isEmpty()) {
 			res.add(varsSetterMTypeFullId);
 		}
+		res.add(helperMTypeFullId);
 		return res;
 	}
 	
 	override toText() {
 		val mtypes = getProcessMTypes();
-		val afterHelperMType = getMTypeAfter(helperMTypeFullId, mtypes);
 		val afterGremlinMType = getMTypeAfter(gremlinMTypeFullId, mtypes);
 		val afterVarsSetterMType = getMTypeAfter(varsSetterMTypeFullId, mtypes);
+		val afterHelperMType = getMTypeAfter(helperMTypeFullId, mtypes);
 		'''
 			//-----------------------------------------------------------------------------
 			//-----------------------------------------------------------------------------
 			//special processes
 			//-----------------------------------------------------------------------------
 			//-----------------------------------------------------------------------------
-			
-			bool cycle__u;
-			
-			active proctype «NamespaceContext.getName(helperProcessFullId)»() {
-				do :: __currentProcess ? «NamespaceContext.getName(helperMTypeFullId)» ->
-					cycle__u = true;
-					atomic {
-						cycle__u = false;
-						__currentProcess ! «NamespaceContext.getName(afterHelperMType)»;
-					}
-				od;
-			}
 			
 			«IF !gremlinTextSuppliers.isEmpty()»
 				active proctype «NamespaceContext.getName(gremlinProcessFullId)»() {
@@ -153,6 +141,17 @@ class VarSettingProgram implements IPromelaElement {
 					od;
 				}
 			«ENDIF»
+			
+			bool cycle__u;
+			active proctype «NamespaceContext.getName(helperProcessFullId)»() {
+				do :: __currentProcess ? «NamespaceContext.getName(helperMTypeFullId)» ->
+					cycle__u = true;
+					atomic {
+						cycle__u = false;
+						__currentProcess ! «NamespaceContext.getName(afterHelperMType)»;
+					}
+				od;
+			}
 		''';
 	}
 	
