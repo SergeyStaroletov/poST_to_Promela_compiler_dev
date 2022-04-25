@@ -26,7 +26,7 @@ public class Main {
 		boolean addLtlMacrosesToEnd = isKeyPresent(args, "-lm", "--ltlMacro");
 		
         Model m = prepareAndParseModelFromResource(inputFile);
-        var res = new PromelaModel(m, reduceTimeValues, addLtlMacrosesToEnd).toText();
+        var res = new PromelaModel(m, reduceTimeValues, addLtlMacrosesToEnd).toText().replace("\t", "    ");
 
         System.out.println(res);
         printToFile(outputFile, res);
