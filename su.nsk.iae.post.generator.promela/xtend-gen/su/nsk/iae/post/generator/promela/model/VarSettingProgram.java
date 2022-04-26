@@ -10,7 +10,7 @@ import java.util.function.Supplier;
 import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.xbase.lib.Conversions;
 import su.nsk.iae.post.generator.promela.context.NamespaceContext;
-import su.nsk.iae.post.generator.promela.exceptions.NotSupportedElementException;
+import su.nsk.iae.post.generator.promela.context.WarningsContext;
 import su.nsk.iae.post.generator.promela.model.vars.PromelaVar;
 
 @SuppressWarnings("all")
@@ -52,93 +52,94 @@ public class VarSettingProgram implements IPromelaElement {
     return this.firstProcessMType = firstProcessMType;
   }
   
-  public String addGremlinVar(final PromelaVar v) {
-    String _xblockexpression = null;
-    {
-      final String fullId = v.getName();
-      if ((v instanceof PromelaVar.Bool)) {
-        final Supplier<String> _function = () -> {
-          String _xblockexpression_1 = null;
+  public void addGremlinVar(final PromelaVar v) {
+    final String fullId = v.getName();
+    if ((v instanceof PromelaVar.Bool)) {
+      final Supplier<String> _function = () -> {
+        String _xblockexpression = null;
+        {
+          final String name = NamespaceContext.getName(fullId);
+          StringConcatenation _builder = new StringConcatenation();
+          _builder.append("if");
+          _builder.newLine();
+          _builder.append("\t");
+          _builder.append(":: ");
+          _builder.append(name, "\t");
+          _builder.append(" = true;");
+          _builder.newLineIfNotEmpty();
+          _builder.append("\t");
+          _builder.append(":: ");
+          _builder.append(name, "\t");
+          _builder.append(" = false;");
+          _builder.newLineIfNotEmpty();
+          _builder.append("fi;");
+          _builder.newLine();
+          _xblockexpression = _builder.toString();
+        }
+        return _xblockexpression;
+      };
+      this.gremlinTextSuppliers.add(_function);
+    } else {
+      if ((v instanceof PromelaVar.Byte)) {
+        final Supplier<String> _function_1 = () -> {
+          String _xblockexpression = null;
           {
             final String name = NamespaceContext.getName(fullId);
             StringConcatenation _builder = new StringConcatenation();
-            _builder.append("if");
-            _builder.newLine();
-            _builder.append("\t");
-            _builder.append(":: ");
-            _builder.append(name, "\t");
-            _builder.append(" = true;");
+            _builder.append("select (");
+            _builder.append(name);
+            _builder.append(" : 0..255);");
             _builder.newLineIfNotEmpty();
-            _builder.append("\t");
-            _builder.append(":: ");
-            _builder.append(name, "\t");
-            _builder.append(" = false;");
-            _builder.newLineIfNotEmpty();
-            _builder.append("fi;");
-            _builder.newLine();
-            _xblockexpression_1 = _builder.toString();
+            _xblockexpression = _builder.toString();
           }
-          return _xblockexpression_1;
+          return _xblockexpression;
         };
-        this.gremlinTextSuppliers.add(_function);
+        this.gremlinTextSuppliers.add(_function_1);
       } else {
-        if ((v instanceof PromelaVar.Byte)) {
-          final Supplier<String> _function_1 = () -> {
-            String _xblockexpression_1 = null;
-            {
-              final String name = NamespaceContext.getName(fullId);
-              StringConcatenation _builder = new StringConcatenation();
-              _builder.append("select (");
-              _builder.append(name);
-              _builder.append(" : 0..255);");
-              _builder.newLineIfNotEmpty();
-              _xblockexpression_1 = _builder.toString();
-            }
-            return _xblockexpression_1;
-          };
-          this.gremlinTextSuppliers.add(_function_1);
-        } else {
-          if ((v instanceof PromelaVar.Short)) {
-            boolean _wasSByte = ((PromelaVar.Short)v).getWasSByte();
-            if (_wasSByte) {
-              final Supplier<String> _function_2 = () -> {
-                String _xblockexpression_1 = null;
-                {
-                  final String name = NamespaceContext.getName(fullId);
-                  StringConcatenation _builder = new StringConcatenation();
-                  _builder.append("select (");
-                  _builder.append(name);
-                  _builder.append(" : -128..127);");
-                  _builder.newLineIfNotEmpty();
-                  _xblockexpression_1 = _builder.toString();
-                }
-                return _xblockexpression_1;
-              };
-              this.gremlinTextSuppliers.add(_function_2);
-            } else {
-              String _string = ((PromelaVar.Short)v).getClass().toString();
-              String _plus = (_string + " as gremlin variable");
-              throw new NotSupportedElementException(_plus);
-            }
+        if ((v instanceof PromelaVar.Short)) {
+          boolean _wasSByte = ((PromelaVar.Short)v).getWasSByte();
+          if (_wasSByte) {
+            final Supplier<String> _function_2 = () -> {
+              String _xblockexpression = null;
+              {
+                final String name = NamespaceContext.getName(fullId);
+                StringConcatenation _builder = new StringConcatenation();
+                _builder.append("select (");
+                _builder.append(name);
+                _builder.append(" : -128..127);");
+                _builder.newLineIfNotEmpty();
+                _xblockexpression = _builder.toString();
+              }
+              return _xblockexpression;
+            };
+            this.gremlinTextSuppliers.add(_function_2);
           } else {
-            String _string_1 = v.getClass().toString();
-            String _plus_1 = (_string_1 + " as gremlin variable");
-            throw new NotSupportedElementException(_plus_1);
+            StringConcatenation _builder = new StringConcatenation();
+            _builder.append("Gremlin variable for full id ");
+            _builder.append(fullId);
+            _builder.append(" was not created:");
+            _builder.append(" poST type SINT is not supported");
+            WarningsContext.addWarning(_builder.toString());
+            return;
           }
+        } else {
+          StringConcatenation _builder_1 = new StringConcatenation();
+          _builder_1.append("Gremlin variable for full id ");
+          _builder_1.append(fullId);
+          _builder_1.append(" was not created:");
+          _builder_1.append(" type ");
+          String _type = v.getType();
+          _builder_1.append(_type);
+          _builder_1.append(" is not supported");
+          WarningsContext.addWarning(_builder_1.toString());
+          return;
         }
       }
-      String _xifexpression = null;
-      if ((this.gremlinProcessFullId == null)) {
-        String _xblockexpression_1 = null;
-        {
-          this.gremlinProcessFullId = NamespaceContext.addId(VarSettingProgram.gremlinProcessId, VarSettingProgram.processPrefix);
-          _xblockexpression_1 = this.gremlinMTypeFullId = NamespaceContext.addId(VarSettingProgram.gremlinProcessId, VarSettingProgram.mTypePrefix);
-        }
-        _xifexpression = _xblockexpression_1;
-      }
-      _xblockexpression = _xifexpression;
     }
-    return _xblockexpression;
+    if ((this.gremlinProcessFullId == null)) {
+      this.gremlinProcessFullId = NamespaceContext.addId(VarSettingProgram.gremlinProcessId, VarSettingProgram.processPrefix);
+      this.gremlinMTypeFullId = NamespaceContext.addId(VarSettingProgram.gremlinProcessId, VarSettingProgram.mTypePrefix);
+    }
   }
   
   public String addOutputToInputAssignments(final String outFullId, final List<String> inFullIds) {

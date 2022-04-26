@@ -633,7 +633,7 @@ public abstract class PromelaStatement implements IPromelaElement, PostConstruct
         StringConcatenation _builder = new StringConcatenation();
         _builder.append("if :: ");
         _builder.append(timeoutVarName);
-        _builder.append(" == ");
+        _builder.append(" > ");
         String _text = this.timeoutValue.toText();
         _builder.append(_text);
         _builder.append(" -> {");

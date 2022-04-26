@@ -12,7 +12,7 @@ class WarningsContext {
 	static def getWarningsText() {
 		'''
 			«FOR wt : warningTexts»
-				WARNING: «wt».
+				WARNING: «wt»
 			«ENDFOR»
 		'''
 	}

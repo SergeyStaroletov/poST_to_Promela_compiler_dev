@@ -8,10 +8,12 @@ PROGRAM Gremlin
 	
 	//"gremlin" vars
 	VAR_INPUT
-        activeUserInit : BOOL;
-        activeUserHands : BOOL;
+        activeUserInit : BOOL := NOT FALSE;
+        activeUserHands : BOOL := NOT TRUE;
         testUserUByte : USINT;
-        testUserSByte : SINT;
+        testUserSByte : SINT := -(7);
+        testFloatVal1 : REAL := 21.75;
+        testFloatVal2 : LREAL := -(12.25);
     END_VAR
     
     VAR

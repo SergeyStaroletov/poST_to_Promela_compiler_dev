@@ -282,6 +282,10 @@ public abstract class PromelaVar implements IPromelaElement {
     return this.value;
   }
   
+  public String getType() {
+    return this.typeName;
+  }
+  
   @Override
   public String toText() {
     String _xifexpression = null;

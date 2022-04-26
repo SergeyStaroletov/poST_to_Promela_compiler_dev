@@ -37,6 +37,12 @@ class PromelaModel implements IPromelaElement {
 		PostConstructContext.postConstruct();
 		
 		NamespaceContext.prepareNamesMapping();
+		
+		checkProcessesLimit();
+	}
+	
+	def getWarnings() {
+		return WarningsContext.warningsText.toString().trim();
 	}
 	
 	override toText() {
@@ -64,7 +70,7 @@ class PromelaModel implements IPromelaElement {
 			«ENDIF»
 		''';
 		clearContexts();
-		return res;
+		return res.toString();
 	}
 	
 	private def getIntervalOfPromelaVerificationTask(Configuration config) {
@@ -144,7 +150,8 @@ class PromelaModel implements IPromelaElement {
 					}
 				}]
 				.reduce[t1, t2 | Math.max(t1, t2)];
-			if (maxTimeout !== null && maxTimeout > 0) {
+			if (maxTimeout !== null && maxTimeout >= 0) {
+				maxTimeout = maxTimeout + 1;
 				var bits = 0;
 				while (maxTimeout > 0) {
 					maxTimeout = maxTimeout >> 1;
@@ -289,6 +296,16 @@ class PromelaModel implements IPromelaElement {
 			#define afterNOrSoonerWith__cltl(n, cond, expr) «
 							»(cycle__u -> afterNCyclesOrSoonerWith__ltl(n, cond, expr))
 		'''
+	}
+	
+	private def checkProcessesLimit() {
+		var mainProcesses = PromelaContext.context.allProcesses.size;
+		var specialProcesses = PromelaContext.context.varSettingProgram.processMTypes.size;
+		var total = mainProcesses + specialProcesses + 1;
+		if (total > 255) {
+			WarningsContext.addWarning('''Spin can not handle more than 255 processes. «
+					»Your model has «total» («mainProcesses» from poST program)''');
+		}
 	}
 	
 }

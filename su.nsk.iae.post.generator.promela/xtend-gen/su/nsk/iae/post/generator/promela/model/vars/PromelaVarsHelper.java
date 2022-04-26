@@ -3,6 +3,7 @@ package su.nsk.iae.post.generator.promela.model.vars;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.ListExtensions;
 import su.nsk.iae.post.generator.promela.context.NamespaceContext;
@@ -135,19 +136,24 @@ public class PromelaVarsHelper {
           case "DINT":
             return new PromelaVar.Int(name);
           case "LINT":
-            throw new NotSupportedElementException("poST variable of type LINT");
+            PromelaVar.Int _int = new PromelaVar.Int(name);
+            return PromelaVarsHelper.<PromelaVar.Int>notSupportedType(_int, "LINT", "DINT");
           case "USINT":
             return new PromelaVar.Byte(name);
           case "UINT":
             return new PromelaVar.Unsigned(name, 16);
           case "UDINT":
-            throw new NotSupportedElementException("poST variable of type UDINT");
+            PromelaVar.Int _int_1 = new PromelaVar.Int(name);
+            return PromelaVarsHelper.<PromelaVar.Int>notSupportedType(_int_1, "UDINT", "DINT");
           case "ULINT":
-            throw new NotSupportedElementException("poST variable of type ULINT");
+            PromelaVar.Int _int_2 = new PromelaVar.Int(name);
+            return PromelaVarsHelper.<PromelaVar.Int>notSupportedType(_int_2, "ULINT", "DINT");
           case "REAL":
-            throw new NotSupportedElementException("poST variable of type REAL");
+            PromelaVar.Int _int_3 = new PromelaVar.Int(name);
+            return PromelaVarsHelper.<PromelaVar.Int>notSupportedType(_int_3, "REAL", "DINT");
           case "LREAL":
-            throw new NotSupportedElementException("poST variable of type LREAL");
+            PromelaVar.Int _int_4 = new PromelaVar.Int(name);
+            return PromelaVarsHelper.<PromelaVar.Int>notSupportedType(_int_4, "LREAL", "DINT");
           case "BOOL":
             return new PromelaVar.Bool(name);
           case "BYTE":
@@ -157,7 +163,8 @@ public class PromelaVarsHelper {
           case "DWORD":
             return new PromelaVar.Int(name);
           case "LWORD":
-            throw new NotSupportedElementException("poST variable of type LWORD");
+            PromelaVar.Int _int_5 = new PromelaVar.Int(name);
+            return PromelaVarsHelper.<PromelaVar.Int>notSupportedType(_int_5, "LWORD", "DWORD");
           case "TIME":
             _switchResult = context.addTimeVar(name);
             break;
@@ -174,6 +181,18 @@ public class PromelaVarsHelper {
       _xblockexpression = _switchResult;
     }
     return _xblockexpression;
+  }
+  
+  private static <T extends PromelaVar> T notSupportedType(final T v, final String oldType, final String newType) {
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("Type ");
+    _builder.append(oldType);
+    _builder.append(" is not fully supported. Variable ");
+    _builder.append(v.name);
+    _builder.append(" registered as of type ");
+    _builder.append(newType);
+    WarningsContext.addWarning(_builder.toString());
+    return v;
   }
   
   private static String postToPromelaTypeNameForArray(final String type) {

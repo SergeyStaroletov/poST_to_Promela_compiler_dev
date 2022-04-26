@@ -17,7 +17,6 @@ public class WarningsContext {
       for(final String wt : WarningsContext.warningTexts) {
         _builder.append("WARNING: ");
         _builder.append(wt);
-        _builder.append(".");
         _builder.newLineIfNotEmpty();
       }
     }

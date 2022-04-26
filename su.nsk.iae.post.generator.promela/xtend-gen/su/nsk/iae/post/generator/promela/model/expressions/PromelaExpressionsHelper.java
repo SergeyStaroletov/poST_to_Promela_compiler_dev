@@ -13,6 +13,7 @@ import su.nsk.iae.post.poST.IntegerLiteral;
 import su.nsk.iae.post.poST.NumericLiteral;
 import su.nsk.iae.post.poST.PrimaryExpression;
 import su.nsk.iae.post.poST.ProcessStatusExpression;
+import su.nsk.iae.post.poST.RealLiteral;
 import su.nsk.iae.post.poST.SymbolicVariable;
 import su.nsk.iae.post.poST.TimeLiteral;
 import su.nsk.iae.post.poST.UnaryExpression;
@@ -46,9 +47,14 @@ public class PromelaExpressionsHelper {
               String _value = ((IntegerLiteral)num).getValue().getValue();
               return new PromelaExpression.Constant(_value);
             } else {
-              String _string = num.getClass().toString();
-              String _plus = ("Number constant of type " + _string);
-              throw new NotSupportedElementException(_plus);
+              if ((num instanceof RealLiteral)) {
+                String _valueOf = String.valueOf(Math.round(Double.parseDouble(((RealLiteral)num).getValue())));
+                return new PromelaExpression.Constant(_valueOf);
+              } else {
+                String _string = num.getClass().toString();
+                String _plus = ("Number constant of type " + _string);
+                throw new UnknownElementException(_plus);
+              }
             }
           } else {
             TimeLiteral _time = ((PrimaryExpression)expr).getConst().getTime();

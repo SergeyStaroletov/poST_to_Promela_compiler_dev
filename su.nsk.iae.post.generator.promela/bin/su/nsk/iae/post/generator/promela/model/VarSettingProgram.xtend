@@ -8,6 +8,7 @@ import java.util.List
 import java.util.HashMap
 import su.nsk.iae.post.generator.promela.exceptions.NotSupportedElementException
 import su.nsk.iae.post.generator.promela.exceptions.WrongModelStateException
+import su.nsk.iae.post.generator.promela.context.WarningsContext
 
 class VarSettingProgram implements IPromelaElement {
 	static val processPrefix = "specialProcess";
@@ -66,11 +67,15 @@ class VarSettingProgram implements IPromelaElement {
 				];
 			}
 			else {
-				throw new NotSupportedElementException(v.class.toString + " as gremlin variable");
+				WarningsContext.addWarning('''Gremlin variable for full id «fullId» was not created:«
+					» poST type SINT is not supported''')
+				return;
 			}
 		}
 		else {
-			throw new NotSupportedElementException(v.class.toString + " as gremlin variable");
+			WarningsContext.addWarning('''Gremlin variable for full id «fullId» was not created:«
+				» type «v.type» is not supported''')
+			return;
 		}
 		if (gremlinProcessFullId === null) {
 			gremlinProcessFullId = NamespaceContext.addId(gremlinProcessId, processPrefix);

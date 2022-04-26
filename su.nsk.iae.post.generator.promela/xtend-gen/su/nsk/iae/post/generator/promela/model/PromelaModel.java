@@ -54,6 +54,11 @@ public class PromelaModel implements IPromelaElement {
     this.setNextProcesses(varSettingProgram);
     PostConstructContext.postConstruct();
     NamespaceContext.prepareNamesMapping();
+    this.checkProcessesLimit();
+  }
+  
+  public String getWarnings() {
+    return WarningsContext.getWarningsText().toString().trim();
   }
   
   @Override
@@ -102,7 +107,7 @@ public class PromelaModel implements IPromelaElement {
     }
     final String res = _builder.toString();
     this.clearContexts();
-    return res;
+    return res.toString();
   }
   
   private long getIntervalOfPromelaVerificationTask(final Configuration config) {
@@ -202,7 +207,8 @@ public class PromelaModel implements IPromelaElement {
         return Long.valueOf(Math.max((t1).longValue(), (t2).longValue()));
       };
       Long maxTimeout = IterableExtensions.<Long>reduce(IterableExtensions.<PromelaExpression, Long>map(IterableExtensions.<PromelaStatement.Timeout, PromelaExpression>map(IterableExtensions.<PromelaStatement.Timeout>filterNull(ListExtensions.<PromelaState, PromelaStatement.Timeout>map(p.getStates(), _function_1)), _function_2), _function_3), _function_4);
-      if (((maxTimeout != null) && ((maxTimeout).longValue() > 0))) {
+      if (((maxTimeout != null) && ((maxTimeout).longValue() >= 0))) {
+        maxTimeout = Long.valueOf(((maxTimeout).longValue() + 1));
         int bits = 0;
         while (((maxTimeout).longValue() > 0)) {
           {
@@ -440,5 +446,27 @@ public class PromelaModel implements IPromelaElement {
     _builder.append("(cycle__u -> afterNCyclesOrSoonerWith__ltl(n, cond, expr))");
     _builder.newLine();
     return _builder;
+  }
+  
+  private boolean checkProcessesLimit() {
+    boolean _xblockexpression = false;
+    {
+      int mainProcesses = PromelaContext.getContext().getAllProcesses().size();
+      int specialProcesses = PromelaContext.getContext().getVarSettingProgram().getProcessMTypes().size();
+      int total = ((mainProcesses + specialProcesses) + 1);
+      boolean _xifexpression = false;
+      if ((total > 255)) {
+        StringConcatenation _builder = new StringConcatenation();
+        _builder.append("Spin can not handle more than 255 processes. ");
+        _builder.append("Your model has ");
+        _builder.append(total);
+        _builder.append(" (");
+        _builder.append(mainProcesses);
+        _builder.append(" from poST program)");
+        _xifexpression = WarningsContext.addWarning(_builder.toString());
+      }
+      _xblockexpression = _xifexpression;
+    }
+    return _xblockexpression;
   }
 }

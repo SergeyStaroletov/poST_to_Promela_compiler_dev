@@ -16,6 +16,7 @@ import su.nsk.iae.post.poST.impl.PowerExpressionImpl
 import su.nsk.iae.post.generator.promela.exceptions.NotSupportedElementException
 import su.nsk.iae.post.generator.promela.context.PromelaContext
 import su.nsk.iae.post.poST.IntegerLiteral
+import su.nsk.iae.post.poST.RealLiteral
 
 class PromelaExpressionsHelper {
 	static def PromelaExpression getExpr(Expression expr) {
@@ -29,8 +30,12 @@ class PromelaExpressionsHelper {
 					if (num instanceof IntegerLiteral) {
 						return new PromelaExpression.Constant(num.value.value);
 					}
+					else if (num instanceof RealLiteral) {
+						return new PromelaExpression.Constant(
+							String.valueOf(Math.round(Double.parseDouble(num.value))));
+					}
 					else {
-						throw new NotSupportedElementException("Number constant of type " + num.class.toString);
+						throw new UnknownElementException("Number constant of type " + num.class.toString);
 					}
 				}
 				else if (expr.const.time !== null) {

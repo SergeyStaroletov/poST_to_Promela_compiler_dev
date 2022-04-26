@@ -104,24 +104,24 @@ class PromelaVarsHelper {
 			case "SINT": return new PromelaVar.Short(name, true)
 			case "INT": return new PromelaVar.Short(name)
 			case "DINT": return new PromelaVar.Int(name)
-			case "LINT": throw new NotSupportedElementException("poST variable of type LINT")
+			case "LINT": return notSupportedType(new PromelaVar.Int(name), "LINT", "DINT")
 			
 			//unsigned integer
 			case "USINT": return new PromelaVar.Byte(name)
 			case "UINT": return new PromelaVar.Unsigned(name, 16)
-			case "UDINT": throw new NotSupportedElementException("poST variable of type UDINT")
-			case "ULINT": throw new NotSupportedElementException("poST variable of type ULINT")
+			case "UDINT": return notSupportedType(new PromelaVar.Int(name), "UDINT", "DINT")
+			case "ULINT": return notSupportedType(new PromelaVar.Int(name), "ULINT", "DINT")
 			
 			//real
-			case "REAL": throw new NotSupportedElementException("poST variable of type REAL")
-			case "LREAL": throw new NotSupportedElementException("poST variable of type LREAL")
+			case "REAL": return notSupportedType(new PromelaVar.Int(name), "REAL", "DINT")
+			case "LREAL": return notSupportedType(new PromelaVar.Int(name), "LREAL", "DINT")
 			
 			//bit string
 			case "BOOL": return new PromelaVar.Bool(name)
 			case "BYTE": return new PromelaVar.Byte(name)
 			case "WORD": return new PromelaVar.Short(name)
 			case "DWORD": return new PromelaVar.Int(name)
-			case "LWORD": throw new NotSupportedElementException("poST variable of type LWORD")
+			case "LWORD": return notSupportedType(new PromelaVar.Int(name), "LWORD", "DWORD")
 			
 			//time
 			case "TIME": context.addTimeVar(name)
@@ -132,6 +132,12 @@ class PromelaVarsHelper {
 			
 			default: throw new UnknownElementException("poST variable of type " + type)
 		}
+	}
+	
+	private static def <T extends PromelaVar> T notSupportedType(T v, String oldType, String newType) {
+		WarningsContext.addWarning('''Type «oldType» is not fully supported. Variable «v.name»«
+			» registered as of type «newType»''');
+		return v;
 	}
 	
 	private static def String postToPromelaTypeNameForArray(String type) {
