@@ -128,7 +128,7 @@ public class PromelaExpressionsHelper {
         boolean _matched = false;
         if (Objects.equal(_class, ExpressionImpl.class)) {
           _matched=true;
-          opLiteral = "||";
+          opLiteral = "|";
         }
         if (!_matched) {
           if (Objects.equal(_class, XorExpressionImpl.class)) {
