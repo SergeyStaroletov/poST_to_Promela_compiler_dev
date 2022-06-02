@@ -329,7 +329,15 @@ public abstract class PromelaStatement implements IPromelaElement, PostConstruct
     public StartProcess(final StartProcessStatement s) {
       this.curProgramName = CurrentContext.getCurProgram().getShortName();
       this.curProcessName = CurrentContext.getCurProcess().getShortName();
-      this.processShortName = s.getProcess().getName();
+      String _xifexpression = null;
+      Variable _process = s.getProcess();
+      boolean _tripleNotEquals = (_process != null);
+      if (_tripleNotEquals) {
+        _xifexpression = s.getProcess().getName();
+      } else {
+        _xifexpression = CurrentContext.getCurProcess().getShortName();
+      }
+      this.processShortName = _xifexpression;
     }
     
     @Override

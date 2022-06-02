@@ -176,7 +176,7 @@ abstract class PromelaStatement implements IPromelaElement, IPostConstuctible {
 		new (StartProcessStatement s) {
 			this.curProgramName = CurrentContext.curProgram.shortName;
 			this.curProcessName = CurrentContext.curProcess.shortName;
-			this.processShortName = s.process.name;
+			this.processShortName = s.process !== null ? s.process.name : CurrentContext.curProcess.shortName;
 		}
 		
 		override void postConstruct() {

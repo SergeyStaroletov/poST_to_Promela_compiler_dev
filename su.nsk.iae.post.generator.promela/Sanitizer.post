@@ -35,6 +35,8 @@ PROGRAM Gremlin
 		STATE Init
 			activeUser := activeUserInit;
 			
+			RESTART;
+			
 			WHILE arr1[5] > 0 DO
 				arr1[5] := arr1[5] - 1;
 			END_WHILE

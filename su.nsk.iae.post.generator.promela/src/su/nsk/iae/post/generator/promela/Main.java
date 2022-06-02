@@ -22,14 +22,21 @@ import su.nsk.iae.post.generator.promela.model.PromelaModel;
 import su.nsk.iae.post.poST.Model;
 
 public class Main {
-	private static String defaultInputPath = ".\\Sanitizer.post";
-	private static String defaultOutputPath = "D:\\Promela programms\\sanitizer-gen.pml";
-	
 	public static void main(String[] args) throws IOException {
-		String inputFile = getKeyValue(args, "-i", "--input").orElse(defaultInputPath);
-		String outputFile = getKeyValue(args, "-o", "--output").orElse(defaultOutputPath);
+		String inputFile = getKeyValue(args, "-i", "--input").orElse(null);
+		String outputFile = getKeyValue(args, "-o", "--output").orElse(null);
 		boolean reduceTimeValues = isKeyPresent(args, "-rt", "--reduceTime");
 		boolean addLtlMacrosesToEnd = isKeyPresent(args, "-lm", "--ltlMacro");
+		
+		if (inputFile == null) {
+			System.out.println("ERROR: Input .post file must be specified (-i).");
+		}
+		if (outputFile == null) {
+			System.out.println("ERROR: Output .pml file must be specified (-o).");
+		}
+		if (inputFile == null || outputFile == null) {
+			return;
+		}
 		
         Model m = prepareAndParseModelFromResource(inputFile);
         try {
