@@ -128,11 +128,13 @@ abstract class PromelaStatement implements IPromelaElement, IPostConstuctible {
 		
 		new (CaseStatement s) {
 			cond = PromelaExpressionsHelper.getExpr(s.cond);
+			/* 
 			s.caseElements.forEach[e | caseElements.add(new AbstractMap.SimpleEntry(
 				e.caseList.caseListElement,
 				new PromelaElementList().addElements(PromelaStatementsHelper.getStatementList(e.statement))
 			))];
 			elseCase =  s.elseStatement !== null ? new PromelaElementList().addElements(PromelaStatementsHelper.getStatementList(s.elseStatement)) : null;
+		*/
 		}
 		
 		override toText() {
