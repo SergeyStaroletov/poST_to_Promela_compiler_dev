@@ -1,0 +1,181 @@
+PROGRAM Environment
+    VAR CONSTANT
+        DAY_DURATION : TIME := T#14h;
+        NIGHT_DURATION : TIME := T#10h;
+    END_VAR
+    VAR_INPUT
+        clouds : BOOL;//gremlin
+    END_VAR
+    VAR_OUTPUT
+        sun : BOOL;
+    END_VAR
+
+    PROCESS Sun
+        STATE Day
+            sun := NOT clouds;
+            TIMEOUT DAY_DURATION THEN
+                SET STATE Night;
+            END_TIMEOUT
+        END_STATE
+
+        STATE Night
+            sun := FALSE;
+            TIMEOUT NIGHT_DURATION THEN
+                SET STATE Day;
+            END_TIMEOUT
+        END_STATE
+    END_PROCESS
+END_PROGRAM
+
+PROGRAM EnergyProvider
+    VAR CONSTANT
+        BATTERY_INIT_ENERGY : USINT := 10;
+        LACK_THRESHOLD : USINT := 3;
+        OVERFLOW_THRESHOLD : USINT := 17;
+    END_VAR
+    VAR_INPUT
+        sun : BOOL;
+        generator : BOOL;
+        consumer : BOOL;
+        cityConsuming : BOOL;//gremlin
+    END_VAR
+    VAR_OUTPUT
+        generatorOn : BOOL;
+        consumerOn : BOOL;
+        batteryBroken : BOOL;
+    END_VAR
+    VAR
+        batteryEnergy : USINT := BATTERY_INIT_ENERGY;
+    END_VAR
+
+    PROCESS Init
+        STATE Init
+            START PROCESS Battery;
+            START PROCESS Controller;
+            STOP;
+        END_STATE
+    END_PROCESS
+
+    PROCESS Controller
+        STATE Normal
+            IF batteryEnergy <= LACK_THRESHOLD THEN
+                generatorOn := TRUE;
+                SET STATE energyLack;
+            END_IF
+            IF batteryEnergy >= OVERFLOW_THRESHOLD THEN
+                consumerOn := TRUE;
+                SET STATE energyOverflow;
+            END_IF
+        END_STATE
+        STATE energyLack
+            IF batteryEnergy > LACK_THRESHOLD THEN
+                consumerOn := FALSE;
+                SET STATE Normal;
+            END_IF
+        END_STATE
+        STATE energyOverflow
+            IF batteryEnergy < OVERFLOW_THRESHOLD THEN
+                generatorOn := FALSE;
+                SET STATE Normal;
+            END_IF
+        END_STATE
+    END_PROCESS
+
+    PROCESS Battery
+        VAR CONSTANT
+            MAX_ENERGY : USINT := 19;
+            MIN_ENERGY : USINT := 1;
+        END_VAR
+        VAR
+            change : SINT;
+        END_VAR
+        STATE active
+            change := 0;
+            IF sun THEN
+                change := change + 1;
+            END_IF
+            IF generator THEN
+                change := change + 1;
+            END_IF
+            IF consumer THEN
+                change := change - 1;
+            END_IF
+            IF cityConsuming THEN
+                change := change - 1;
+            END_IF
+            batteryEnergy := batteryEnergy + change;
+            IF (batteryEnergy < MIN_ENERGY) OR (batteryEnergy > MAX_ENERGY) THEN
+                batteryBroken := TRUE;
+                ERROR;
+            END_IF
+        END_STATE
+    END_PROCESS
+END_PROGRAM
+
+PROGRAM ReserveEnergyProvider
+    VAR_INPUT
+        generatorOn : BOOL;
+    END_VAR
+    VAR_OUTPUT
+        generator : BOOL;
+    END_VAR
+
+    PROCESS Generator
+        VAR CONSTANT
+            START_TIME : TIME := T#1h;
+        END_VAR
+
+        STATE Wait
+            IF generatorOn THEN
+                SET NEXT;
+            END_IF
+        END_STATE
+        STATE Starting
+            IF NOT generatorOn THEN
+                SET STATE Wait;
+            END_IF
+            TIMEOUT START_TIME THEN
+                generator := TRUE;
+                SET NEXT;
+            END_TIMEOUT
+        END_STATE
+        STATE Working
+            IF NOT generatorOn THEN
+                generator := FALSE;
+                SET STATE Wait;
+            END_IF
+        END_STATE
+    END_PROCESS
+END_PROGRAM
+
+PROGRAM ReserveEnergyConsumer
+    VAR_INPUT
+        consumerOn : BOOL;
+    END_VAR
+    VAR_OUTPUT
+        consumer : BOOL;
+    END_VAR
+
+    PROCESS Consumer
+        VAR CONSTANT
+            STOP_TIME : TIME := T#1h;
+        END_VAR
+        STATE Off
+            IF consumerOn THEN
+                consumer := TRUE;
+                SET STATE On;
+            END_IF
+        END_STATE
+        STATE On
+            IF NOT consumerOn THEN
+                SET STATE Stopping;
+            END_IF
+        END_STATE
+        STATE Stopping
+            TIMEOUT STOP_TIME THEN
+                consumer := FALSE;
+                SET STATE Off;
+            END_TIMEOUT
+        END_STATE
+    END_PROCESS
+END_PROGRAM
