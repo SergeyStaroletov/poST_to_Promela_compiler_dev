@@ -79,9 +79,9 @@ class PromelaExpressionsHelper {
 			val right = getExpr(expr.right);
 			var String opLiteral;
 			switch (expr.class) {
-				case ExpressionImpl/*OR*/: opLiteral = "|"
+				case ExpressionImpl/*OR*/: opLiteral = "||"
 				case XorExpressionImpl: opLiteral = "^"
-				case AndExpressionImpl: opLiteral = "&"
+				case AndExpressionImpl: opLiteral = "&&"
 				case CompExpressionImpl: opLiteral = getCompLiteral(expr)
 				case EquExpressionImpl: opLiteral = (expr as EquExpressionImpl).equOp.literal
 				case AddExpressionImpl: opLiteral = (expr as AddExpressionImpl).addOp.literal
