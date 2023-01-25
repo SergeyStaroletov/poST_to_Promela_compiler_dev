@@ -5,6 +5,8 @@ import su.nsk.iae.post.generator.promela.context.NamespaceContext
 import su.nsk.iae.post.generator.promela.model.vars.PromelaVar
 import su.nsk.iae.post.generator.promela.model.vars.PromelaVarsHelper
 import su.nsk.iae.post.poST.Program
+import org.eclipse.emf.common.util.EList
+import su.nsk.iae.post.poST.GlobalVarDeclaration
 
 class PromelaProgram implements IPromelaElement {
 	final String shortName;
@@ -17,11 +19,13 @@ class PromelaProgram implements IPromelaElement {
 	
 	final PromelaElementList<PromelaProcess> processes = new PromelaElementList("\r\n");
 	
-	new(Program program) {
+	new(Program program, EList<GlobalVarDeclaration> globVars) {
 		CurrentContext.startProgram(this);
 		this.shortName = program.name;
 		this.fullName = NamespaceContext.addId(program.name);
 		NamespaceContext.startNamespace(program.name);
+		
+		globVars.forEach([d | inOutVars.addAll(PromelaVarsHelper.getVars(d.varsSimple))]);
 		
 		program.progInVars.forEach([d | inVars.addAll(PromelaVarsHelper.getVars(d.vars))]);
 		program.progOutVars.forEach([d | outVars.addAll(PromelaVarsHelper.getVars(d.vars))]);
@@ -35,6 +39,8 @@ class PromelaProgram implements IPromelaElement {
 		NamespaceContext.endNamespace();
 		CurrentContext.stopProgram();
 	}
+	
+
 	
 	override toText() {
 		'''

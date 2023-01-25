@@ -24,7 +24,8 @@ class PromelaModel implements IPromelaElement {
 	
 	new(Model m, boolean reduceTimeValues, boolean addLtlMacrosesToEnd) {
 		this.addLtlMacrosesToEnd = addLtlMacrosesToEnd;
-		m.programs.forEach[p | programs.add(new PromelaProgram(p))];
+		
+		m.programs.forEach[p | programs.add(new PromelaProgram(p, m.globVars))];
 		NamespaceContext.addId("__currentProcess");
 		
 		val interval = getIntervalOfPromelaVerificationTask(m.conf);
@@ -204,7 +205,7 @@ class PromelaModel implements IPromelaElement {
 				val shortId = fullIdParts.get(fullIdParts.length - 1);
 				val prev = outputsAndInOuts.putIfAbsent(shortId, inOut);
 				if (prev !== null) {
-					throw new ConflictingOutputsOrInOutsException(prev.name, inOut.name);
+					//throw new ConflictingOutputsOrInOutsException(prev.name, inOut.name);
 				}
 			}
 		}
@@ -300,7 +301,9 @@ class PromelaModel implements IPromelaElement {
 	
 	private def checkProcessesLimit() {
 		var mainProcesses = PromelaContext.context.allProcesses.size;
-		var specialProcesses = PromelaContext.context.varSettingProgram.processMTypes.size;
+		var specialProcesses = 0;
+		if (PromelaContext.context.varSettingProgram != null)
+			specialProcesses = PromelaContext.context.varSettingProgram.processMTypes.size;
 		var total = mainProcesses + specialProcesses + 1;
 		if (total > 255) {
 			WarningsContext.addWarning('''Spin can not handle more than 255 processes. «
