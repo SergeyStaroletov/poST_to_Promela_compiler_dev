@@ -58,7 +58,7 @@ PROGRAM EnergyProvider
 
     PROCESS Controller
         STATE Normal
-            IF batteryEnergy <= LACK_THRESHOLD THEN
+            IF (batteryEnergy <= LACK_THRESHOLD) AND (batteryEnergy > 0) THEN
                 generatorOn := TRUE;
                 SET STATE energyLack;
             END_IF

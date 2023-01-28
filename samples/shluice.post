@@ -1,0 +1,523 @@
+VAR_GLOBAL (* VAR_INPUT *)
+ (* Ship sensors *)
+ shipInHigh  : BOOL;
+ shipInLow : BOOL;
+ shipInChmbr  : BOOL;
+(* Water level sensors *)
+ atLow  : BOOL;
+ atHigh : BOOL;
+(* Gate / Valves sensors *)
+ HighGateOpened : BOOL;
+ LowGateOpened : BOOL;
+ HighGateClosed : BOOL;
+ LowGateClosed : BOOL;
+ HighValveOpened : BOOL;
+ LowValveOpened : BOOL;
+(* END_VAR
+VAR *) (* VAR_OUTPUT *)
+(* sluice gates *)
+ openHighGate : BOOL;
+ openLowGate : BOOL;
+(* sluice valves *)
+ openHighValve : BOOL;
+ openLowValve : BOOL;
+(* traffic lights *)
+ Low2ChmbrLight : BOOL;
+ Chmbr2LowLight : BOOL;
+ Chmbr2HighLight : BOOL;
+ High2ChmbrLight : BOOL;
+END_VAR
+
+PROGRAM Plant (* Sluice *) 
+(* Plant *)
+PROCESS Init 
+  STATE begin
+    (* inputs: *)
+    shipInHigh  := FALSE;
+    shipInLow := FALSE;
+    shipInChmbr  := FALSE;
+    atLow  := TRUE;
+    atHigh := FALSE;
+    HighGateOpened := FALSE;
+    LowGateOpened := FALSE;
+    HighValveOpened := FALSE;
+    LowValveOpened := FALSE;
+(* outputs: *)
+    openHighGate := FALSE;
+    openLowGate := FALSE;
+    (* sluice valves *)
+    openHighValve := FALSE;
+    openLowValve := FALSE;
+    (* traffic lights *)
+    Low2ChmbrLight := FALSE;
+    Chmbr2LowLight := FALSE;
+    Chmbr2HighLight := FALSE;
+    High2ChmbrLight := FALSE;
+    START PROCESS UpperGateSim;
+    START PROCESS LowerGateSim;
+    START PROCESS UpperValveSim;
+    START PROCESS LowerValveSim;
+    START PROCESS WaterLevelSim;
+    STOP;
+  END_STATE
+END_PROCESS
+
+PROCESS UpperGateSim 
+  VAR CONSTANT
+    GATE_SPEED : REAL := 0.5;
+    GATE_OPEN_COORD : REAL := 100;
+  END_VAR
+  VAR 
+    coord : REAL := 0.0;
+  END_VAR
+  STATE check_open_close LOOPED 
+    IF openHighGate THEN
+      coord := coord + GATE_SPEED;
+    ELSE
+      coord := coord - GATE_SPEED;
+    END_IF
+    IF coord <= 0.0 THEN 
+      coord := 0.0;
+    END_IF
+    IF coord >= GATE_OPEN_COORD THEN 
+      coord := GATE_OPEN_COORD;
+    END_IF
+    IF coord = GATE_OPEN_COORD THEN  
+      HighGateOpened := TRUE;
+    ELSE
+      HighGateOpened := FALSE;
+    END_IF	
+    IF coord = 0.0 THEN  
+      HighGateClosed := TRUE;
+    ELSE
+      HighGateClosed := FALSE;
+    END_IF	
+  END_STATE
+END_PROCESS
+
+PROCESS LowerGateSim 
+  VAR CONSTANT
+    GATE_SPEED : REAL := 0.5;
+    GATE_OPEN_COORD : REAL := 100;
+  END_VAR
+  VAR 
+    coord : REAL := 0.0;
+  END_VAR
+  STATE check_open_close LOOPED 
+    IF openLowGate THEN
+      coord := coord + GATE_SPEED;
+    ELSE
+      coord := coord - GATE_SPEED;
+    END_IF
+    IF coord <= 0.0 THEN 
+      coord := 0.0;
+	  END_IF
+    IF coord >= GATE_OPEN_COORD THEN 
+      coord := GATE_OPEN_COORD;
+    END_IF
+    IF coord = GATE_OPEN_COORD THEN  
+      LowGateOpened := TRUE;
+    ELSE
+      LowGateOpened := FALSE;
+    END_IF  
+    IF coord = 0.0 THEN  
+      LowGateClosed := TRUE;
+    ELSE
+      LowGateClosed := FALSE;
+    END_IF  
+  END_STATE
+END_PROCESS
+
+PROCESS UpperValveSim 
+  STATE check_open_close LOOPED 
+    IF openHighValve = TRUE THEN  
+      HighValveOpened := TRUE;
+    ELSE
+      HighValveOpened := FALSE;
+    END_IF  
+  END_STATE
+END_PROCESS
+
+PROCESS LowerValveSim 
+  STATE check_open_close LOOPED 
+    IF openLowValve = TRUE THEN  
+      LowValveOpened := TRUE;
+    ELSE
+      LowValveOpened := FALSE;
+    END_IF  
+  END_STATE
+END_PROCESS
+
+PROCESS WaterLevelSim
+  VAR CONSTANT
+    OUTFLOW_RATE : REAL := 0.5;
+    UPPER_LEVEL : REAL := 100;
+    LOWER_LEVEL  : REAL := 0;
+  END_VAR
+  VAR 
+    coord : REAL := 0.0;
+  END_VAR
+  STATE check_open_close LOOPED 
+    IF openLowValve THEN
+      coord := coord - OUTFLOW_RATE;
+    END_IF
+    IF openHighValve THEN
+      coord := coord + OUTFLOW_RATE;
+    END_IF
+    IF coord >= UPPER_LEVEL THEN 
+      coord := UPPER_LEVEL;
+    END_IF
+    IF coord <= LOWER_LEVEL THEN 
+      coord := LOWER_LEVEL;
+    END_IF
+    IF coord = LOWER_LEVEL THEN  
+      atLow := TRUE;
+    ELSE
+      atLow := FALSE;
+    END_IF  
+    IF coord = UPPER_LEVEL THEN  
+      atHigh := TRUE;
+    ELSE
+      atHigh := FALSE;
+    END_IF  
+  END_STATE
+END_PROCESS
+END_PROGRAM
+
+(*============================================*)
+(*============================================*)
+(*============= CONTROLLER ===================*)
+(*============================================*)
+(*============================================*)
+
+
+PROGRAM Controller
+PROCESS Init (* initial process *)
+  STATE begin
+    openHighGate := FALSE;
+    openLowGate := FALSE;
+    (* sluice valves *)
+    openHighValve := FALSE;
+    openLowValve := FALSE;
+    (* traffic lights *)
+    Low2ChmbrLight := FALSE;
+    Chmbr2LowLight := FALSE;
+    Chmbr2HighLight := FALSE;
+    High2ChmbrLight := FALSE;
+
+    START PROCESS Waiting4Ship;
+    STOP;
+  END_STATE
+END_PROCESS
+
+
+PROCESS Waiting4Ship 
+  STATE init
+    (* TO BE EFFECTIVE: *)
+    IF (shipInHigh AND shipInLow) THEN  
+      IF (atHigh OR atLow) THEN
+        IF atHigh THEN
+          START PROCESS DownControl;
+          SET STATE CheckDown;
+        END_IF
+        IF atLow THEN
+          START PROCESS UpControl;
+          SET STATE CheckUp;
+        END_IF
+      ELSE
+          START PROCESS DownControl;
+          SET STATE CheckDown;
+      END_IF
+    ELSE (* PROCESS THE FIRST *)
+      IF shipInHigh THEN
+        START PROCESS DownControl;
+        SET STATE CheckDown;
+      END_IF
+      IF shipInLow THEN
+        START PROCESS UpControl;
+        SET STATE CheckUp;
+      END_IF
+    END_IF
+  END_STATE
+  STATE CheckUp 
+    IF PROCESS UpControl IN STATE STOP THEN
+      START PROCESS DownControl;
+      SET STATE CheckDown;
+    END_IF
+  END_STATE
+  STATE CheckDown 
+    IF PROCESS DownControl IN STATE STOP THEN
+      START PROCESS UpControl;
+      SET STATE CheckUp;
+    END_IF
+  END_STATE
+END_PROCESS
+
+PROCESS UpControl 
+  STATE begin
+    START PROCESS LightOFF;
+    IF shipInHigh OR shipInChmbr THEN
+      START PROCESS Water2High;
+      SET NEXT;
+    ELSE
+      STOP;
+    END_IF
+  END_STATE
+  STATE Wait4High
+    IF (PROCESS Water2High IN STATE STOP) THEN
+      START PROCESS OpenHighGate;
+      SET NEXT;
+    END_IF
+  END_STATE
+  STATE Wait4Open
+    IF (PROCESS OpenHighGate IN STATE STOP) THEN
+      IF shipInChmbr THEN
+        START PROCESS Chmbr2HighON;
+        SET NEXT;
+      ELSE
+        START PROCESS High2ChmbrON;
+        SET STATE Wait4ShipGetInChmbr;
+      END_IF
+    END_IF
+  END_STATE
+  STATE Wait4ShipGetOutChmbr
+    IF (NOT shipInChmbr) THEN
+      IF (NOT shipInHigh) THEN
+        START PROCESS CloseHighGate; (*CLOSE GATE!*)
+        SET NEXT;
+      ELSE
+        START PROCESS High2ChmbrON;
+        SET STATE Wait4ShipGetInChmbr;
+      END_IF
+    END_IF
+  END_STATE
+  STATE Wait4ShipGetInChmbr
+    IF (shipInChmbr) THEN
+      START PROCESS CloseHighGate; (*CLOSE GATE!*)
+      SET NEXT;
+    END_IF
+  END_STATE
+  STATE Wait4Close
+    IF (PROCESS CloseHighGate IN STATE STOP) THEN
+      STOP;
+    END_IF
+  END_STATE
+END_PROCESS
+
+PROCESS DownControl 
+  STATE begin
+    START PROCESS LightOFF;
+    IF shipInLow OR shipInChmbr THEN
+      START PROCESS Water2Low;
+      SET NEXT;
+    ELSE
+      STOP;
+    END_IF
+  END_STATE
+  STATE Wait4Low
+    IF (PROCESS Water2Low IN STATE STOP) THEN
+      START PROCESS OpenLowGate;
+      SET NEXT;
+    END_IF
+  END_STATE
+  STATE Wait4Open
+    IF (PROCESS OpenLowGate IN STATE STOP) THEN
+      IF shipInChmbr THEN
+        START PROCESS Chmbr2LowON;
+        SET NEXT;
+      ELSE
+        START PROCESS Low2ChmbrON;
+        SET STATE Wait4ShipGetInChmbr;
+      END_IF
+    END_IF
+  END_STATE
+  STATE Wait4ShipGetOutChmbr
+    IF (NOT shipInChmbr) THEN
+      IF (NOT shipInLow) THEN
+        START PROCESS CloseLowGate; (*CLOSE GATE!*)
+        SET STATE Wait4Close;
+      ELSE
+        START PROCESS Low2ChmbrON;
+        SET STATE Wait4ShipGetInChmbr;
+      END_IF
+    END_IF
+  END_STATE
+  STATE Wait4ShipGetInChmbr
+    IF (shipInChmbr) THEN
+      START PROCESS CloseLowGate; (*CLOSE GATE!*)
+      SET NEXT;
+    END_IF
+  END_STATE
+  STATE Wait4Close
+    IF (PROCESS CloseLowGate IN STATE STOP) THEN
+      STOP;
+    END_IF
+  END_STATE
+END_PROCESS
+
+
+(* Gate/Valve Control Processes *)
+PROCESS Water2Low
+  STATE CheckConditions
+    IF (atLow) THEN
+      STOP;
+    ELSE
+      IF (NOT HighGateClosed) THEN
+        ERROR;
+      ELSE
+        openLowValve := TRUE; 
+        openHighValve := FALSE; 
+        SET NEXT;
+      END_IF
+    END_IF
+  END_STATE
+  STATE CheckLevel
+    IF (atLow) THEN
+      openLowValve := FALSE; 
+      STOP;
+    END_IF
+  END_STATE
+END_PROCESS
+
+PROCESS Water2High
+  STATE CheckConditions
+    IF (atHigh) THEN
+      STOP;
+    ELSE
+      IF (NOT LowGateClosed) THEN
+        ERROR;
+      ELSE
+        openLowValve := FALSE; 
+        openHighValve := TRUE; 
+        SET NEXT;
+      END_IF
+    END_IF
+  END_STATE
+  STATE CheckLevel
+    IF (atHigh) THEN
+      openHighValve := FALSE; 
+      STOP;
+    END_IF
+  END_STATE
+END_PROCESS
+
+PROCESS OpenLowGate
+  STATE CheckConditions
+    IF (LowGateOpened) THEN
+      STOP;
+    ELSE
+      IF (NOT atLow) THEN
+        ERROR;
+      ELSE
+        openLowGate := TRUE; 
+        SET NEXT;
+      END_IF
+    END_IF
+  END_STATE
+  STATE CheckOpeness
+    IF (LowGateOpened) THEN
+      STOP;
+    END_IF
+  END_STATE
+END_PROCESS
+
+PROCESS CloseLowGate
+  STATE CheckConditions
+    IF (LowGateClosed) THEN
+      STOP;
+    ELSE
+      openLowGate := FALSE; 
+      SET NEXT;
+    END_IF
+  END_STATE
+  STATE CheckOpeness
+    IF (LowGateClosed) THEN
+      STOP;
+    END_IF
+  END_STATE
+END_PROCESS
+
+PROCESS OpenHighGate
+  STATE CheckConditions
+    IF (HighGateOpened) THEN
+      STOP;
+    ELSE
+      IF (NOT atHigh) THEN
+        ERROR;
+      ELSE
+        openHighGate := TRUE; 
+        SET NEXT;
+      END_IF
+    END_IF
+  END_STATE
+  STATE CheckOpeness
+    IF (HighGateOpened) THEN
+      STOP;
+    END_IF
+  END_STATE
+END_PROCESS
+
+PROCESS CloseHighGate
+  STATE CheckConditions
+    IF (HighGateClosed) THEN
+      STOP;
+    ELSE
+      openHighGate := FALSE; 
+      SET NEXT;
+    END_IF
+  END_STATE
+  STATE CheckOpeness
+    IF (HighGateClosed) THEN
+      STOP;
+    END_IF
+  END_STATE
+END_PROCESS
+
+
+(* Light Control Processes *)
+PROCESS LightOFF
+  STATE init
+    Low2ChmbrLight := FALSE;
+    Chmbr2LowLight := FALSE;
+    Chmbr2HighLight := FALSE;
+    High2ChmbrLight := FALSE;
+    STOP;
+  END_STATE
+END_PROCESS
+PROCESS Low2ChmbrON
+  STATE init
+    Low2ChmbrLight := TRUE;
+    Chmbr2LowLight := FALSE;
+    Chmbr2HighLight := FALSE;
+    High2ChmbrLight := FALSE;
+    STOP;
+  END_STATE
+END_PROCESS
+PROCESS Chmbr2LowON
+  STATE init
+    Low2ChmbrLight := FALSE;
+    Chmbr2LowLight := TRUE;
+    Chmbr2HighLight := FALSE;
+    High2ChmbrLight := FALSE;
+    STOP;
+  END_STATE
+END_PROCESS
+PROCESS High2ChmbrON
+  STATE init
+    Low2ChmbrLight := FALSE;
+    Chmbr2LowLight := FALSE;
+    Chmbr2HighLight := FALSE;
+    High2ChmbrLight := TRUE;
+    STOP;
+  END_STATE
+END_PROCESS
+PROCESS Chmbr2HighON
+  STATE init
+    Low2ChmbrLight := FALSE;
+    Chmbr2LowLight := FALSE;
+    Chmbr2HighLight := TRUE;
+    High2ChmbrLight := FALSE;
+    STOP;
+  END_STATE
+END_PROCESS
+END_PROGRAM
