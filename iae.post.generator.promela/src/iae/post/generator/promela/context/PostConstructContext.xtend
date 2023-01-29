@@ -1,4 +1,4 @@
-package su.nsk.iae.post.generator.promela.context
+package iae.post.generator.promela.context
 
 import java.util.List
 import java.util.ArrayList

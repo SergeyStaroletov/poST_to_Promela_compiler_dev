@@ -8,6 +8,6 @@
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="xtend-gen"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/su.nsk.iae.post"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/iae.post"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

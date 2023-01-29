@@ -1,17 +1,17 @@
-package su.nsk.iae.post.generator.promela.model.vars
+package iae.post.generator.promela.model.vars
 
-import su.nsk.iae.post.poST.VarInitDeclaration
-import su.nsk.iae.post.generator.promela.model.PromelaElementList
+import iae.post.poST.VarInitDeclaration
+import iae.post.generator.promela.model.PromelaElementList
 import java.util.List
-import su.nsk.iae.post.generator.promela.exceptions.UnknownElementException
-import su.nsk.iae.post.generator.promela.exceptions.NotSupportedElementException
-import su.nsk.iae.post.generator.promela.context.PromelaContext
+import iae.post.generator.promela.exceptions.UnknownElementException
+import iae.post.generator.promela.exceptions.NotSupportedElementException
+import iae.post.generator.promela.context.PromelaContext
 import java.util.ArrayList
-import su.nsk.iae.post.generator.promela.context.NamespaceContext
-import su.nsk.iae.post.generator.promela.model.expressions.PromelaExpressionsHelper
-import su.nsk.iae.post.poST.PrimaryExpression
-import su.nsk.iae.post.poST.IntegerLiteral
-import su.nsk.iae.post.generator.promela.context.WarningsContext
+import iae.post.generator.promela.context.NamespaceContext
+import iae.post.generator.promela.model.expressions.PromelaExpressionsHelper
+import iae.post.poST.PrimaryExpression
+import iae.post.poST.IntegerLiteral
+import iae.post.generator.promela.context.WarningsContext
 
 class PromelaVarsHelper {	
 	static def PromelaElementList<PromelaVar> getVars(List<VarInitDeclaration> varDecls, boolean const) {

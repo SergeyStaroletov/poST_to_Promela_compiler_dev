@@ -1,12 +1,12 @@
-package su.nsk.iae.post.generator.promela.model
+package iae.post.generator.promela.model
 
-import su.nsk.iae.post.generator.promela.context.CurrentContext
-import su.nsk.iae.post.generator.promela.context.NamespaceContext
-import su.nsk.iae.post.generator.promela.model.vars.PromelaVar
-import su.nsk.iae.post.generator.promela.model.vars.PromelaVarsHelper
-import su.nsk.iae.post.poST.Program
+import iae.post.generator.promela.context.CurrentContext
+import iae.post.generator.promela.context.NamespaceContext
+import iae.post.generator.promela.model.vars.PromelaVar
+import iae.post.generator.promela.model.vars.PromelaVarsHelper
+import iae.post.poST.Program
 import org.eclipse.emf.common.util.EList
-import su.nsk.iae.post.poST.GlobalVarDeclaration
+import iae.post.poST.GlobalVarDeclaration
 
 class PromelaProgram implements IPromelaElement {
 	final String shortName;

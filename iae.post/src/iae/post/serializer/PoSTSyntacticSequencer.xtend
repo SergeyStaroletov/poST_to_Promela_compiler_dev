@@ -1,4 +1,4 @@
-package su.nsk.iae.post.serializer
+package iae.post.serializer
 
 
 class PoSTSyntacticSequencer extends AbstractPoSTSyntacticSequencer {

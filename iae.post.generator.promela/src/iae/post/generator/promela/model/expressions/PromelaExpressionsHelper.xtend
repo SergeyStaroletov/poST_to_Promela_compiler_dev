@@ -1,22 +1,22 @@
-package su.nsk.iae.post.generator.promela.model.expressions
+package iae.post.generator.promela.model.expressions
 
-import su.nsk.iae.post.poST.Expression
-import su.nsk.iae.post.generator.promela.exceptions.UnknownElementException
-import su.nsk.iae.post.poST.PrimaryExpression
-import su.nsk.iae.post.poST.UnaryExpression
-import su.nsk.iae.post.generator.promela.context.NamespaceContext
-import su.nsk.iae.post.poST.impl.ExpressionImpl
-import su.nsk.iae.post.poST.impl.XorExpressionImpl
-import su.nsk.iae.post.poST.impl.AndExpressionImpl
-import su.nsk.iae.post.poST.impl.CompExpressionImpl
-import su.nsk.iae.post.poST.impl.EquExpressionImpl
-import su.nsk.iae.post.poST.impl.AddExpressionImpl
-import su.nsk.iae.post.poST.impl.MulExpressionImpl
-import su.nsk.iae.post.poST.impl.PowerExpressionImpl
-import su.nsk.iae.post.generator.promela.exceptions.NotSupportedElementException
-import su.nsk.iae.post.generator.promela.context.PromelaContext
-import su.nsk.iae.post.poST.IntegerLiteral
-import su.nsk.iae.post.poST.RealLiteral
+import iae.post.poST.Expression
+import iae.post.generator.promela.exceptions.UnknownElementException
+import iae.post.poST.PrimaryExpression
+import iae.post.poST.UnaryExpression
+import iae.post.generator.promela.context.NamespaceContext
+import iae.post.poST.impl.ExpressionImpl
+import iae.post.poST.impl.XorExpressionImpl
+import iae.post.poST.impl.AndExpressionImpl
+import iae.post.poST.impl.CompExpressionImpl
+import iae.post.poST.impl.EquExpressionImpl
+import iae.post.poST.impl.AddExpressionImpl
+import iae.post.poST.impl.MulExpressionImpl
+import iae.post.poST.impl.PowerExpressionImpl
+import iae.post.generator.promela.exceptions.NotSupportedElementException
+import iae.post.generator.promela.context.PromelaContext
+import iae.post.poST.IntegerLiteral
+import iae.post.poST.RealLiteral
 
 class PromelaExpressionsHelper {
 	static def PromelaExpression getExpr(Expression expr) {

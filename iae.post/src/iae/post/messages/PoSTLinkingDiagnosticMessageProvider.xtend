@@ -1,4 +1,4 @@
-package su.nsk.iae.post.messages
+package iae.post.messages
 
 import org.eclipse.xtext.diagnostics.Diagnostic
 import org.eclipse.xtext.diagnostics.DiagnosticMessage

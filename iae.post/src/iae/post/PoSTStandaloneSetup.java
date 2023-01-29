@@ -1,4 +1,4 @@
-package su.nsk.iae.post;
+package iae.post;
 
 import com.google.inject.Injector;
 

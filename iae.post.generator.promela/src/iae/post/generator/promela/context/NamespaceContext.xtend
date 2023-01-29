@@ -1,8 +1,8 @@
-package su.nsk.iae.post.generator.promela.context
+package iae.post.generator.promela.context
 
 import java.util.Map
 import java.util.HashMap
-import su.nsk.iae.post.generator.promela.exceptions.WrongModelStateException
+import iae.post.generator.promela.exceptions.WrongModelStateException
 import java.util.List
 import java.util.ArrayList
 

@@ -1,12 +1,12 @@
-package su.nsk.iae.post.generator.promela.context
+package iae.post.generator.promela.context
 
-import su.nsk.iae.post.generator.promela.model.vars.PromelaVar
+import iae.post.generator.promela.model.vars.PromelaVar
 import java.util.List
 import java.util.ArrayList
-import su.nsk.iae.post.generator.promela.model.PromelaProcess
-import su.nsk.iae.post.generator.promela.model.expressions.PromelaExpression
-import su.nsk.iae.post.generator.promela.model.VarSettingProgram
-import su.nsk.iae.post.generator.promela.model.statements.PromelaStatement
+import iae.post.generator.promela.model.PromelaProcess
+import iae.post.generator.promela.model.expressions.PromelaExpression
+import iae.post.generator.promela.model.VarSettingProgram
+import iae.post.generator.promela.model.statements.PromelaStatement
 import java.util.Map
 import java.util.HashMap
 

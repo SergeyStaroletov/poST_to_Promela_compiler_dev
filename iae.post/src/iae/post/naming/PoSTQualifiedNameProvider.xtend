@@ -1,21 +1,21 @@
-package su.nsk.iae.post.naming
+package iae.post.naming
 
 import java.util.stream.Stream
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.naming.DefaultDeclarativeQualifiedNameProvider
 import org.eclipse.xtext.naming.QualifiedName
-import su.nsk.iae.post.poST.Function
-import su.nsk.iae.post.poST.FunctionBlock
-import su.nsk.iae.post.poST.Process
-import su.nsk.iae.post.poST.ProcessVarInitDeclaration
-import su.nsk.iae.post.poST.Program
-import su.nsk.iae.post.poST.ProgramConfiguration
-import su.nsk.iae.post.poST.Resource
-import su.nsk.iae.post.poST.StatementList
-import su.nsk.iae.post.poST.SymbolicVariable
-import su.nsk.iae.post.poST.Task
-import su.nsk.iae.post.poST.TemplateProcessConfElement
-import su.nsk.iae.post.poST.VarInitDeclaration
+import iae.post.poST.Function
+import iae.post.poST.FunctionBlock
+import iae.post.poST.Process
+import iae.post.poST.ProcessVarInitDeclaration
+import iae.post.poST.Program
+import iae.post.poST.ProgramConfiguration
+import iae.post.poST.Resource
+import iae.post.poST.StatementList
+import iae.post.poST.SymbolicVariable
+import iae.post.poST.Task
+import iae.post.poST.TemplateProcessConfElement
+import iae.post.poST.VarInitDeclaration
 
 import static extension org.eclipse.xtext.EcoreUtil2.*
 

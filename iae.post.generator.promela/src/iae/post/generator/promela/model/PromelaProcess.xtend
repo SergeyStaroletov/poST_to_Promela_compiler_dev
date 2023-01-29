@@ -1,11 +1,11 @@
-package su.nsk.iae.post.generator.promela.model
+package iae.post.generator.promela.model
 
-import su.nsk.iae.post.poST.Process
-import su.nsk.iae.post.generator.promela.context.PromelaContext
-import su.nsk.iae.post.generator.promela.context.NamespaceContext
-import su.nsk.iae.post.generator.promela.model.vars.PromelaVar
-import su.nsk.iae.post.generator.promela.model.vars.PromelaVarsHelper
-import su.nsk.iae.post.generator.promela.context.CurrentContext
+import iae.post.poST.Process
+import iae.post.generator.promela.context.PromelaContext
+import iae.post.generator.promela.context.NamespaceContext
+import iae.post.generator.promela.model.vars.PromelaVar
+import iae.post.generator.promela.model.vars.PromelaVarsHelper
+import iae.post.generator.promela.context.CurrentContext
 
 class PromelaProcess implements IPromelaElement {
 	String programName;

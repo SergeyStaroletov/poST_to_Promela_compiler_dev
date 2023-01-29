@@ -1,12 +1,12 @@
-package su.nsk.iae.post.generator.promela.model.expressions
+package iae.post.generator.promela.model.expressions
 
-import su.nsk.iae.post.generator.promela.model.IPromelaElement
-import su.nsk.iae.post.generator.promela.context.NamespaceContext
-import su.nsk.iae.post.poST.ProcessStatusExpression
-import su.nsk.iae.post.generator.promela.context.PromelaContext
-import su.nsk.iae.post.generator.promela.context.CurrentContext
-import su.nsk.iae.post.generator.promela.context.PostConstructContext
-import su.nsk.iae.post.generator.promela.model.vars.PromelaVar
+import iae.post.generator.promela.model.IPromelaElement
+import iae.post.generator.promela.context.NamespaceContext
+import iae.post.poST.ProcessStatusExpression
+import iae.post.generator.promela.context.PromelaContext
+import iae.post.generator.promela.context.CurrentContext
+import iae.post.generator.promela.context.PostConstructContext
+import iae.post.generator.promela.model.vars.PromelaVar
 
 abstract class PromelaExpression implements IPromelaElement {
 	

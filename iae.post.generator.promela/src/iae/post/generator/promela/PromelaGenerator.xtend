@@ -1,12 +1,12 @@
-package su.nsk.iae.post.generator.promela
+package iae.post.generator.promela
 
-import su.nsk.iae.post.generator.IPoSTGenerator
-import su.nsk.iae.post.poST.Model
+import iae.post.generator.IPoSTGenerator
+import iae.post.poST.Model
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IFileSystemAccess2
 import org.eclipse.xtext.generator.IGeneratorContext
-import su.nsk.iae.post.generator.promela.model.PromelaProgram
-import su.nsk.iae.post.generator.promela.model.PromelaModel
+import iae.post.generator.promela.model.PromelaProgram
+import iae.post.generator.promela.model.PromelaModel
 
 class PromelaGenerator implements IPoSTGenerator {
 	

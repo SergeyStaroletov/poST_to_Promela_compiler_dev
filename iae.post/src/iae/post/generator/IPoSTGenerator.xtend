@@ -1,6 +1,6 @@
-package su.nsk.iae.post.generator
+package iae.post.generator
 
-import su.nsk.iae.post.poST.Model
+import iae.post.poST.Model
 import org.eclipse.xtext.generator.IGenerator2
 
 interface IPoSTGenerator extends IGenerator2 {

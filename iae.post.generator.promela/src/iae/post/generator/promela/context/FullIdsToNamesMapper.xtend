@@ -1,13 +1,13 @@
-package su.nsk.iae.post.generator.promela.context
+package iae.post.generator.promela.context
 
 import java.util.Map
 import java.util.HashMap
-import su.nsk.iae.post.generator.promela.exceptions.WrongModelStateException
-import su.nsk.iae.post.generator.promela.context.NamespaceContext.Namespace
+import iae.post.generator.promela.exceptions.WrongModelStateException
+import iae.post.generator.promela.context.NamespaceContext.Namespace
 import java.util.List
 import java.util.ArrayList
 import java.util.LinkedList
-import su.nsk.iae.post.generator.promela.context.NamespaceContext.FullIdParts
+import iae.post.generator.promela.context.NamespaceContext.FullIdParts
 import java.util.Map.Entry
 import java.util.AbstractMap.SimpleEntry
 

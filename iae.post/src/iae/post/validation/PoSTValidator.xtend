@@ -1,4 +1,4 @@
-package su.nsk.iae.post.validation
+package iae.post.validation
 
 import java.util.ArrayList
 import java.util.HashSet
@@ -7,51 +7,51 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.validation.Check
-import su.nsk.iae.post.poST.ArraySpecification
-import su.nsk.iae.post.poST.AssignmentStatement
-import su.nsk.iae.post.poST.AssignmentType
-import su.nsk.iae.post.poST.AttachVariableConfElement
-import su.nsk.iae.post.poST.CaseElement
-import su.nsk.iae.post.poST.Configuration
-import su.nsk.iae.post.poST.ErrorProcessStatement
-import su.nsk.iae.post.poST.ExternalVarDeclaration
-import su.nsk.iae.post.poST.ExternalVarInitDeclaration
-import su.nsk.iae.post.poST.FBInvocation
-import su.nsk.iae.post.poST.ForStatement
-import su.nsk.iae.post.poST.FunctionBlock
-import su.nsk.iae.post.poST.FunctionCall
-import su.nsk.iae.post.poST.GlobalVarDeclaration
-import su.nsk.iae.post.poST.GlobalVarInitDeclaration
-import su.nsk.iae.post.poST.IfStatement
-import su.nsk.iae.post.poST.InputOutputVarDeclaration
-import su.nsk.iae.post.poST.InputVarDeclaration
-import su.nsk.iae.post.poST.Model
-import su.nsk.iae.post.poST.OutputVarDeclaration
-import su.nsk.iae.post.poST.PoSTPackage
-import su.nsk.iae.post.poST.Process
-import su.nsk.iae.post.poST.ProcessStatusExpression
-import su.nsk.iae.post.poST.ProcessVarDeclaration
-import su.nsk.iae.post.poST.ProcessVarInitDeclaration
-import su.nsk.iae.post.poST.ProcessVariable
-import su.nsk.iae.post.poST.Program
-import su.nsk.iae.post.poST.ProgramConfiguration
-import su.nsk.iae.post.poST.RepeatStatement
-import su.nsk.iae.post.poST.Resource
-import su.nsk.iae.post.poST.SetStateStatement
-import su.nsk.iae.post.poST.SimpleSpecificationInit
-import su.nsk.iae.post.poST.StartProcessStatement
-import su.nsk.iae.post.poST.Statement
-import su.nsk.iae.post.poST.StopProcessStatement
-import su.nsk.iae.post.poST.SymbolicVariable
-import su.nsk.iae.post.poST.Task
-import su.nsk.iae.post.poST.TempVarDeclaration
-import su.nsk.iae.post.poST.TemplateProcessAttachVariableConfElement
-import su.nsk.iae.post.poST.TemplateProcessConfElement
-import su.nsk.iae.post.poST.TimeoutStatement
-import su.nsk.iae.post.poST.VarDeclaration
-import su.nsk.iae.post.poST.VarInitDeclaration
-import su.nsk.iae.post.poST.Variable
-import su.nsk.iae.post.poST.WhileStatement
+import iae.post.poST.ArraySpecification
+import iae.post.poST.AssignmentStatement
+import iae.post.poST.AssignmentType
+import iae.post.poST.AttachVariableConfElement
+import iae.post.poST.CaseElement
+import iae.post.poST.Configuration
+import iae.post.poST.ErrorProcessStatement
+import iae.post.poST.ExternalVarDeclaration
+import iae.post.poST.ExternalVarInitDeclaration
+import iae.post.poST.FBInvocation
+import iae.post.poST.ForStatement
+import iae.post.poST.FunctionBlock
+import iae.post.poST.FunctionCall
+import iae.post.poST.GlobalVarDeclaration
+import iae.post.poST.GlobalVarInitDeclaration
+import iae.post.poST.IfStatement
+import iae.post.poST.InputOutputVarDeclaration
+import iae.post.poST.InputVarDeclaration
+import iae.post.poST.Model
+import iae.post.poST.OutputVarDeclaration
+import iae.post.poST.PoSTPackage
+import iae.post.poST.Process
+import iae.post.poST.ProcessStatusExpression
+import iae.post.poST.ProcessVarDeclaration
+import iae.post.poST.ProcessVarInitDeclaration
+import iae.post.poST.ProcessVariable
+import iae.post.poST.Program
+import iae.post.poST.ProgramConfiguration
+import iae.post.poST.RepeatStatement
+import iae.post.poST.Resource
+import iae.post.poST.SetStateStatement
+import iae.post.poST.SimpleSpecificationInit
+import iae.post.poST.StartProcessStatement
+import iae.post.poST.Statement
+import iae.post.poST.StopProcessStatement
+import iae.post.poST.SymbolicVariable
+import iae.post.poST.Task
+import iae.post.poST.TempVarDeclaration
+import iae.post.poST.TemplateProcessAttachVariableConfElement
+import iae.post.poST.TemplateProcessConfElement
+import iae.post.poST.TimeoutStatement
+import iae.post.poST.VarDeclaration
+import iae.post.poST.VarInitDeclaration
+import iae.post.poST.Variable
+import iae.post.poST.WhileStatement
 
 import static extension java.lang.Character.isLowerCase
 import static extension java.lang.Character.isUpperCase
@@ -412,7 +412,7 @@ class PoSTValidator extends AbstractPoSTValidator {
 	}
 	
 	@Check
-	def checkState_NameConflicts(su.nsk.iae.post.poST.State ele) {
+	def checkState_NameConflicts(iae.post.poST.State ele) {
 		val process = ele.getContainerOfType(Process)
 		if (process.checkNameRepetition(ele)) {
 			error("Name error: Process already has a State with this name", ePackage.state_Name)
@@ -420,14 +420,14 @@ class PoSTValidator extends AbstractPoSTValidator {
 	}
 	
 	@Check
-	def checkState_Empty(su.nsk.iae.post.poST.State ele) {
+	def checkState_Empty(iae.post.poST.State ele) {
 		if (ele.statement.statements.empty && (ele.timeout === null)) {
 			error("Statement error: State can't be empty", ePackage.state_Name)
 		}
 	}
 	
 	@Check
-	def checkState_Unreachable(su.nsk.iae.post.poST.State ele) {
+	def checkState_Unreachable(iae.post.poST.State ele) {
 		val process = ele.getContainerOfType(Process)
 		val stateIndex = process.states.indexOf(ele)
 		if (stateIndex === 0 ||
@@ -440,7 +440,7 @@ class PoSTValidator extends AbstractPoSTValidator {
 	}
 	
 	@Check
-	def checkState_Looped(su.nsk.iae.post.poST.State ele) {
+	def checkState_Looped(iae.post.poST.State ele) {
 		var check = ele.containsType(SetStateStatement) ||
 					ele.containsType(StartProcessStatement) ||
 					ele.containsType(StopProcessStatement) ||
@@ -473,7 +473,7 @@ class PoSTValidator extends AbstractPoSTValidator {
 	
 	@Check
 	def checkSetStateStatement_Useless(SetStateStatement ele) {
-		val state = ele.getContainerOfType(su.nsk.iae.post.poST.State)
+		val state = ele.getContainerOfType(iae.post.poST.State)
 		if (state === ele.state) {
 			warning("Useless statement, use RESET TIMER", ePackage.setStateStatement_State)
 		}
@@ -485,7 +485,7 @@ class PoSTValidator extends AbstractPoSTValidator {
 			return
 		}
 		val process = ele.getContainerOfType(Process)
-		val state = ele.getContainerOfType(su.nsk.iae.post.poST.State)
+		val state = ele.getContainerOfType(iae.post.poST.State)
 		if (process.states.last === state) {
 			error("Invalid statement: No next state in the Process", ePackage.setStateStatement_Next)
 		}
@@ -647,13 +647,13 @@ class PoSTValidator extends AbstractPoSTValidator {
 		])
 	}
 	
-	private def <T extends Statement> boolean checkStateSet(EList<su.nsk.iae.post.poST.State> stateList, su.nsk.iae.post.poST.State ele) {
+	private def <T extends Statement> boolean checkStateSet(EList<iae.post.poST.State> stateList, iae.post.poST.State ele) {
 		return stateList.stream.filter([x | x !== ele]).anyMatch([x | 
 			x.getAllContentsOfType(SetStateStatement).stream.anyMatch([xx | xx.state === ele])
 		])
 	}
 	
-	private def <T extends Statement> boolean checkStateSetNext(EList<su.nsk.iae.post.poST.State> stateList, int index) {
+	private def <T extends Statement> boolean checkStateSetNext(EList<iae.post.poST.State> stateList, int index) {
 		return stateList.get(index).getAllContentsOfType(SetStateStatement).stream.anyMatch([xx | xx.next])
 	}
 	
@@ -695,7 +695,7 @@ class PoSTValidator extends AbstractPoSTValidator {
 		return program.processes.stream.anyMatch([x | (x !== ele) && x.name.equals(ele.name)])
 	}
 	
-	private def boolean checkNameRepetition(Process process, su.nsk.iae.post.poST.State ele) {
+	private def boolean checkNameRepetition(Process process, iae.post.poST.State ele) {
 		return process.states.stream.anyMatch([x | (x !== ele) && x.name.equals(ele.name)])
 	}
 	

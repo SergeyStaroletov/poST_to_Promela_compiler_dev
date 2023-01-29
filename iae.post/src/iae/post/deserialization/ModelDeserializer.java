@@ -1,4 +1,4 @@
-package su.nsk.iae.post.deserialization;
+package iae.post.deserialization;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -11,7 +11,7 @@ import org.eclipse.xtext.resource.XtextResourceSet;
 
 import com.google.inject.Injector;
 
-import su.nsk.iae.post.PoSTStandaloneSetup;
+import iae.post.PoSTStandaloneSetup;
 
 public class ModelDeserializer {
 

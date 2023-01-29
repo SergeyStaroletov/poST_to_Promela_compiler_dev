@@ -1,4 +1,4 @@
-package su.nsk.iae.post.generator.promela.exceptions
+package iae.post.generator.promela.exceptions
 
 class ConflictingOutputsOrInOutsException extends RuntimeException {
 	String input1;

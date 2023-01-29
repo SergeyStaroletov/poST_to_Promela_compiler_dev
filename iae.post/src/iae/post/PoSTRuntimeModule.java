@@ -1,4 +1,4 @@
-package su.nsk.iae.post;
+package iae.post;
 
 import org.eclipse.xtext.linking.ILinkingDiagnosticMessageProvider;
 import org.eclipse.xtext.linking.ILinkingService;
@@ -7,9 +7,9 @@ import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import com.google.inject.Binder;
 import com.google.inject.name.Names;
 
-import su.nsk.iae.post.linking.PoSTLinkingService;
-import su.nsk.iae.post.messages.PoSTLinkingDiagnosticMessageProvider;
-import su.nsk.iae.post.naming.PoSTQualifiedNameProvider;
+import iae.post.linking.PoSTLinkingService;
+import iae.post.messages.PoSTLinkingDiagnosticMessageProvider;
+import iae.post.naming.PoSTQualifiedNameProvider;
 
 public class PoSTRuntimeModule extends AbstractPoSTRuntimeModule {
 	

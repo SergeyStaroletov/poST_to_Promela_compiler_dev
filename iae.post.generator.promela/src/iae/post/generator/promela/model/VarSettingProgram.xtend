@@ -1,14 +1,14 @@
-package su.nsk.iae.post.generator.promela.model
+package iae.post.generator.promela.model
 
-import su.nsk.iae.post.generator.promela.context.NamespaceContext
+import iae.post.generator.promela.context.NamespaceContext
 import java.util.ArrayList
-import su.nsk.iae.post.generator.promela.model.vars.PromelaVar
+import iae.post.generator.promela.model.vars.PromelaVar
 import java.util.function.Supplier
 import java.util.List
 import java.util.HashMap
-import su.nsk.iae.post.generator.promela.exceptions.NotSupportedElementException
-import su.nsk.iae.post.generator.promela.exceptions.WrongModelStateException
-import su.nsk.iae.post.generator.promela.context.WarningsContext
+import iae.post.generator.promela.exceptions.NotSupportedElementException
+import iae.post.generator.promela.exceptions.WrongModelStateException
+import iae.post.generator.promela.context.WarningsContext
 
 class VarSettingProgram implements IPromelaElement {
 	static val processPrefix = "specialProcess";

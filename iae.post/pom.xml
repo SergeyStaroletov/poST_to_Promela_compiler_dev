@@ -2,11 +2,11 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>su.nsk.iae.post</groupId>
-		<artifactId>su.nsk.iae.post.parent</artifactId>
+		<groupId>iae.post</groupId>
+		<artifactId>iae.post.parent</artifactId>
 		<version>1.0.0</version>
 	</parent>
-	<artifactId>su.nsk.iae.post</artifactId>
+	<artifactId>iae.post</artifactId>
 	<packaging>eclipse-plugin</packaging>
 
 	<build>
@@ -74,19 +74,19 @@
 				<configuration>
 					<filesets combine.children="append">
 						<fileset>
-							<directory>${basedir}/../su.nsk.iae.post/src-gen/</directory>
+							<directory>${basedir}/../iae.post/src-gen/</directory>
 							<includes>
 								<include>**/*</include>
 							</includes>
 						</fileset>
 						<fileset>
-							<directory>${basedir}/../su.nsk.iae.post.ide/src-gen/</directory>
+							<directory>${basedir}/../iae.post.ide/src-gen/</directory>
 							<includes>
 								<include>**/*</include>
 							</includes>
 						</fileset>
 						<fileset>
-							<directory>${basedir}/../su.nsk.iae.post.ui/src-gen/</directory>
+							<directory>${basedir}/../iae.post.ui/src-gen/</directory>
 							<includes>
 								<include>**/*</include>
 							</includes>

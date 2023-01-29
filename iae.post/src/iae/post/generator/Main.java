@@ -1,4 +1,4 @@
-package su.nsk.iae.post.generator;
+package iae.post.generator;
 
 import java.util.Arrays;
 import java.util.List;
@@ -20,7 +20,7 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Provider;
 
-import su.nsk.iae.post.PoSTStandaloneSetup;
+import iae.post.PoSTStandaloneSetup;
 
 public class Main {
 

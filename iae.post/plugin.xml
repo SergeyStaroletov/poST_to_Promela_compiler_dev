@@ -4,8 +4,8 @@
 	<extension-point id="post_extension" name="PoSTExtension" schema="schema/post_extension.exsd"/>
 	<extension point="org.eclipse.emf.ecore.generated_package">
 		<package
-			uri = "http://www.nsk.su/iae/post/PoST"
-			class = "su.nsk.iae.post.poST.PoSTPackage"
+			uri = "http://www.iae/post/PoST"
+			class = "iae.post.poST.PoSTPackage"
 			genModel = "model/generated/PoST.genmodel" />
 	</extension>
 </plugin>

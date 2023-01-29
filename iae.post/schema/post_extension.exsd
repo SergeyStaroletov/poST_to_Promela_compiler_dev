@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="su.nsk.iae.post" xmlns="http://www.w3.org/2001/XMLSchema">
+<schema targetNamespace="iae.post" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appInfo>
-         <meta.schema plugin="su.nsk.iae.post" id="post_extension" name="PoSTExtension"/>
+         <meta.schema plugin="iae.post" id="post_extension" name="PoSTExtension"/>
       </appInfo>
       <documentation>
          [Enter description of this extension point.]
@@ -55,7 +55,7 @@
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn=":su.nsk.iae.post.generator.IPoSTGenerator"/>
+                  <meta.attribute kind="java" basedOn=":iae.post.generator.IPoSTGenerator"/>
                </appInfo>
             </annotation>
          </attribute>

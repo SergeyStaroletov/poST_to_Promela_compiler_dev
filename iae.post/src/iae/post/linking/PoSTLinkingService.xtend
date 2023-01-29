@@ -1,4 +1,4 @@
-package su.nsk.iae.post.linking
+package iae.post.linking
 
 import java.util.Collections
 import org.eclipse.emf.ecore.EObject

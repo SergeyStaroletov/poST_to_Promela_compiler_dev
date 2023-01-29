@@ -1,4 +1,4 @@
-package su.nsk.iae.post.generator.promela.model
+package iae.post.generator.promela.model
 
 import java.util.ArrayList
 import org.eclipse.xtend2.lib.StringConcatenation

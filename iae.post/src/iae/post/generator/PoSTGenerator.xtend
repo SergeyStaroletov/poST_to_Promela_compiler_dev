@@ -1,4 +1,4 @@
-package su.nsk.iae.post.generator
+package iae.post.generator
 
 import java.util.ArrayList
 import java.util.List
@@ -7,11 +7,11 @@ import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.AbstractGenerator
 import org.eclipse.xtext.generator.IFileSystemAccess2
 import org.eclipse.xtext.generator.IGeneratorContext
-import su.nsk.iae.post.poST.Model
+import iae.post.poST.Model
 
 class PoSTGenerator extends AbstractGenerator {
 	
-	static final String EXTENSION_ID = "su.nsk.iae.post.post_extension"
+	static final String EXTENSION_ID = "iae.post.post_extension"
 	static final List<IPoSTGenerator> generators = new ArrayList
 	
 	static def void initGenerators() {

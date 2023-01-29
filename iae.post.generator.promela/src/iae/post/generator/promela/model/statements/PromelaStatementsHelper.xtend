@@ -1,21 +1,21 @@
-package su.nsk.iae.post.generator.promela.model.statements
+package iae.post.generator.promela.model.statements
 
-import su.nsk.iae.post.poST.Statement
-import su.nsk.iae.post.generator.promela.exceptions.UnknownElementException
-import su.nsk.iae.post.generator.promela.model.statements.PromelaStatement
-import su.nsk.iae.post.poST.StatementList
-import su.nsk.iae.post.poST.impl.AssignmentStatementImpl
-import su.nsk.iae.post.poST.impl.IfStatementImpl
-import su.nsk.iae.post.poST.impl.CaseStatementImpl
-import su.nsk.iae.post.poST.impl.StartProcessStatementImpl
-import su.nsk.iae.post.poST.impl.StopProcessStatementImpl
-import su.nsk.iae.post.poST.impl.ErrorProcessStatementImpl
-import su.nsk.iae.post.poST.impl.SetStateStatementImpl
-import su.nsk.iae.post.poST.impl.ResetTimerStatementImpl
-import su.nsk.iae.post.poST.impl.TimeoutStatementImpl
-import su.nsk.iae.post.poST.impl.WhileStatementImpl
-import su.nsk.iae.post.poST.impl.RepeatStatementImpl
-import su.nsk.iae.post.poST.impl.ForStatementImpl
+import iae.post.poST.Statement
+import iae.post.generator.promela.exceptions.UnknownElementException
+import iae.post.generator.promela.model.statements.PromelaStatement
+import iae.post.poST.StatementList
+import iae.post.poST.impl.AssignmentStatementImpl
+import iae.post.poST.impl.IfStatementImpl
+import iae.post.poST.impl.CaseStatementImpl
+import iae.post.poST.impl.StartProcessStatementImpl
+import iae.post.poST.impl.StopProcessStatementImpl
+import iae.post.poST.impl.ErrorProcessStatementImpl
+import iae.post.poST.impl.SetStateStatementImpl
+import iae.post.poST.impl.ResetTimerStatementImpl
+import iae.post.poST.impl.TimeoutStatementImpl
+import iae.post.poST.impl.WhileStatementImpl
+import iae.post.poST.impl.RepeatStatementImpl
+import iae.post.poST.impl.ForStatementImpl
 
 class PromelaStatementsHelper {
 	static def getStatementList(StatementList statements) {

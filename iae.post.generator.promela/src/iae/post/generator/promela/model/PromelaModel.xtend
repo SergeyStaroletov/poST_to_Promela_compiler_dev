@@ -1,20 +1,20 @@
-package su.nsk.iae.post.generator.promela.model
+package iae.post.generator.promela.model
 
-import su.nsk.iae.post.poST.Model
-import su.nsk.iae.post.generator.promela.context.PromelaContext
-import su.nsk.iae.post.generator.promela.context.PostConstructContext
-import su.nsk.iae.post.generator.promela.model.expressions.PromelaExpression
-import su.nsk.iae.post.generator.promela.model.vars.PromelaVar
-import su.nsk.iae.post.generator.promela.model.expressions.PromelaExpression.TimeConstant
-import su.nsk.iae.post.generator.promela.context.NamespaceContext
+import iae.post.poST.Model
+import iae.post.generator.promela.context.PromelaContext
+import iae.post.generator.promela.context.PostConstructContext
+import iae.post.generator.promela.model.expressions.PromelaExpression
+import iae.post.generator.promela.model.vars.PromelaVar
+import iae.post.generator.promela.model.expressions.PromelaExpression.TimeConstant
+import iae.post.generator.promela.context.NamespaceContext
 import java.util.List
 import java.util.ArrayList
 import java.util.HashMap
-import su.nsk.iae.post.generator.promela.exceptions.ConflictingOutputsOrInOutsException
-import su.nsk.iae.post.poST.Configuration
-import su.nsk.iae.post.generator.promela.context.CurrentContext
-import su.nsk.iae.post.generator.promela.context.WarningsContext
-import su.nsk.iae.post.generator.promela.exceptions.NotSupportedElementException
+import iae.post.generator.promela.exceptions.ConflictingOutputsOrInOutsException
+import iae.post.poST.Configuration
+import iae.post.generator.promela.context.CurrentContext
+import iae.post.generator.promela.context.WarningsContext
+import iae.post.generator.promela.exceptions.NotSupportedElementException
 
 class PromelaModel implements IPromelaElement {
 	static val promelaVerificationTaskName = "PromelaVerificationTask";

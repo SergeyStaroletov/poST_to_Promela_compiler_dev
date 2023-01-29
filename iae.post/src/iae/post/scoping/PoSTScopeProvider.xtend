@@ -1,4 +1,4 @@
-package su.nsk.iae.post.scoping
+package iae.post.scoping
 
 import java.util.Collections
 import java.util.stream.Collectors
@@ -10,21 +10,21 @@ import org.eclipse.emf.ecore.EReference
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.scoping.IScope
 import org.eclipse.xtext.scoping.Scopes
-import su.nsk.iae.post.library.PoSTLibraryProvider
-import su.nsk.iae.post.poST.FBInvocation
-import su.nsk.iae.post.poST.Function
-import su.nsk.iae.post.poST.FunctionBlock
-import su.nsk.iae.post.poST.FunctionCall
-import su.nsk.iae.post.poST.GlobalVarDeclaration
-import su.nsk.iae.post.poST.Model
-import su.nsk.iae.post.poST.PoSTPackage
-import su.nsk.iae.post.poST.Process
-import su.nsk.iae.post.poST.Program
-import su.nsk.iae.post.poST.ProgramConfiguration
-import su.nsk.iae.post.poST.Resource
-import su.nsk.iae.post.poST.SymbolicVariable
-import su.nsk.iae.post.poST.TemplateProcessConfElement
-import su.nsk.iae.post.poST.VarInitDeclaration
+import iae.post.library.PoSTLibraryProvider
+import iae.post.poST.FBInvocation
+import iae.post.poST.Function
+import iae.post.poST.FunctionBlock
+import iae.post.poST.FunctionCall
+import iae.post.poST.GlobalVarDeclaration
+import iae.post.poST.Model
+import iae.post.poST.PoSTPackage
+import iae.post.poST.Process
+import iae.post.poST.Program
+import iae.post.poST.ProgramConfiguration
+import iae.post.poST.Resource
+import iae.post.poST.SymbolicVariable
+import iae.post.poST.TemplateProcessConfElement
+import iae.post.poST.VarInitDeclaration
 
 import static extension org.eclipse.xtext.EcoreUtil2.*
 

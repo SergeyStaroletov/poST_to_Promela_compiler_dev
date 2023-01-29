@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
-Automatic-Module-Name: su.nsk.iae.post
+Automatic-Module-Name: iae.post
 Bundle-ManifestVersion: 2
-Bundle-Name: su.nsk.iae.post
-Bundle-Vendor: Institute of Automation and Electrometry SB RAS
+Bundle-Name: iae.post
+Bundle-Vendor: IAE RAS
 Bundle-Version: 0.3.1
-Bundle-SymbolicName: su.nsk.iae.post; singleton:=true
+Bundle-SymbolicName: iae.post; singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.xtext,
  org.eclipse.xtext.xbase,
@@ -17,15 +17,15 @@ Require-Bundle: org.eclipse.xtext,
  org.eclipse.core.runtime,
  org.eclipse.core.resources
 Bundle-RequiredExecutionEnvironment: JavaSE-11
-Export-Package: su.nsk.iae.post.serializer,
- su.nsk.iae.post,
- su.nsk.iae.post.poST.util,
- su.nsk.iae.post.parser.antlr.internal,
- su.nsk.iae.post.validation,
- su.nsk.iae.post.scoping,
- su.nsk.iae.post.poST.impl,
- su.nsk.iae.post.generator,
- su.nsk.iae.post.poST,
- su.nsk.iae.post.services,
- su.nsk.iae.post.parser.antlr
+Export-Package: iae.post.serializer,
+ iae.post,
+ iae.post.poST.util,
+ iae.post.parser.antlr.internal,
+ iae.post.validation,
+ iae.post.scoping,
+ iae.post.poST.impl,
+ iae.post.generator,
+ iae.post.poST,
+ iae.post.services,
+ iae.post.parser.antlr
 Import-Package: org.apache.log4j

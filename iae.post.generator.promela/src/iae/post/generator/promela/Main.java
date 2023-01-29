@@ -1,4 +1,4 @@
-package su.nsk.iae.post.generator.promela;
+package iae.post.generator.promela;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -12,14 +12,14 @@ import org.eclipse.emf.ecore.util.BasicEAnnotationValidator.ValidationContext;
 
 import com.google.inject.Injector;
 
-import su.nsk.iae.post.PoSTStandaloneSetup;
-import su.nsk.iae.post.generator.promela.context.WarningsContext;
-import su.nsk.iae.post.generator.promela.exceptions.ConflictingOutputsOrInOutsException;
-import su.nsk.iae.post.generator.promela.exceptions.NotSupportedElementException;
-import su.nsk.iae.post.generator.promela.exceptions.UnknownElementException;
-import su.nsk.iae.post.generator.promela.exceptions.WrongModelStateException;
-import su.nsk.iae.post.generator.promela.model.PromelaModel;
-import su.nsk.iae.post.poST.Model;
+import iae.post.PoSTStandaloneSetup;
+import iae.post.generator.promela.context.WarningsContext;
+import iae.post.generator.promela.exceptions.ConflictingOutputsOrInOutsException;
+import iae.post.generator.promela.exceptions.NotSupportedElementException;
+import iae.post.generator.promela.exceptions.UnknownElementException;
+import iae.post.generator.promela.exceptions.WrongModelStateException;
+import iae.post.generator.promela.model.PromelaModel;
+import iae.post.poST.Model;
 
 public class Main {
 	public static void main(String[] args) throws IOException {

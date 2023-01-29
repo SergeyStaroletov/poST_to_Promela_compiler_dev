@@ -1,8 +1,8 @@
-package su.nsk.iae.post.generator.promela.context
+package iae.post.generator.promela.context
 
-import su.nsk.iae.post.generator.promela.model.PromelaProgram
-import su.nsk.iae.post.generator.promela.model.PromelaProcess
-import su.nsk.iae.post.generator.promela.model.PromelaState
+import iae.post.generator.promela.model.PromelaProgram
+import iae.post.generator.promela.model.PromelaProcess
+import iae.post.generator.promela.model.PromelaState
 
 class CurrentContext {
 	static var PromelaProgram curProgram;

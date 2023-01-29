@@ -1,4 +1,4 @@
-package su.nsk.iae.post.library
+package iae.post.library
 
 import java.nio.file.Files
 import java.nio.file.Path
@@ -12,20 +12,20 @@ import org.eclipse.core.resources.IFolder
 import org.eclipse.core.resources.ResourcesPlugin
 import org.eclipse.emf.ecore.EObject
 import org.w3c.dom.Element
-import su.nsk.iae.post.poST.Function
-import su.nsk.iae.post.poST.FunctionBlock
-import su.nsk.iae.post.poST.InputOutputVarDeclaration
-import su.nsk.iae.post.poST.InputVarDeclaration
-import su.nsk.iae.post.poST.OutputVarDeclaration
-import su.nsk.iae.post.poST.PoSTFactory
-import su.nsk.iae.post.poST.PoSTPackage
-import su.nsk.iae.post.poST.VarInitDeclaration
-import su.nsk.iae.post.poST.impl.FunctionBlockImpl
-import su.nsk.iae.post.poST.impl.FunctionImpl
-import su.nsk.iae.post.poST.impl.InputOutputVarDeclarationImpl
-import su.nsk.iae.post.poST.impl.InputVarDeclarationImpl
-import su.nsk.iae.post.poST.impl.OutputVarDeclarationImpl
-import su.nsk.iae.post.poST.impl.VarListImpl
+import iae.post.poST.Function
+import iae.post.poST.FunctionBlock
+import iae.post.poST.InputOutputVarDeclaration
+import iae.post.poST.InputVarDeclaration
+import iae.post.poST.OutputVarDeclaration
+import iae.post.poST.PoSTFactory
+import iae.post.poST.PoSTPackage
+import iae.post.poST.VarInitDeclaration
+import iae.post.poST.impl.FunctionBlockImpl
+import iae.post.poST.impl.FunctionImpl
+import iae.post.poST.impl.InputOutputVarDeclarationImpl
+import iae.post.poST.impl.InputVarDeclarationImpl
+import iae.post.poST.impl.OutputVarDeclarationImpl
+import iae.post.poST.impl.VarListImpl
 
 class PoSTLibraryProvider {
 	
